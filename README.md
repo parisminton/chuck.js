@@ -14,6 +14,6 @@ You can see my progress in [this example][2].
 
 [1]: http://visitmix.com/labs/ai2canvas "MIX Online: Ai to Canvas Plug-In"
 
-[2]: http://james.da.ydrea.ms/times_polevault.js "An animation powered by chuck.js."
+[2]: http://james.da.ydrea.ms/times_polevault.html "An animation powered by chuck.js."
 
 [3]: https://github.com/parisminton/chuck.js/blob/master/CHANGELOG.md "See the changelog for chuck.js"
