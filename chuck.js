@@ -370,12 +370,15 @@ Slider.prototype.init = function () {
 Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
 Slider.prototype.mousedownHandler = function () {
   this.selected = true;
+  this.timeline.injectBreakpoint();
 }
 Slider.prototype.mouseupHandler = function () {
-  console.log(this.me.name + " moved in.");
+  this.timeline.extractBreakpoint();
+  this.selected = false;
 }
 Slider.prototype.mousemoveHandler = function () {
-  this.selected = false;
+  if (this.selected) {
+  }
 }
 
 
@@ -623,8 +626,25 @@ Timeline.prototype = {
       this.animator.advanceAll();
       this.animator.drawFrame();
     }
-  }
+  },
   
+  injectBreakpoint : function () {
+    this.injected_bp = this.current_bp;
+    this.breakpoints.splice(this.current_bp, 0, (this.current_frame + 1));
+    console.log("Yeah, babeee!");
+    console.log(this.breakpoints);
+  },
+
+  extractBreakpoint : function () {
+    if (this.injected_bp) {
+      this.breakpoints.splice(this.injected_bp, 1);
+      this.injected_bp = null;
+      console.log("Hm. Hm.");
+      // this.animate();
+      console.log(this.breakpoints);
+    }
+  }
+
 };
 
 
@@ -741,6 +761,7 @@ Animator.prototype = {
   emptyAllCaches : function () {
     this.getAllCels("emptyCache");
   }
+
 };
 
 

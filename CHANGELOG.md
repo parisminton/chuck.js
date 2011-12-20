@@ -10,6 +10,8 @@ Changelog
 
 2. Gave the `Slider` object a `selected` property that turns true on mousedown and false on mouseup.
 
+3. Added `Timeline.injectBreakpoint()` and `Timeline.extractBreakpoint()` to pause and resume the animation. Made these mousedown and mouseup event handlers for `Slider`.
+
 
 
 **12/19/11**
