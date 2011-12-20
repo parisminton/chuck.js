@@ -208,6 +208,9 @@ function stage () {
       play.restore();
     }
   };
+  play.clickHandler = function () {
+    this.timeline.play();
+  };
 
   
 
@@ -857,6 +860,9 @@ function stage () {
       step.closePath();
       step.restore();
     }
+  };
+  step.clickHandler = function () {
+    this.timeline.stepThrough();
   };
 
   
@@ -12617,15 +12623,6 @@ function stage () {
       }
     }
   ];
-  
-
-
-  the_canvas.addEventListener("mouseover", dela, false);
-
-
-  function dela () {
-    console.log("This is how it is.");
-  }
 
   t.load(play, step, slider, back, forward, track, pit, shadow, pitshadow, vaulter, pitforeground);
   

@@ -60,7 +60,7 @@ Character.prototype = {
       current_iteration : 0,
       current_cel : 0,
       cels : []
-    };
+    }
   },
 
   reset : function () {
@@ -270,6 +270,12 @@ Button.prototype.drawBoundary = function () {
   this.boundary();
 };
 Button.prototype.userEvents = ["click", "mouseover", "mouseout"];
+Button.prototype.mouseoverHandler = function () {
+
+};
+Button.prototype.mouseoutHandler = function () {
+
+};
 
 
 
@@ -278,6 +284,7 @@ function Slider (obj_name) {
   this.name = obj_name;
   this.visible = true;
   this.touchable = true;
+  this.selected = false;
   this.current_seq = 0; 
   this.sequence_order = ["track", "scrubber"];
   this.track = {
@@ -307,6 +314,7 @@ function Slider (obj_name) {
     current_cel : 0,
     cels : []
   };
+  this.me = this;
   this.constructor = Slider;
 };
 Slider.prototype = new Character(); 
@@ -337,7 +345,7 @@ Slider.prototype.makeDrawBoundary = function (obj) {
       obj[cs_string].xdistance = obj[cs_string].xlimit; 
       obj[cs_string].ydistance = obj[cs_string].ylimit; 
       obj.boundary();
-      console.log(cs_string);
+      // console.log(cs_string);
       obj[cs_string].xdistance = 0;
       obj[cs_string].ydistance = 0; 
     }
@@ -345,7 +353,7 @@ Slider.prototype.makeDrawBoundary = function (obj) {
     else if (obj.timeline.current_frame > 0 && obj.timeline.current_frame < obj.timeline.frame_total) {
       obj[cs_string].xdistance -= obj[cs_string].xinc; 
       obj[cs_string].ydistance -= obj[cs_string].yinc; 
-      console.log(cs_string);
+      // console.log(cs_string);
       obj.boundary();
       obj[cs_string].xdistance += obj[cs_string].xinc;
       obj[cs_string].ydistance += obj[cs_string].yinc;
@@ -356,36 +364,19 @@ Slider.prototype.makeDrawBoundary = function (obj) {
     obj.current_seq = old_cs;
   }
 };
-Slider.prototype.drawBoundary = function () {
-  var old_cs = this.current_seq,
-      cs = this.current_seq = 1,
-      cs_string = this.sequence_order[cs];
-
-  /* ... when the scrubber\'s all the way right ... */
-  if (this.timeline.current_frame == 0 && this.timeline.playthrough_count > 0) {
-    this[cs_string].xdistance = this[cs_string].xlimit; 
-    this[cs_string].ydistance = this[cs_string].ylimit; 
-    this.boundary();
-    console.log(cs_string);
-    this[cs_string].xdistance = 0;
-    this[cs_string].ydistance = 0; 
-  }
-  /* ... when the scrubber\'s somewhere in between ... */
-  else if (this.timeline.current_frame > 0 && this.timeline.current_frame < this.timeline.frame_total) {
-    this[cs_string].xdistance -= this[cs_string].xinc; 
-    this[cs_string].ydistance -= this[cs_string].yinc; 
-    console.log(cs_string);
-    this.boundary();
-    this[cs_string].xdistance += this[cs_string].xinc;
-    this[cs_string].ydistance += this[cs_string].yinc;
-  }
-  else { // ... when the scrubber\'s all the way left ...
-    this.boundary();
-  }
-  this.current_seq = old_cs;
-};
-Slider.prototype.userEvents = ["mouseover", "mouseout"];
-
+Slider.prototype.init = function () {
+  this.drawBoundary = this.makeDrawBoundary(this.me);
+}
+Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
+Slider.prototype.mousedownHandler = function () {
+  this.selected = true;
+}
+Slider.prototype.mouseupHandler = function () {
+  console.log(this.me.name + " moved in.");
+}
+Slider.prototype.mousemoveHandler = function () {
+  this.selected = false;
+}
 
 
 /* CONSTRUCTOR ... a collection that manages state for all Characters in the animation ... */
@@ -400,16 +391,6 @@ function Timeline (anim, copy) {
   this.current_bp = 0; // by default, the first breakpoint
   this.playthrough_count = 0;
   this.listeners = [];
-  /*
-  this.userEvents = {
-    click : [],
-    mousedown : [],
-    mousemove : [],
-    mouseover : [],
-    mouseup : [],
-    mouseout : []
-  };
-  */
   this.me = this; // ... this self-reference helps us define the scope in our 'dispatch' calls below ...
   this.constructor = Timeline;
 };
@@ -426,6 +407,9 @@ Timeline.prototype = {
       arguments[i].reset();
       arguments[i].queue_index = (this.queue.length) ? this.queue.length : 0;
       this.queue.push(arguments[i]);
+      if (arguments[i].constructor == Slider) {
+        arguments[i].init();
+      }
     }
     this.init();
   },
@@ -439,10 +423,14 @@ Timeline.prototype = {
       obj.mousex = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
       obj.mousey = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
       for (i = 0; i < len; i += 1) {
-        obj.queue[i].drawBoundary();
-        if (context.isPointInPath(obj.mousex, obj.mousey)) {
-          if (obj.queue[i][handler_string]) {
-            obj.queue[i][handler_string]();
+        if (obj.queue[i].drawBoundary) {
+          if (typeof obj.queue[i].drawBoundary == "function") {
+            obj.queue[i].drawBoundary();
+            if (context.isPointInPath(obj.mousex, obj.mousey)) {
+              if (obj.queue[i][handler_string]) {
+                obj.queue[i][handler_string]();
+              }
+            }
           }
         }
       }
@@ -463,14 +451,6 @@ Timeline.prototype = {
     this.setFrameTotal();
     this.setFinalBreakpoint();
     this.declareFrames();
-    /*
-    this.dispatchClick = this.makeDispatchers(this.me, "click");
-    this.dispatchMousedown = this.makeDispatchers(this.me, "mousedown");
-    this.dispatchMousemove = this.makeDispatchers(this.me, "mousemove");
-    this.dispatchMouseup = this.makeDispatchers(this.me, "mouseup");
-    this.dispatchMouseover = this.makeDispatchers(this.me, "mouseover");
-    this.dispatchMouseout = this.makeDispatchers(this.me, "mouseout");
-    */
     for (i = 0; i < len; i += 1) {
       if (this.queue[i].userEvents) {
         len2 = this.queue[i].userEvents.length;
@@ -479,13 +459,17 @@ Timeline.prototype = {
           dispatch_method_string = "dispatch" + event_string.charAt(0).toUpperCase() + event_string.slice(1);
           this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
           len3 = this.listeners.length;
-          for (k = 0; k < len3; k += 1) {
-            if (dispatch_method_string == this.listeners[k]) {
-              match == true;
+          if (len3 > 0) {
+            for (k = 0; k < len3; k += 1) {
+              if (this.listeners[k] == dispatch_method_string) {
+                match = true;
+                break;
+              }
             }
           }
           if (!match) {
             the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
+            this.listeners.push(dispatch_method_string);
           }
         }
         match = false;
@@ -639,52 +623,8 @@ Timeline.prototype = {
       this.animator.advanceAll();
       this.animator.drawFrame();
     }
-  },
-  /*
-  dispatchClick : function (evt, obj) {
-    var i,
-        len = this.userEvents.click.length;
-
-    this.getCoords(evt);
-    for (i = 0; i < len; i += 1) {
-      this.userEvents.click[i].drawBoundary.call(this.userEvents.click[i]);
-      if (context.isPointInPath(this.mousex, this.mousey)) {
-        this.play();
-        return "play";
-      }
-    }
-  },
-  */
-  dispatchHover : function (evt, obj) {
-    this.getCoords(evt);    
-    playButtonBoundary(context);
-  },
-
-  dispatchMousedown : function (evt, obj) {
-    var i,
-        len = this.userEvents.mousedown.length;
-
-    this.getCoords(evt);    
-    for (i = 0; i < len; i += 1) {
-      this.userEvents.mousedown[i].drawBoundary.call(this.userEvents.mousedown[i]);
-      if (context.isPointInPath(this.mousex, this.mousey)) {
-        console.log("Come Wit Me.");
-        this.userEvent.mousedown[i].selected = true
-      }
-    }
-  },
-    
-  dispatchMouseup : function (evt, obj) {
-    var temp_xdistance = (obj.xdistance - obj.xinc),
-        temp_ydistance = (obj.ydistance - obj.yinc);
-    
-    this.getCoords(evt);    
-    obj.drawBoundary();
-    if (context.isPointInPath(this.mousex, this.mousey)) {
-      console.log("Blue Girl.");
-    }
   }
-
+  
 };
 
 
@@ -830,6 +770,6 @@ Copy.prototype = {
     this.current_copy = 0;
     this.container.innerHTML = "";
     this.container.innerHTML = this.blocks[0];
-  },
+  }
 
 };
