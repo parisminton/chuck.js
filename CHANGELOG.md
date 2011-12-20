@@ -4,6 +4,14 @@ chuck.js
 Changelog
 ---------
 
+**12/19/11**
+
+1. `Character`s now have a `userEvents` property -- an array of events they need to listen for -- and an event handler method named accordingly. So a `Character` that responds to a mouse click needs to define a method named `clickHandler`.
+
+2. `Timeline.init()` now automatically adds event listeners for `Characters` that need them. 
+
+
+
 **12/18/11**
 
 1. First set of changes in this new repo, the library's new home. A `Copy` object collects all the behavior and details for any text that needs to respond to events.

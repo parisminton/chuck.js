@@ -269,6 +269,7 @@ Button.prototype = new Character();
 Button.prototype.drawBoundary = function () {
   this.boundary();
 };
+Button.prototype.userEvents = ["click", "mouseover", "mouseout"];
 
 
 
@@ -383,6 +384,7 @@ Slider.prototype.drawBoundary = function () {
   }
   this.current_seq = old_cs;
 };
+Slider.prototype.userEvents = ["mouseover", "mouseout"];
 
 
 
@@ -397,6 +399,8 @@ function Timeline (anim, copy) {
   this.breakpoints = [46, 49, 81];
   this.current_bp = 0; // by default, the first breakpoint
   this.playthrough_count = 0;
+  this.listeners = [];
+  /*
   this.userEvents = {
     click : [],
     mousedown : [],
@@ -405,6 +409,7 @@ function Timeline (anim, copy) {
     mouseup : [],
     mouseout : []
   };
+  */
   this.me = this; // ... this self-reference helps us define the scope in our 'dispatch' calls below ...
   this.constructor = Timeline;
 };
@@ -428,15 +433,17 @@ Timeline.prototype = {
   makeDispatchers : function (obj, event_string) {
     return function (evt) {
       var i,
-          len = obj.userEvents[event_string].length;
+          len = obj.queue.length,
+          handler_string = event_string + "Handler";
           
       obj.mousex = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
       obj.mousey = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
       for (i = 0; i < len; i += 1) {
-        obj.userEvents[event_string][i].drawBoundary();
+        obj.queue[i].drawBoundary();
         if (context.isPointInPath(obj.mousex, obj.mousey)) {
-          obj.play();
-          return "play";
+          if (obj.queue[i][handler_string]) {
+            obj.queue[i][handler_string]();
+          }
         }
       }
     }
@@ -444,25 +451,44 @@ Timeline.prototype = {
 
   init : function () {
     var i, 
-        len = this.queue.length;
+        j,
+        k,
+        len = this.queue.length,
+        len2,
+        len3,
+        event_string,
+        dispatch_method_string,
+        match = false;
 
     this.setFrameTotal();
     this.setFinalBreakpoint();
     this.declareFrames();
+    /*
     this.dispatchClick = this.makeDispatchers(this.me, "click");
+    this.dispatchMousedown = this.makeDispatchers(this.me, "mousedown");
+    this.dispatchMousemove = this.makeDispatchers(this.me, "mousemove");
+    this.dispatchMouseup = this.makeDispatchers(this.me, "mouseup");
+    this.dispatchMouseover = this.makeDispatchers(this.me, "mouseover");
+    this.dispatchMouseout = this.makeDispatchers(this.me, "mouseout");
+    */
     for (i = 0; i < len; i += 1) {
-      if (this.queue[i].constructor == Slider) {
-        this.queue[i].setScrubberLimits();
-        this.userEvents.mousedown.push(this.queue[i]);
-        // the_canvas.addEventListener("mousedown", this.dispatchMousedown, false);
-        this.userEvents.mousemove.push(this.queue[i]);
-        // the_canvas.addEventListener("mousemove", this.dispatchMousemove, false);
-        this.userEvents.mouseup.push(this.queue[i]);
-        // the_canvas.addEventListener("mouseup", this.dispatchMouse, false);
-      }
-      if (this.queue[i].constructor == Button) {
-        this.userEvents.click.push(this.queue[i]);
-        the_canvas.addEventListener("click", this.dispatchClick, false);
+      if (this.queue[i].userEvents) {
+        len2 = this.queue[i].userEvents.length;
+        for (j = 0; j < len2; j += 1) {
+          event_string = this.queue[i].userEvents[j];
+          dispatch_method_string = "dispatch" + event_string.charAt(0).toUpperCase() + event_string.slice(1);
+          this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
+          len3 = this.listeners.length;
+          for (k = 0; k < len3; k += 1) {
+            if (dispatch_method_string == this.listeners[k]) {
+              match == true;
+            }
+          }
+          if (!match) {
+            the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
+          }
+        }
+        match = false;
       }
       this.storeInFrames(this.queue[i]);
     }
