@@ -6,13 +6,17 @@ Changelog
 
 **12/21/11**
 
-1. Added `xorigin` and `yorigin` members to each sequence in the `Character` prototype. These are added to a `Character`'s original coordinates on every draw to offset where it's drawn on the Canvas. They also free `xdistance` and `ydistance` to be cumulative, and to be reset to zero without affecting the `Character`'s current position.
+1. Added `xorigin` and `yorigin` members to each sequence in the `Character` prototype. These are added to a `Character`'s original coordinates on every draw to offset its position on the Canvas. They also free `xdistance` and `ydistance` to be cumulative, and to be reset to zero without affecting the `Character`'s current position.
 
 2. Updated `Character.advance()` to add `xorigin` and `yorigin` to `xpos` and `ypos`.
 
 3. Removed unnecessary JavaScript calls from *times_polevault.html*.
 
 4. Added `setOrigins()`, `setOriginX()` and `setOriginY()` methods to `Character`.
+
+5. Created `EventDispatcher`, a constructor for an object that manages events. An `EventDispatcher` instance is now expected as the second argument to the `Timeline` constructor.
+
+6. Moved `makeDispatchers()` from `Timeline` to `EventDispatcher` and call it on `EventDispatcher.init()`.
 
 
 

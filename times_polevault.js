@@ -32,9 +32,9 @@ function stage () {
   
   ];
 
-
+  e = new EventDispatcher();
   a = new Animator(75, c);
-  t = new Timeline(a);
+  t = new Timeline(a, e);
 
   play = new Button("play", false);
   play.show();
@@ -1030,6 +1030,7 @@ function stage () {
     }
   };
 
+
   back = new Character("back", false);
   back.show();
   back.main.cels = [
@@ -1068,6 +1069,7 @@ function stage () {
       }
     }
   ];
+
 
   forward = new Character("forward", false);
   forward.show();
@@ -1108,6 +1110,7 @@ function stage () {
     }
   ];
 
+
   track = new Character("track", false);
   track.show();
   track.main.cels = [
@@ -1122,6 +1125,7 @@ function stage () {
       }
     }
   ];
+
 
   pit = new Character("pit", false);
   pit.show()
@@ -1162,7 +1166,7 @@ function stage () {
         pit.lineTo(435.0, 338.9);
         pit.lineTo(435.0, 39.1);
         pit.closePath();
-        gradient =   pit.createLinearGradient(434.7, 189.0, 438.5, 189.0);
+        gradient = pit.createLinearGradient(434.7, 189.0, 438.5, 189.0);
         pit.addColorStop(gradient, 0.00, "rgb(198, 199, 201)");
         pit.addColorStop(gradient, 0.35, "rgb(255, 255, 255)");
         pit.addColorStop(gradient, 1.00, "rgb(146, 148, 151)");
@@ -1177,7 +1181,7 @@ function stage () {
         pit.lineTo(431.5, 61.3);
         pit.lineTo(430.9, 58.2);
         pit.closePath();
-        gradient =   pit.createLinearGradient(459.3, 51.4, 460.0, 54.8);
+        gradient = pit.createLinearGradient(459.3, 51.4, 460.0, 54.8);
         pit.addColorStop(gradient, 0.00, "rgb(198, 199, 201)");
         pit.addColorStop(gradient, 0.35, "rgb(255, 255, 255)");
         pit.addColorStop(gradient, 1.00, "rgb(146, 148, 151)");
@@ -1287,7 +1291,7 @@ function stage () {
         pit.lineTo(435.0, 338.9);
         pit.lineTo(435.0, 39.1);
         pit.closePath();
-        gradient =   pit.createLinearGradient(434.7, 189.0, 438.5, 189.0);
+        gradient = pit.createLinearGradient(434.7, 189.0, 438.5, 189.0);
         pit.addColorStop(gradient, 0.00, "rgb(198, 199, 201)");
         pit.addColorStop(gradient, 0.35, "rgb(255, 255, 255)");
         pit.addColorStop(gradient, 1.00, "rgb(146, 148, 151)");
@@ -1302,7 +1306,7 @@ function stage () {
         pit.lineTo(431.5, 61.3);
         pit.lineTo(430.9, 58.2);
         pit.closePath();
-        gradient =   pit.createLinearGradient(459.3, 51.4, 460.0, 54.8);
+        gradient = pit.createLinearGradient(459.3, 51.4, 460.0, 54.8);
         pit.addColorStop(gradient, 0.00, "rgb(198, 199, 201)");
         pit.addColorStop(gradient, 0.35, "rgb(255, 255, 255)");
         pit.addColorStop(gradient, 1.00, "rgb(146, 148, 151)");
@@ -1375,6 +1379,7 @@ function stage () {
   ];
   pit.main.iterations = 91;
   pit.sequence_order = ["main", "land"];
+
 
   shadow = new Character("shadow", false);
   shadow.show();
@@ -2186,6 +2191,7 @@ function stage () {
   ];
   shadow.runup.iterations = 4;
   shadow.sequence_order = ["runup", "main"];
+
 
   vaulter = new Character("vaulter", false);
   vaulter.show();
@@ -12404,7 +12410,7 @@ function stage () {
   vaulter.runup.iterations = 4;
   vaulter.setSequenceOrder("runup", "main");
 
-  
+
   pitshadow = new Character("pitshadow", false);
   pitshadow.show();
   pitshadow.main.cels = [
@@ -12545,7 +12551,6 @@ function stage () {
   pitshadow.main.starting_frame = 54;
 
 
-
   pitforeground = new Character("pitforeground", false);
   pitforeground.show();
   pitforeground.main.cels = [
@@ -12563,7 +12568,7 @@ function stage () {
         pitforeground.lineTo(481.2, 357.4);
         pitforeground.lineTo(481.2, 27.9);
         pitforeground.closePath();
-        gradient =   pitforeground.createLinearGradient(480.9, 192.7, 484.7, 192.7);
+        gradient = pitforeground.createLinearGradient(480.9, 192.7, 484.7, 192.7);
         pitforeground.addColorStop(gradient, 0.00, "rgb(198, 199, 201)");
         pitforeground.addColorStop(gradient, 0.35, "rgb(255, 255, 255)");
         pitforeground.addColorStop(gradient, 1.00, "rgb(146, 148, 151)");
@@ -12613,7 +12618,7 @@ function stage () {
         pitforeground.lineTo(461.5, 54.5);
         pitforeground.lineTo(460.8, 51.3);
         pitforeground.closePath();
-        gradient =   pitforeground.createLinearGradient(474.3, 48.1, 475.0, 51.3);
+        gradient = pitforeground.createLinearGradient(474.3, 48.1, 475.0, 51.3);
         pitforeground.addColorStop(gradient, 0.00, "rgb(198, 199, 201)");
         pitforeground.addColorStop(gradient, 0.35, "rgb(255, 255, 255)");
         pitforeground.addColorStop(gradient, 1.00, "rgb(146, 148, 151)");
@@ -12623,6 +12628,11 @@ function stage () {
       }
     }
   ];
+  
+  /*
+  vaulter.setOrigins(-550, 50);
+  vaulter.runup.xinc = 25;
+  */
 
   t.load(play, step, slider, back, forward, track, pit, shadow, pitshadow, vaulter, pitforeground);
   

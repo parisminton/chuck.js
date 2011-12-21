@@ -437,10 +437,83 @@ Slider.prototype.mousemoveHandler = function () {
 }
 
 
+
 /* CONSTRUCTOR ... a collection that manages state for all Characters in the animation ... */
-function Timeline (anim, copy) {
+function EventDispatcher () {
+  this.listeners = [];
+  this.me = this;
+  this.constructor = EventDispatcher;
+};
+EventDispatcher.prototype = {
+
+  makeDispatchers : function (obj, event_string) {
+    return function (evt) {
+      var i,
+          len = obj.timeline.queue.length,
+          handler_string = event_string + "Handler";
+          
+      obj.mousex = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
+      obj.mousey = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
+      for (i = 0; i < len; i += 1) {
+        if (obj.timeline.queue[i].drawBoundary) {
+          if (typeof obj.timeline.queue[i].drawBoundary == "function") {
+            obj.timeline.queue[i].drawBoundary();
+            if (context.isPointInPath(obj.mousex, obj.mousey)) {
+              if (obj.timeline.queue[i][handler_string]) {
+                obj.timeline.queue[i][handler_string]();
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+
+  init : function () {
+    var i, 
+        j,
+        k,
+        len = this.timeline.queue.length,
+        len2,
+        len3,
+        event_string,
+        dispatch_method_string,
+        match = false;
+
+    for (i = 0; i < len; i += 1) {
+      if (this.timeline.queue[i].userEvents) {
+        len2 = this.timeline.queue[i].userEvents.length;
+        for (j = 0; j < len2; j += 1) {
+          event_string = this.timeline.queue[i].userEvents[j];
+          dispatch_method_string = "dispatch" + event_string.charAt(0).toUpperCase() + event_string.slice(1);
+          this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
+          len3 = this.listeners.length;
+          if (len3 > 0) {
+            for (k = 0; k < len3; k += 1) {
+              if (this.listeners[k] == dispatch_method_string) {
+                match = true;
+                break;
+              }
+            }
+          }
+          if (!match) {
+            the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
+            this.listeners.push(dispatch_method_string);
+          }
+        }
+        match = false;
+      }
+    }
+  }
+
+};
+
+
+
+/* CONSTRUCTOR ... a collection that manages state for all Characters in the animation ... */
+function Timeline (anim, events) {
   this.animator = anim;
-  this.copy = (copy) ? copy : null;
+  this.event_dispatcher = events;
   this.queue = [];
   this.frame_total = 0;
   this.frames = [];
@@ -448,7 +521,6 @@ function Timeline (anim, copy) {
   this.breakpoints = [46, 49, 81];
   this.current_bp = 0; // by default, the first breakpoint
   this.playthrough_count = 0;
-  this.listeners = [];
   this.me = this; // ... this self-reference helps us define the scope in our 'dispatch' calls below ...
   this.constructor = Timeline;
 };
@@ -472,70 +544,20 @@ Timeline.prototype = {
     this.init();
   },
 
-  makeDispatchers : function (obj, event_string) {
-    return function (evt) {
-      var i,
-          len = obj.queue.length,
-          handler_string = event_string + "Handler";
-          
-      obj.mousex = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
-      obj.mousey = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
-      for (i = 0; i < len; i += 1) {
-        if (obj.queue[i].drawBoundary) {
-          if (typeof obj.queue[i].drawBoundary == "function") {
-            obj.queue[i].drawBoundary();
-            if (context.isPointInPath(obj.mousex, obj.mousey)) {
-              if (obj.queue[i][handler_string]) {
-                obj.queue[i][handler_string]();
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-
   init : function () {
     var i, 
-        j,
-        k,
-        len = this.queue.length,
-        len2,
-        len3,
-        event_string,
-        dispatch_method_string,
-        match = false;
+        len = this.queue.length;
 
     this.setFrameTotal();
     this.setFinalBreakpoint();
     this.declareFrames();
     for (i = 0; i < len; i += 1) {
-      if (this.queue[i].userEvents) {
-        len2 = this.queue[i].userEvents.length;
-        for (j = 0; j < len2; j += 1) {
-          event_string = this.queue[i].userEvents[j];
-          dispatch_method_string = "dispatch" + event_string.charAt(0).toUpperCase() + event_string.slice(1);
-          this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
-          len3 = this.listeners.length;
-          if (len3 > 0) {
-            for (k = 0; k < len3; k += 1) {
-              if (this.listeners[k] == dispatch_method_string) {
-                match = true;
-                break;
-              }
-            }
-          }
-          if (!match) {
-            the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
-            this.listeners.push(dispatch_method_string);
-          }
-        }
-        match = false;
-      }
       this.storeInFrames(this.queue[i]);
     }
     this.animator.timeline = this;
     this.animator.init();
+    this.event_dispatcher.timeline = this;
+    this.event_dispatcher.init();
   },
 
   setFrameTotal : function () {

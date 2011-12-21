@@ -7,10 +7,10 @@ It's inspired partly by a desire to help the advances in visualization tools at 
 
 + [processing.js][2] by John Resig, based on the original language by Ben Fry and Casey Reas | [source][3] 
 + [EaselJS][4] by Grant Skinner | [source][5]
-+ [Tween.js][6] by sole and Mr. Doob | [source][7]
-+ [Gury][8] by Ryan Sandor Richards | [source][9]
++ [tween.js][6] by sole and Mr. Doob | [source][7]
++ [gury][8] by Ryan Sandor Richards | [source][9]
 
-chuck is my contribution for the interaction developer who frequently has to present information sequentially alongside blocks of text that need to move in sync with the action. They've probably already got vectors, but they need them to move. It's a project that bridges two things I love to do: draw and code.
+chuck is my contribution for the interaction developer who frequently has to present information sequentially alongside blocks of text that need to change in sync with the action. They've probably already got vectors, but they need them to move. It's a project that bridges two things I love to do: draw and code.
 
 This is just a library, so it doesn't save you the hard work of making the art on the front end. Once you've exported your artwork as .html files using the plug-in, the included shell script converts the files into chuck object instances. Those instances are powered by code that handles the mechanics of animating them and putting them in sequence on a timeline. 
 
