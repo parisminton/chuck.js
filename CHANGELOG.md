@@ -6,11 +6,15 @@ Changelog
 
 **12/20/11**
 
-1. Updated `Timeline.init()` to remember which dispatch handlers are listening for events.
+1. Added MIT license language.
 
-2. Gave the `Slider` object a `selected` property that turns true on mousedown and false on mouseup.
+2. A `Character`'s `xdistance` carries over from one sequence to another. This allows a `Character` to move evenly across the screen while cycling through all its sequences.
 
-3. Added `Timeline.injectBreakpoint()` and `Timeline.extractBreakpoint()` to pause and resume the animation. Made these mousedown and mouseup event handlers for `Slider`.
+3. Updated `Timeline.init()` to remember which dispatch handlers are listening for events.
+
+4. Gave the `Slider` object a `selected` property that turns true on mousedown and false on mouseup.
+
+5. Added `Timeline.injectBreakpoint()` and `Timeline.extractBreakpoint()` to pause and resume the animation. Made these mousedown and mouseup event handlers for `Slider`.
 
 
 
