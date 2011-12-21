@@ -30,6 +30,8 @@ function Character (obj_name, touchable) {
   this.current_seq = 0; 
   this.sequence_order = ["main"];
   this.main = {
+    xorigin : 0,
+    yorigin : 0,
     xdistance : 0,
     ydistance : 0,
     xinc : 0,
@@ -70,6 +72,8 @@ Character.prototype = {
 
   makeSequence : function (seq_name) {
     this[seq_name] = {
+      xorigin : 0,
+      yorigin : 0,
       xdistance : 0,
       ydistance : 0,
       xinc : 0,
@@ -145,14 +149,22 @@ Character.prototype = {
   },
 
   moveTo : function (xpos, ypos) {
-    xpos = (xpos + this[this.sequence_order[this.current_seq]].xdistance);
-    ypos = (ypos + this[this.sequence_order[this.current_seq]].ydistance);
+    xpos = (xpos + this[this.sequence_order[this.current_seq]].xorigin 
+                 + this[this.sequence_order[this.current_seq]].xdistance);
+
+    ypos = (ypos + this[this.sequence_order[this.current_seq]].yorigin 
+                 + this[this.sequence_order[this.current_seq]].ydistance);
+
     context.moveTo(xpos, ypos);
   },
 
   lineTo : function (xpos, ypos) {
-    xpos = (xpos + this[this.sequence_order[this.current_seq]].xdistance);
-    ypos = (ypos + this[this.sequence_order[this.current_seq]].ydistance);
+    xpos = (xpos + this[this.sequence_order[this.current_seq]].xorigin 
+                 + this[this.sequence_order[this.current_seq]].xdistance);
+
+    ypos = (ypos + this[this.sequence_order[this.current_seq]].yorigin
+                 + this[this.sequence_order[this.current_seq]].ydistance);
+
     context.lineTo(xpos, ypos);
   },
 
@@ -169,24 +181,44 @@ Character.prototype = {
   },
 
   bezierCurveTo : function (xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos) {
-    xctrl_1 = (xctrl_1 + this[this.sequence_order[this.current_seq]].xdistance);
-    yctrl_1 = (yctrl_1 + this[this.sequence_order[this.current_seq]].ydistance);
-    xctrl_2 = (xctrl_2 + this[this.sequence_order[this.current_seq]].xdistance);
-    yctrl_2 = (yctrl_2 + this[this.sequence_order[this.current_seq]].ydistance);
-    xpos = (xpos + this[this.sequence_order[this.current_seq]].xdistance);
-    ypos = (ypos + this[this.sequence_order[this.current_seq]].ydistance);
+    xctrl_1 = (xctrl_1 + this[this.sequence_order[this.current_seq]].xorigin
+                       + this[this.sequence_order[this.current_seq]].xdistance);
+
+    yctrl_1 = (yctrl_1 + this[this.sequence_order[this.current_seq]].yorigin
+                       + this[this.sequence_order[this.current_seq]].ydistance);
+                       
+    xctrl_2 = (xctrl_2 + this[this.sequence_order[this.current_seq]].xorigin
+                       + this[this.sequence_order[this.current_seq]].xdistance);
+
+    yctrl_2 = (yctrl_2 + this[this.sequence_order[this.current_seq]].yorigin
+                       + this[this.sequence_order[this.current_seq]].ydistance);
+
+    xpos = (xpos + this[this.sequence_order[this.current_seq]].xorigin
+                 + this[this.sequence_order[this.current_seq]].xdistance);
+
+    ypos = (ypos + this[this.sequence_order[this.current_seq]].yorigin
+                 + this[this.sequence_order[this.current_seq]].ydistance);
+                 
     context.bezierCurveTo(xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos);
   },
 
   strokeRect : function (xpos, ypos, width, height) {
-    xpos = (xpos + this[this.sequence_order[this.current_seq]].xdistance);
-    ypos = (ypos + this[this.sequence_order[this.current_seq]].ydistance);
+    xpos = (xpos + this[this.sequence_order[this.current_seq]].xorigin
+                 + this[this.sequence_order[this.current_seq]].xdistance);
+                 
+    ypos = (ypos + this[this.sequence_order[this.current_seq]].yorigin
+                 + this[this.sequence_order[this.current_seq]].ydistance);
+                 
     context.strokeRect(xpos, ypos, width, height);
   },
 
   fillRect : function (xpos, ypos, width, height) {
-    xpos = (xpos + this[this.sequence_order[this.current_seq]].xdistance);
-    ypos = (ypos + this[this.sequence_order[this.current_seq]].ydistance);
+    xpos = (xpos + this[this.sequence_order[this.current_seq]].xorigin
+                 + this[this.sequence_order[this.current_seq]].xdistance);
+                 
+    ypos = (ypos + this[this.sequence_order[this.current_seq]].yorigin
+                 + this[this.sequence_order[this.current_seq]].ydistance);
+                 
     context.fillRect(xpos, ypos, width, height);
   },
 
@@ -224,7 +256,7 @@ Character.prototype = {
 
   restore : function () {
     context.restore();
-  },
+  }
 
 };
 
@@ -237,6 +269,8 @@ function Button (obj_name) {
   this.current_seq = 0;
   this.sequence_order = ["off"];
   this.off = {
+    xorigin : 0,
+    yorigin : 0,
     xdistance : 0,
     ydistance : 0,
     xinc : 0,
@@ -273,6 +307,8 @@ function Slider (obj_name) {
   this.current_seq = 0; 
   this.sequence_order = ["track", "scrubber"];
   this.track = {
+    xorigin : 0,
+    yorigin : 0,
     xdistance : 0,
     ydistance : 0,
     xinc : 0,
@@ -285,6 +321,8 @@ function Slider (obj_name) {
   };
   this.scrubber = {
     selected : false,
+    xorigin : 0,
+    yorigin : 0,
     xdistance : 0,
     ydistance : 0,
     xinc : 0,
@@ -747,7 +785,7 @@ Animator.prototype = {
 
   resetAllCels : function () {
     this.getAllCels("reset");
-  },
+  }
 
 };
 

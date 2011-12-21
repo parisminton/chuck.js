@@ -4,9 +4,17 @@ chuck.js
 Changelog
 ---------
 
+**12/21/11**
+
+1. Added `xorigin` and `yorigin` members to each sequence in the `Character` prototype. These are added to a `Character`'s original coordinates on every draw to offset where it's drawn on the Canvas. They also free `xdistance` and `ydistance` to be cumulative, and to be reset to zero without affecting the `Character`'s current position.
+
+2. Updated `Character.advance()` to add `xorigin` and `yorigin` to `xpos` and `ypos`.
+
+
+
 **12/20/11**
 
-1. Got rid of the `cache` property and `store`, `emptyCache()` and `emptyAllCaches` methods for `Character`. They're not being used, and we can calculate positions on the Canvas with `x`- and `ydistance`.
+1. Got rid of the `cache` property and `store()`, `emptyCache()` and `emptyAllCaches()` methods for `Character`. They're not being used, and we can calculate positions on the Canvas with `x`- and `ydistance`.
 
 2. Added MIT license language.
 
