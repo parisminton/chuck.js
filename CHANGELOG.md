@@ -10,6 +10,8 @@ Changelog
 
 2. Updated `Character.advance()` to add `xorigin` and `yorigin` to `xpos` and `ypos`.
 
+3. Removed unnecessary JavaScript calls from *times_polevault.html*.
+
 
 
 **12/20/11**
