@@ -6,15 +6,17 @@ Changelog
 
 **12/20/11**
 
-1. Added MIT license language.
+1. Got rid of the `cache` property and `store`, `emptyCache()` and `emptyAllCaches` methods for `Character`. They're not being used, and we can calculate positions on the Canvas with `x`- and `ydistance`.
 
-2. A `Character`'s `xdistance` carries over from one sequence to another. This allows a `Character` to move evenly across the screen while cycling through all its sequences.
+2. Added MIT license language.
 
-3. Updated `Timeline.init()` to remember which dispatch handlers are listening for events.
+3. A `Character`'s `xdistance` carries over from one sequence to another. This allows a `Character` to move evenly across the screen while cycling through all its sequences.
 
-4. Gave the `Slider` object a `selected` property that turns true on mousedown and false on mouseup.
+4. Updated `Timeline.init()` to remember which dispatch handlers are listening for events.
 
-5. Added `Timeline.injectBreakpoint()` and `Timeline.extractBreakpoint()` to pause and resume the animation. Made these mousedown and mouseup event handlers for `Slider`.
+5. Gave the `Slider` object a `selected` property that turns true on mousedown and false on mouseup.
+
+6. Added `Timeline.injectBreakpoint()` and `Timeline.extractBreakpoint()` to pause and resume the animation. Made these mousedown and mouseup event handlers for `Slider`.
 
 
 

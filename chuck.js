@@ -35,7 +35,6 @@ function Character (obj_name, touchable) {
     xinc : 0,
     yinc : 0,
     starting_frame : 0,
-    cache : [],
     iterations : 1,
     current_iteration : 0,
     current_cel : 0,
@@ -76,7 +75,6 @@ Character.prototype = {
       xinc : 0,
       yinc : 0,
       starting_frame : 0,
-      cache : [],
       iterations : 1,
       current_iteration : 0,
       current_cel : 0,
@@ -141,53 +139,36 @@ Character.prototype = {
     }
   },
 
-  store : function (member) {
-    this[this.sequence_order[this.current_seq]].cache.push(member);
-  },
-
-  emptyCache : function () {
-    if (this[this.sequence_order[this.current_seq]] && this[this.sequence_order[this.current_seq]].cache) {
-      this[this.sequence_order[this.current_seq]].cache.length = 0;
-    }
-  },
-
   /* ... drawing instructions that update their coordinates before processing ... */
   beginPath : function () {
-    this.store("beginPath");
     context.beginPath();
   },
 
   moveTo : function (xpos, ypos) {
-    this.store( {moveTo : [xpos, ypos]} );
     xpos = (xpos + this[this.sequence_order[this.current_seq]].xdistance);
     ypos = (ypos + this[this.sequence_order[this.current_seq]].ydistance);
     context.moveTo(xpos, ypos);
   },
 
   lineTo : function (xpos, ypos) {
-    this.store( {lineTo : [xpos, ypos]} );
     xpos = (xpos + this[this.sequence_order[this.current_seq]].xdistance);
     ypos = (ypos + this[this.sequence_order[this.current_seq]].ydistance);
     context.lineTo(xpos, ypos);
   },
 
   lineWidth : function (line_width) {
-    this.store( {lineWidth : line_width} );
     context.lineWidth = line_width;
   },
 
   lineJoin : function (line_join) {
-    this.store( {lineJoin : line_join} );
     context.lineJoin = line_join;
   },
 
   miterLimit : function (miter_limit) {
-    this.store( {miterLimit : miter_limit} );
     context.miterLimit = miter_limit;
   },
 
   bezierCurveTo : function (xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos) {
-    this.store( {bezierCurveTo : [xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos]} );
     xctrl_1 = (xctrl_1 + this[this.sequence_order[this.current_seq]].xdistance);
     yctrl_1 = (yctrl_1 + this[this.sequence_order[this.current_seq]].ydistance);
     xctrl_2 = (xctrl_2 + this[this.sequence_order[this.current_seq]].xdistance);
@@ -198,73 +179,53 @@ Character.prototype = {
   },
 
   strokeRect : function (xpos, ypos, width, height) {
-    this.store( {strokeRect : [xpos, ypos, width, height]} );
     xpos = (xpos + this[this.sequence_order[this.current_seq]].xdistance);
     ypos = (ypos + this[this.sequence_order[this.current_seq]].ydistance);
     context.strokeRect(xpos, ypos, width, height);
   },
 
   fillRect : function (xpos, ypos, width, height) {
-    this.store( {fillRect : [xpos, ypos, width, height]} );
     xpos = (xpos + this[this.sequence_order[this.current_seq]].xdistance);
     ypos = (ypos + this[this.sequence_order[this.current_seq]].ydistance);
     context.fillRect(xpos, ypos, width, height);
   },
 
   closePath : function () {
-    this.store("closePath");
     context.closePath();
   },
 
   createLinearGradient : function (xstart, ystart, xend, yend) {
-    this.store( {gradient : context.createLinearGradient(xstart, ystart, xend, yend) } );
     return context.createLinearGradient(xstart, ystart, xend, yend);
   },
 
   addColorStop : function (gradient, offset, color_string) {
-    this.store( {addColorStop : [offset, color_string]} );
     gradient.addColorStop(offset, color_string);
   },
 
   fill : function () {
-    this.store("fill");
     context.fill();
   },
 
   fillStyle : function (style_string) {
-    this.store( {fillStyle : style_string} );
     context.fillStyle = style_string;
   },
 
   stroke : function () {
-    this.store("stroke");
     context.stroke();
   },
 
   strokeStyle : function (style_string) {
-    this.store( {strokeStyle : style_string} );
     context.strokeStyle = style_string;
   },
 
   save : function () {
-    this.store("save");
     context.save();
   },
 
   restore : function () {
-    this.store("restore");
     context.restore();
   },
 
-  getMousedown : function (evt) {
-    var x = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
-        y = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
-    
-    this.boundary();
-    if (context.isPointInPath(x, y)) {
-      alert("Come Wit Me.");
-    }
-  }
 };
 
 
@@ -281,7 +242,6 @@ function Button (obj_name) {
     xinc : 0,
     yinc : 0,
     starting_frame : 0,
-    cache : [],
     iterations : 1,
     current_iteration : 0,
     current_cel : 0,
@@ -318,7 +278,6 @@ function Slider (obj_name) {
     xinc : 0,
     yinc : 0,
     starting_frame : 0,
-    cache : [],
     iterations : 1,
     current_iteration : 0,
     current_cel : 0,
@@ -333,7 +292,6 @@ function Slider (obj_name) {
     xlimit : 0, 
     ylimit : 0, 
     starting_frame : 0,
-    cache : [],
     iterations : 1,
     current_iteration : 0,
     current_cel : 0,
@@ -769,7 +727,6 @@ Animator.prototype = {
   drawFrame : function () {
     var i, len;
     context.clearRect(0, 0, 800, 476);
-    this.emptyAllCaches();
     len = this.timeline.queue.length;
     for (i = 0; i < len; i += 1) {
       this.renderCharacter(this.timeline.queue[i], context);
@@ -791,10 +748,6 @@ Animator.prototype = {
   resetAllCels : function () {
     this.getAllCels("reset");
   },
-
-  emptyAllCaches : function () {
-    this.getAllCels("emptyCache");
-  }
 
 };
 
