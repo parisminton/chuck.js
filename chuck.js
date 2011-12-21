@@ -112,6 +112,31 @@ Character.prototype = {
     }
   },
 
+  setOrigins : function (xvalue, yvalue) {
+    var i,
+        len = this.sequence_order.length;
+    for (i = 0; i < len; i += 1) {
+      this[this.sequence_order[i]].xorigin = xvalue;
+      this[this.sequence_order[i]].yorigin = yvalue;
+    }
+  },
+
+  setOriginX : function (xvalue) {
+    var i,
+        len = this.sequence_order.length;
+    for (i = 0; i < len; i += 1) {
+      this[this.sequence_order[i]].xorigin = xvalue;
+    }
+  },
+
+  setOriginY : function (yvalue) {
+    var i,
+        len = this.sequence_order.length;
+    for (i = 0; i < len; i += 1) {
+      this[this.sequence_order[i]].yorigin = yvalue;
+    }
+  },
+
   advance : function () {
     var cs = this.current_seq,
         order = this.sequence_order,

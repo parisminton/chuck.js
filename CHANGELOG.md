@@ -12,6 +12,8 @@ Changelog
 
 3. Removed unnecessary JavaScript calls from *times_polevault.html*.
 
+4. Added `setOrigins()`, `setOriginX()` and `setOriginY()` methods to `Character`.
+
 
 
 **12/20/11**
@@ -278,15 +280,13 @@ Changelog
 
 
 
-**11/8/11** - *Updates go back to May, but alas, the log starts here. The plan is to be way more atomic from now on.*
+**11/8/11** 
 
-The files *polevault.js*, *new\_polevault.js*, *polevault.html* and *pv\_cels.js* all include code for running canvas animations. This will become a subset of [bigwheel.js][3], but I'm testing it [here][4]. The project isn't complete, but these are all working. The highlights:
+1. Made the `CharACTers` constructor, for creating objects that keep their own distinct drawing rules. A CharACTer represents an autonomous object on the stage and might be thought of as a cel in traditional animation.
 
-1. The `CharACTers` constructor, for creating objects that keep their own distinct drawing rules. A CharACTer represents an autonomous object on the stage and might be thought of as a cel in traditional animation.
+2. Created `ftha` (function that handles advancement) which updates the drawing instructions for every CharACTer on every redraw. I'll come up with a better name.
 
-2. `ftha` (function that handles advancement) which updates the drawing instructions for every CharACTer on every redraw. I'll come up with a better name.
-
-3. `recordMoveTo`, `recordLineTo`, `recordStrokeRect`, and `recordFillRect`, which create paths and cache the results of the coordinates passed to them. This is designed to make it easier to do math on the coordinates between redraws. More of these recorder functions to come.
+3. The `CharACTer` methods `recordMoveTo`, `recordLineTo`, `recordStrokeRect`, and `recordFillRect` create paths and cache the results of the coordinates passed to them. This is designed to make it easier to do math on the coordinates between redraws. More of these recorder functions to come.
 
 
 
