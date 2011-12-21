@@ -324,10 +324,12 @@ Button.prototype.mouseoutHandler = function () {
 
 
 /* CONSTRUCTOR ... a control that lets the user slide through a range ... */
-function Slider (obj_name) {
+function Slider (obj_name, min_edge, max_edge, touchable) {
   this.name = obj_name;
+  this.min_edge = min_edge;
+  this.max_edge = max_edge;
+  this.touchable = (touchable) ? touchable : false;
   this.visible = true;
-  this.touchable = true;
   this.selected = false;
   this.current_seq = 0; 
   this.sequence_order = ["track", "scrubber"];
@@ -417,24 +419,17 @@ Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
 Slider.prototype.mousedownHandler = function () {
   this.selected = true;
   this.timeline.injectBreakpoint();
-}
+  this.original_mouse_x = this.event_dispatcher.mouse_x;
+};
+Slider.prototype.mousemoveHandler = function () {
+  if (this.selected) {
+    this.current_mouse_x = this.event_dispatcher.mouse_x;
+  }
+};
 Slider.prototype.mouseupHandler = function () {
   this.timeline.extractBreakpoint();
   this.selected = false;
-}
-Slider.prototype.mousemoveHandler = function () {
-  if (this.selected) {
-    var mousex = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
-        mousey = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
-    /*
-    this.scrubber.xinc = this.timeline.mousex;  
-    window.mokey = function () {
-      a.drawFrame(t.timeline.queue);
-    };
-    setTimeout(window.mokey, 75);
-    */
-  }
-}
+};
 
 
 
@@ -452,13 +447,13 @@ EventDispatcher.prototype = {
           len = obj.timeline.queue.length,
           handler_string = event_string + "Handler";
           
-      obj.mousex = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
-      obj.mousey = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
+      obj.mouse_x = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
+      obj.mouse_y = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
       for (i = 0; i < len; i += 1) {
         if (obj.timeline.queue[i].drawBoundary) {
           if (typeof obj.timeline.queue[i].drawBoundary == "function") {
             obj.timeline.queue[i].drawBoundary();
-            if (context.isPointInPath(obj.mousex, obj.mousey)) {
+            if (context.isPointInPath(obj.mouse_x, obj.mouse_y)) {
               if (obj.timeline.queue[i][handler_string]) {
                 obj.timeline.queue[i][handler_string]();
               }

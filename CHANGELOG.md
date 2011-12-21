@@ -20,6 +20,8 @@ Changelog
 
 7. `Timeline.load()` puts references to the `EventDispatcher` instance into every loaded `Character`.
 
+8. Added `min_edge` and `max_edge` properties to the `Slider` prototype. The constructor now expects them as the second and third arguments.
+
 
 
 **12/20/11**

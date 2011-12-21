@@ -867,7 +867,7 @@ function stage () {
 
   
 
-  slider = new Slider("slider", false);
+  slider = new Slider("slider", 274.6, 425.4, true);
   slider.show();
   slider.track.cels = [
     function () {
@@ -884,6 +884,8 @@ function stage () {
         slider.closePath();
         slider.fillStyle("rgb(239, 239, 239)");
         slider.fill();
+        slider.strokeStyle("rgb(255, 0, 0)");
+        slider.stroke();
 
         // slider/Path
         slider.beginPath();
