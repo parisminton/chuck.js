@@ -18,6 +18,8 @@ Changelog
 
 6. Moved `makeDispatchers()` from `Timeline` to `EventDispatcher` and call it on `EventDispatcher.init()`.
 
+7. `Timeline.load()` puts references to the `EventDispatcher` instance into every loaded `Character`.
+
 
 
 **12/20/11**

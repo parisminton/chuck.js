@@ -438,7 +438,7 @@ Slider.prototype.mousemoveHandler = function () {
 
 
 
-/* CONSTRUCTOR ... a collection that manages state for all Characters in the animation ... */
+/* CONSTRUCTOR ... event management ... */
 function EventDispatcher () {
   this.listeners = [];
   this.me = this;
@@ -533,6 +533,7 @@ Timeline.prototype = {
     for (i = 0; i < len; i += 1) {
       arguments[i].countSpan();
       arguments[i].animator = this.animator;
+      arguments[i].event_dispatcher = this.event_dispatcher;
       arguments[i].timeline = this;
       arguments[i].reset();
       arguments[i].queue_index = (this.queue.length) ? this.queue.length : 0;
