@@ -411,27 +411,41 @@ Slider.prototype.makeDrawBoundary = function (obj) {
     obj.current_seq = old_cs;
   }
 };
+Slider.prototype.selectScrubber = function () {
+  this.scrubber.selected = true;
+};
+Slider.prototype.releaseScrubber = function () {
+  this.scrubber.selected = false;
+};
 Slider.prototype.init = function () {
   this.drawBoundary = this.makeDrawBoundary(this.me);
-}
+};
 Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
+Slider.prototype.reset = function () {
+  /* ### round to nearest xinc ### */
+};
 Slider.prototype.mousedownHandler = function () {
   this.original_mouse_x = this.event_dispatcher.mouse_x;
-  this.timeline.injectBreakpoint();
-  this.event_dispatcher.scrubber_active = true;
+  this.timeline.stop();
+  this.selectScrubber();
 };
 Slider.prototype.mousemoveHandler = function () {
-  if (this.event_dispatcher.scrubber_active) {
-    this.current_mouse_x = this.event_dispatcher.mouse_x;
+  if (this.scrubber.selected) {
     this.scrubber.original_xinc = this.scrubber.xinc;
     this.scrubber.xinc = 0;
-    this.scrubber.xdistance = (this.event_dispatcher.mouse_x - this.min_edge);
-    this.animator.animate();
+    if (this.event_dispatcher.mouse_x > this.min_edge &&
+        this.event_dispatcher.mouse_x < this.max_edge) {
+      this.scrubber.xdistance = (this.event_dispatcher.mouse_x - this.min_edge);
+    }
+    this.animator.drawFrame(this.timeline.queue);
   }
 };
 Slider.prototype.mouseupHandler = function () {
-  this.timeline.extractBreakpoint();
-  this.selected = false;
+  if (this.scrubber.selected) {
+    this.releaseScrubber();
+    // this.scrubber.reset();
+    this.scrubber.xinc = this.scrubber.original_xinc;
+  }
 };
 
 
@@ -439,9 +453,6 @@ Slider.prototype.mouseupHandler = function () {
 /* CONSTRUCTOR ... event management ... */
 function EventDispatcher () {
   this.listeners = [];
-  this.scrubber_active = false;
-  this.scrubber_reset = false;
-  this.timeline_live = false;
   this.me = this;
   this.constructor = EventDispatcher;
 };
@@ -456,8 +467,14 @@ EventDispatcher.prototype = {
       obj.mouse_x = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
       obj.mouse_y = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
       for (i = 0; i < len; i += 1) {
-        if (obj.timeline.queue[i].drawBoundary) {
-          if (typeof obj.timeline.queue[i].drawBoundary == "function") {
+        if (obj.timeline.queue[i].drawBoundary && typeof obj.timeline.queue[i].drawBoundary == "function") {
+          /* ... if the user has selected the scrubber, we don't care whether they're in the boundary ... */
+          if (obj.timeline.queue[i].constructor == Slider && obj.timeline.queue[i].scrubber.selected) {
+            if (obj.timeline.queue[i][handler_string]) {
+              obj.timeline.queue[i][handler_string]();
+            }
+          }
+          else {
             obj.timeline.queue[i].drawBoundary();
             if (context.isPointInPath(obj.mouse_x, obj.mouse_y)) {
               if (obj.timeline.queue[i][handler_string]) {
@@ -521,6 +538,7 @@ function Timeline (anim, events) {
   this.current_frame = 0;
   this.breakpoints = [46, 49, 81];
   this.current_bp = 0; // by default, the first breakpoint
+  this.live = false;
   this.playthrough_count = 0;
   this.me = this; // ... this self-reference helps us define the scope in our 'dispatch' calls below ...
   this.constructor = Timeline;
@@ -677,8 +695,17 @@ Timeline.prototype = {
     }
   },
 
+  ready : function () {
+    this.live = true;
+  },
+
+  stop : function () {
+    this.live = false;
+  },
+
   play : function () {
-    if (!this.event_dispatcher.timeline_live) {
+    if (!this.live) {
+      this.ready();
       this.current_bp = (this.breakpoints.length - 1);  // ### a chance current_bp becomes a negative number ###
       this.current_frame = 0;
       this.animator.resetAllCels();
@@ -687,7 +714,8 @@ Timeline.prototype = {
   },
 
   stepThrough : function () {
-    if (!this.event_dispatcher.timeline_live) {
+    if (!this.live) {
+      this.ready();
       this.animator.animate();
       this.animator.copy.swapText();
       this.animator.copy.insertText();
@@ -695,36 +723,23 @@ Timeline.prototype = {
   },
 
   frameBack : function () {
-    if (!this.event_dispatcher.timeline_live) {
+    if (!this.live) {
+      this.ready();
       // retreatAll();
       this.animator.drawFrame();
+      this.stop();
     }
   },
 
   frameForward : function () {
-    if (!this.event_dispatcher.timeline_live) {
+    if (!this.live) {
+      this.ready();
       this.animator.advanceAll();
       this.animator.drawFrame();
-    }
-  },
-  
-  injectBreakpoint : function () {
-    this.injected_bp = this.current_bp;
-    this.breakpoints.splice(this.current_bp, 0, (this.current_frame + 1));
-    console.log("Yeah, babeee!");
-    console.log(this.breakpoints);
-  },
-
-  extractBreakpoint : function () {
-    if (this.injected_bp) {
-      this.breakpoints.splice(this.injected_bp, 1);
-      this.injected_bp = null;
-      console.log("Hm. Hm.");
-      // this.animate();
-      console.log(this.breakpoints);
+      this.stop();
     }
   }
-
+  
 };
 
 
@@ -745,25 +760,14 @@ Animator.prototype = {
     
     return function () {
 
-      /* ... scrubber advancement ... */
-      if (obj.event_dispatcher.scrubber_active && !obj.event_dispatcher.timeline_live) {
-        if (obj.event_dispatcher.scrubber_reset) {
-          obj.event_dispatcher.scrubber_active = false;
-          obj.event_dispatcher.scrubber_reset = false;
-          return "done";
-        }
-        obj.drawFrame(obj.timeline.queue);
-        setTimeout(obj.animate, obj.fps);
-      }
-
-      /* ... Character advancement ... */
-      else {
+      /* ... timeline advancement ... */
+      if (obj.timeline.live) {
         if (obj.timeline.current_frame >= obj.timeline.frame_total) {
           // console.log("First condition: animate() exited on frame " + obj.timeline.current_frame + ".");
           obj.advanceAll();
           obj.timeline.current_frame = 0;
           obj.timeline.current_bp = 0;
-          obj.event_dispatcher.timeline_live = false;
+          obj.timeline.stop();
           obj.timeline.playthrough_count += 1;
           if (obj.copy) {
             obj.copy.resetText();
@@ -773,16 +777,16 @@ Animator.prototype = {
         if (obj.timeline.current_frame >= obj.timeline.breakpoints[obj.timeline.current_bp]) {
           // console.log("Second condition: animate() exited on frame " + obj.timeline.current_frame + ".");
           obj.timeline.advanceBreakpoint(); 
-          obj.event_dispatcher.timeline_live = false;
-          return "done";
+          obj.timeline.stop();
+          return "paused";
         }
-        obj.event_dispatcher.timeline_live = true;
         obj.drawFrame(obj.timeline.queue); 
         // console.log(obj.timeline.current_frame);
         obj.advanceAll();
         obj.timeline.current_frame += 1;
         setTimeout(obj.animate, obj.fps);
       }
+
     }
   },
 

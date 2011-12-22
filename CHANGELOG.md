@@ -22,11 +22,11 @@ Changelog
 
 8. Added `min_edge` and `max_edge` properties to the `Slider` prototype. The constructor now expects them as the second and third arguments.
 
-9. Added `scrubber_active`, `scrubber_reset` and `timeline_live` properties to `EventDispatcher` to aid in setting the scrubber position.
+9. Got rid of `Animator`'s running property and changed its `this.running` condition to test for `this.event_dispatch.timeline_live` instead.
 
-10. Got rid of `Animator`'s running property and changed its `this.running` condition to test for `this.event_dispatch.timeline_live` instead.
+10. Got rid of `Timeline.injectBreakpoint()` and `Timeline.extractBreakpoint()`. More or less replaced them with `Timeline.stop()` and `Timeline.ready()`, which are much simpler.
 
-11. Added a condition to `Animator` to allow dragging the scrubber without advancing any of the other `Character`s.
+11. The scrubber is draggable. Oh, fraptious day! In that effort, `Slider` got `selectScrubber()` and `releaseScrubber()` methods.
 
 
 
