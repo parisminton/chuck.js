@@ -365,6 +365,16 @@ function Slider (obj_name, min_edge, max_edge, touchable) {
   this.constructor = Slider;
 };
 Slider.prototype = new Character(); 
+
+Slider.prototype.scale = function () {
+  var near_xinc = Math.round((this.scrubber.xdistance / this.scrubber.original_xinc) * 100) / 100, // lower limit
+      mod = Math.round((this.scrubber.xdistance % this.scrubber.original_xinc) * 100) / 100,
+      nearest_frame = (mod < (this.scrubber.original_xinc - mod)) ? Math.floor(near_xinc) : Math.ceil(near_xinc);
+
+  this.scrubber.xdistance = Math.round((nearest_frame * this.scrubber.original_xinc) * 100) / 100;
+  this.timeline.jumpToFrame(nearest_frame);
+};
+
 Slider.prototype.setScrubberLimits = function () {
   var i,
       len = this.sequence_order.length,
@@ -418,6 +428,8 @@ Slider.prototype.releaseScrubber = function () {
   this.scrubber.selected = false;
 };
 Slider.prototype.init = function () {
+  this.breadth = (this.max_edge - this.min_edge);
+  this.scrubber.xinc = this.scrubber.original_xinc = Math.round((this.breadth / this.timeline.frame_total) * 100) / 100;
   this.drawBoundary = this.makeDrawBoundary(this.me);
 };
 Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
@@ -431,13 +443,13 @@ Slider.prototype.mousedownHandler = function () {
 };
 Slider.prototype.mousemoveHandler = function () {
   if (this.scrubber.selected) {
-    this.scrubber.original_xinc = this.scrubber.xinc;
     this.scrubber.xinc = 0;
     if (this.event_dispatcher.mouse_x > this.min_edge &&
         this.event_dispatcher.mouse_x < this.max_edge) {
-      this.scrubber.xdistance = (this.event_dispatcher.mouse_x - this.min_edge);
+      this.scrubber.xdistance = Math.round((this.event_dispatcher.mouse_x - this.min_edge) * 100) / 100;
     }
     this.animator.drawFrame(this.timeline.queue);
+    this.scale();
   }
 };
 Slider.prototype.mouseupHandler = function () {
@@ -557,9 +569,6 @@ Timeline.prototype = {
       arguments[i].reset();
       arguments[i].queue_index = (this.queue.length) ? this.queue.length : 0;
       this.queue.push(arguments[i]);
-      if (arguments[i].constructor == Slider) {
-        arguments[i].init();
-      }
     }
     this.init();
   },
@@ -572,6 +581,9 @@ Timeline.prototype = {
     this.setFinalBreakpoint();
     this.declareFrames();
     for (i = 0; i < len; i += 1) {
+      if (this.queue[i].constructor == Slider) {
+        this.queue[i].init();
+      }
       this.storeInFrames(this.queue[i]);
     }
     this.animator.timeline = this;
@@ -636,7 +648,7 @@ Timeline.prototype = {
     for (i = 0; i < this.frame_total; i += 1) {
 
       this.frames[frame_count].push(
-        objKeyMaker(character.name, character.sequence_order[cs], cc, visible, xd, yd)
+        objKeyMaker(character.name, cs, cc, visible, xd, yd)
       );
       frame_count += 1;
 
@@ -720,6 +732,28 @@ Timeline.prototype = {
       this.animator.copy.swapText();
       this.animator.copy.insertText();
     }
+  },
+
+  jumpToFrame : function (frame_index) {
+    var i,
+        len = this.frames[frame_index].length;
+
+    for (i = 0; i < len; i += 1) {
+      for (character in this.frames[frame_index][i]) {
+        this.queue[i].visible = this.frames[frame_index][i][character].vis;
+
+        this.queue[i].current_seq = this.frames[frame_index][i][character].cs; 
+
+        this.queue[i].sequence_order[this.queue[i].current_seq].current_cel =
+        this.frames[frame_index][i][character].cc;
+        
+        this.queue[i].sequence_order[this.queue[i].current_seq].xdistance = this.frames[frame_index][i][character].xd; 
+        
+        this.queue[i].sequence_order[this.queue[i].current_seq].ydistance = this.frames[frame_index][i][character].yd; 
+        
+      }
+    }
+    this.animator.drawFrame(this.queue);
   },
 
   frameBack : function () {
