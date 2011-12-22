@@ -330,7 +330,6 @@ function Slider (obj_name, min_edge, max_edge, touchable) {
   this.max_edge = max_edge;
   this.touchable = (touchable) ? touchable : false;
   this.visible = true;
-  this.selected = false;
   this.current_seq = 0; 
   this.sequence_order = ["track", "scrubber"];
   this.track = {
@@ -417,13 +416,17 @@ Slider.prototype.init = function () {
 }
 Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
 Slider.prototype.mousedownHandler = function () {
-  this.selected = true;
-  this.timeline.injectBreakpoint();
   this.original_mouse_x = this.event_dispatcher.mouse_x;
+  this.timeline.injectBreakpoint();
+  this.event_dispatcher.scrubber_active = true;
 };
 Slider.prototype.mousemoveHandler = function () {
-  if (this.selected) {
+  if (this.event_dispatcher.scrubber_active) {
     this.current_mouse_x = this.event_dispatcher.mouse_x;
+    this.scrubber.original_xinc = this.scrubber.xinc;
+    this.scrubber.xinc = 0;
+    this.scrubber.xdistance = (this.event_dispatcher.mouse_x - this.min_edge);
+    this.animator.animate();
   }
 };
 Slider.prototype.mouseupHandler = function () {
@@ -436,6 +439,9 @@ Slider.prototype.mouseupHandler = function () {
 /* CONSTRUCTOR ... event management ... */
 function EventDispatcher () {
   this.listeners = [];
+  this.scrubber_active = false;
+  this.scrubber_reset = false;
+  this.timeline_live = false;
   this.me = this;
   this.constructor = EventDispatcher;
 };
@@ -554,6 +560,7 @@ Timeline.prototype = {
     this.animator.init();
     this.event_dispatcher.timeline = this;
     this.event_dispatcher.init();
+    this.animator.event_dispatcher = this.event_dispatcher;
   },
 
   setFrameTotal : function () {
@@ -671,7 +678,7 @@ Timeline.prototype = {
   },
 
   play : function () {
-    if (!this.animator.running) {
+    if (!this.event_dispatcher.timeline_live) {
       this.current_bp = (this.breakpoints.length - 1);  // ### a chance current_bp becomes a negative number ###
       this.current_frame = 0;
       this.animator.resetAllCels();
@@ -680,7 +687,7 @@ Timeline.prototype = {
   },
 
   stepThrough : function () {
-    if (!this.animator.running) {
+    if (!this.event_dispatcher.timeline_live) {
       this.animator.animate();
       this.animator.copy.swapText();
       this.animator.copy.insertText();
@@ -688,14 +695,14 @@ Timeline.prototype = {
   },
 
   frameBack : function () {
-    if (!this.animator.running) {
+    if (!this.event_dispatcher.timeline_live) {
       // retreatAll();
       this.animator.drawFrame();
     }
   },
 
   frameForward : function () {
-    if (!this.animator.running) {
+    if (!this.event_dispatcher.timeline_live) {
       this.animator.advanceAll();
       this.animator.drawFrame();
     }
@@ -726,7 +733,6 @@ Timeline.prototype = {
 function Animator (fps, copy) {
   this.fps = (fps) ? fps : 75; // ### optionally, an array? [75]
   this.copy = (copy) ? copy : null;
-  this.running = false;
   this.me = this; // ... need this self-reference for makeAnimate, explained below ...
   this.constructor = Animator;
 };
@@ -739,31 +745,44 @@ Animator.prototype = {
     
     return function () {
 
-      if (obj.timeline.current_frame >= obj.timeline.frame_total) {
-        // console.log("First condition: animate() exited on frame " + obj.timeline.current_frame + ".");
-        obj.advanceAll();
-        obj.timeline.current_frame = 0;
-        obj.timeline.current_bp = 0;
-        obj.running = false;
-        obj.timeline.playthrough_count += 1;
-        if (obj.copy) {
-          obj.copy.resetText();
+      /* ... scrubber advancement ... */
+      if (obj.event_dispatcher.scrubber_active && !obj.event_dispatcher.timeline_live) {
+        if (obj.event_dispatcher.scrubber_reset) {
+          obj.event_dispatcher.scrubber_active = false;
+          obj.event_dispatcher.scrubber_reset = false;
+          return "done";
         }
-        return "done";
+        obj.drawFrame(obj.timeline.queue);
+        setTimeout(obj.animate, obj.fps);
       }
-      if (obj.timeline.current_frame >= obj.timeline.breakpoints[obj.timeline.current_bp]) {
-        // console.log("Second condition: animate() exited on frame " + obj.timeline.current_frame + ".");
-        obj.timeline.advanceBreakpoint(); 
-        obj.running = false;
-        return "done";
-      }
-      obj.running = true;
-      obj.drawFrame(obj.timeline.queue); 
-      // console.log(obj.timeline.current_frame);
-      obj.advanceAll();
-      obj.timeline.current_frame += 1;
-      setTimeout(obj.animate, obj.fps);
 
+      /* ... Character advancement ... */
+      else {
+        if (obj.timeline.current_frame >= obj.timeline.frame_total) {
+          // console.log("First condition: animate() exited on frame " + obj.timeline.current_frame + ".");
+          obj.advanceAll();
+          obj.timeline.current_frame = 0;
+          obj.timeline.current_bp = 0;
+          obj.event_dispatcher.timeline_live = false;
+          obj.timeline.playthrough_count += 1;
+          if (obj.copy) {
+            obj.copy.resetText();
+          }
+          return "done";
+        }
+        if (obj.timeline.current_frame >= obj.timeline.breakpoints[obj.timeline.current_bp]) {
+          // console.log("Second condition: animate() exited on frame " + obj.timeline.current_frame + ".");
+          obj.timeline.advanceBreakpoint(); 
+          obj.event_dispatcher.timeline_live = false;
+          return "done";
+        }
+        obj.event_dispatcher.timeline_live = true;
+        obj.drawFrame(obj.timeline.queue); 
+        // console.log(obj.timeline.current_frame);
+        obj.advanceAll();
+        obj.timeline.current_frame += 1;
+        setTimeout(obj.animate, obj.fps);
+      }
     }
   },
 
