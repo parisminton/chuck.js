@@ -4,6 +4,12 @@ chuck.js
 Changelog
 ---------
 
+**12/23/11**
+
+1. Revamping the timeline playthrough system. Instead of doing all the calculations right before each frame is drawn, I can calculate and save the coordinates for every frame before anything gets drawn to the screen. `Timeline.store()` is the first step in this effort.
+
+
+
 **12/21/11**
 
 1. Added `xorigin` and `yorigin` members to each sequence in the `Character` prototype. These are added to a `Character`'s original coordinates on every draw to offset its position on the Canvas. They also free `xdistance` and `ydistance` to be cumulative, and to be reset to zero without affecting the `Character`'s current position.

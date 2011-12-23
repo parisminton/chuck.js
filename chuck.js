@@ -95,7 +95,6 @@ Character.prototype = {
       this[this.sequence_order[i]].xdistance = 0; 
     }
     this.current_seq = 0;
-    current_copy = 0;
   },
 
   countSpan : function () {
@@ -372,7 +371,7 @@ Slider.prototype.scale = function () {
       nearest_frame = (mod < (this.scrubber.original_xinc - mod)) ? Math.floor(near_xinc) : Math.ceil(near_xinc);
 
   this.scrubber.xdistance = Math.round((nearest_frame * this.scrubber.original_xinc) * 100) / 100;
-  this.timeline.jumpToFrame(nearest_frame);
+  return nearest_frame;
 };
 
 Slider.prototype.setScrubberLimits = function () {
@@ -442,14 +441,18 @@ Slider.prototype.mousedownHandler = function () {
   this.selectScrubber();
 };
 Slider.prototype.mousemoveHandler = function () {
+  var nearest_frame;
+
   if (this.scrubber.selected) {
     this.scrubber.xinc = 0;
     if (this.event_dispatcher.mouse_x > this.min_edge &&
         this.event_dispatcher.mouse_x < this.max_edge) {
       this.scrubber.xdistance = Math.round((this.event_dispatcher.mouse_x - this.min_edge) * 100) / 100;
     }
+    nearest_frame = this.scale();
+    this.timeline.jumpToFrame(nearest_frame);
     this.animator.drawFrame(this.timeline.queue);
-    this.scale();
+    // console.log(nearest_frame);
   }
 };
 Slider.prototype.mouseupHandler = function () {
@@ -573,6 +576,27 @@ Timeline.prototype = {
     this.init();
   },
 
+  store : function () {
+    var i,
+        j,
+        len2 = this.queue.length;
+
+    for (i = 0; i < this.frame_total; i += 1) {
+      for (j = 0; j < len2; j += 1) {
+        if (this.queue[j].constructor == Slider) {
+          continue;
+        }
+        if (typeof this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].cels[this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].current_cel] == "function") {
+          this.frames[i].push(this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].cels[this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].current_cel]);
+        }
+        else {
+          this.frames[i].push(this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].cels[(this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].cels.length - 1)]);
+        }
+        this.queue[j].advance();
+      }
+    }
+  },
+
   init : function () {
     var i, 
         len = this.queue.length;
@@ -580,12 +604,7 @@ Timeline.prototype = {
     this.setFrameTotal();
     this.setFinalBreakpoint();
     this.declareFrames();
-    for (i = 0; i < len; i += 1) {
-      if (this.queue[i].constructor == Slider) {
-        this.queue[i].init();
-      }
-      this.storeInFrames(this.queue[i]);
-    }
+      this.store();
     this.animator.timeline = this;
     this.animator.init();
     this.event_dispatcher.timeline = this;
@@ -738,6 +757,7 @@ Timeline.prototype = {
     var i,
         len = this.frames[frame_index].length;
 
+    // console.log("James is " + frame_index + ".");
     for (i = 0; i < len; i += 1) {
       for (character in this.frames[frame_index][i]) {
         this.queue[i].visible = this.frames[frame_index][i][character].vis;
@@ -750,10 +770,8 @@ Timeline.prototype = {
         this.queue[i].sequence_order[this.queue[i].current_seq].xdistance = this.frames[frame_index][i][character].xd; 
         
         this.queue[i].sequence_order[this.queue[i].current_seq].ydistance = this.frames[frame_index][i][character].yd; 
-        
       }
     }
-    this.animator.drawFrame(this.queue);
   },
 
   frameBack : function () {
