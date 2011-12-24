@@ -6,7 +6,9 @@ Changelog
 
 **12/23/11**
 
-1. Revamping the timeline playthrough system. Instead of doing all the calculations right before each frame is drawn, I can calculate and save the coordinates for every frame before anything gets drawn to the screen. `Timeline.store()` is the first step in this effort.
+1. Revamping the timeline playthrough system. Instead of doing all the calculations right before each frame is drawn, I can calculate and save the drawing instructions for every frame before anything gets drawn to the screen. `Timeline.store()` is the first step in this effort.
+
+2. Changed `back` and `forward` from instances of `Character` to instances of `Button`. Gave them boundaries and click handlers that fire `Timeline.play()`.
 
 
 

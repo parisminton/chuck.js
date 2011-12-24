@@ -884,8 +884,6 @@ function stage () {
         slider.closePath();
         slider.fillStyle("rgb(239, 239, 239)");
         slider.fill();
-        slider.strokeStyle("rgb(255, 0, 0)");
-        slider.stroke();
 
         // slider/Path
         slider.beginPath();
@@ -1028,14 +1026,16 @@ function stage () {
       slider.lineTo(274.6, 401.8);
       slider.lineTo(280.6, 396.3);
       slider.closePath();
+      slider.strokeStyle("rgb(255, 0, 0)");
+      slider.stroke();
       slider.restore();
     }
   };
 
 
-  back = new Character("back", false);
+  back = new Button("back", false);
   back.show();
-  back.main.cels = [
+  back.off.cels = [
     function () {
       if (back.visible) {
 
@@ -1071,11 +1071,30 @@ function stage () {
       }
     }
   ];
+  back.boundary = function () {
+    if (back.visible) {
+      back.save();
+      back.beginPath();
+      back.moveTo(470.3, 404.8);
+      back.bezierCurveTo(470.3, 405.9, 469.4, 406.8, 468.3, 406.8);
+      back.lineTo(452.3, 406.8);
+      back.bezierCurveTo(451.2, 406.8, 450.3, 405.9, 450.3, 404.8);
+      back.lineTo(450.3, 388.8);
+      back.bezierCurveTo(450.3, 387.7, 451.2, 386.8, 452.3, 386.8);
+      back.lineTo(468.3, 386.8);
+      back.bezierCurveTo(469.4, 386.8, 470.3, 387.7, 470.3, 388.8);
+      back.lineTo(470.3, 404.8);
+      back.closePath();
+    }
+  };
+  back.clickHandler = function () {
+    this.timeline.play();
+  };
 
 
-  forward = new Character("forward", false);
+  forward = new Button("forward", false);
   forward.show();
-  forward.main.cels = [
+  forward.off.cels = [
     function () {
       if (forward.visible) {
 
@@ -1111,6 +1130,25 @@ function stage () {
       }
     }
   ];
+  forward.boundary = function () {
+    if (forward.visible) {
+      forward.save();
+      forward.beginPath();
+      forward.moveTo(477.3, 404.8);
+      forward.bezierCurveTo(477.3, 405.9, 478.2, 406.8, 479.3, 406.8);
+      forward.lineTo(495.3, 406.8);
+      forward.bezierCurveTo(496.4, 406.8, 497.3, 405.9, 497.3, 404.8);
+      forward.lineTo(497.3, 388.8);
+      forward.bezierCurveTo(497.3, 387.7, 496.4, 386.8, 495.3, 386.8);
+      forward.lineTo(479.3, 386.8);
+      forward.bezierCurveTo(478.2, 386.8, 477.3, 387.7, 477.3, 388.8);
+      forward.lineTo(477.3, 404.8);
+      forward.closePath();
+    }
+  };
+  forward.clickHandler = function () {
+    this.timeline.play();
+  };
 
 
   track = new Character("track", false);
