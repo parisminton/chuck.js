@@ -719,17 +719,7 @@ Timeline.prototype = {
 
     for (i = 0; i < this.frame_total; i += 1) {
       for (j = 0; j < len; j += 1) {
-        obj = this.queue[j];
-        order = obj.sequence_order;
-        cs = obj.current_seq;
-        cc = obj[order[cs]].current_cel;
-
-        if (i < obj.span) {
-          obj.makeFrameInstructions(i, obj);
-        }
-        else {
-          obj.makeFrameInstructions((obj[order[cs]].cels.length - 1), obj);
-        }
+        this.queue[j].makeFrameInstructions(i, this.queue[j]);
       }
     }
   },
@@ -744,6 +734,8 @@ Timeline.prototype = {
     this.event_dispatcher.timeline = this;
     this.event_dispatcher.init();
     this.animator.event_dispatcher = this.event_dispatcher;
+    this.live = true;
+    this.animator.animate();
   },
 
   setFrameTotal : function () {
@@ -894,7 +886,7 @@ Animator.prototype = {
           obj.timeline.stop();
           return "paused";
         }
-        // obj.drawFrame(obj.timeline.queue); 
+        obj.drawFrame(obj.timeline.current_frame); 
         // console.log(obj.timeline.current_frame);
         // obj.advanceAll();
         obj.timeline.current_frame += 1;

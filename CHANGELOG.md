@@ -4,6 +4,14 @@ chuck.js
 Changelog
 ---------
 
+**12/28/11**
+
+1. Removed the `Character.span` test from `Timeline.store()`. Cels seem to be spread evenly across frames and early animation tests in this new system look good in Chrome, Firefox, Safari and Opera on OSX.
+
+2. Started the animator from within `Timeline.init()` just for testing. I'll remove it once the EventDispatcher is working.
+
+
+
 **12/27/11**
 
 1. Added a `controls` array to the `Timeline` object.
