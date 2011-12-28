@@ -20,7 +20,8 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 var the_canvas = document.getElementById("main-stage"),
-    context = the_canvas.getContext("2d");
+    context = the_canvas.getContext("2d"),
+    gradient;
 
 /* CONSTRUCTOR ... an entity on the screen with one or more cels ... */
 function Character (obj_name, touchable) {
@@ -42,6 +43,8 @@ function Character (obj_name, touchable) {
     current_cel : 0,
     cels : []
   };
+  this.xpos;
+  this.ypos;
   this.constructor = Character;
 };
 Character.prototype = {
@@ -136,11 +139,22 @@ Character.prototype = {
     }
   },
 
+  plotX : function (xvalue) {
+    xvalue = (xvalue + this[this.sequence_order[this.current_seq]].xorigin
+                     + this[this.sequence_order[this.current_seq]].xdistance);
+    return xvalue;
+  },
+
+  plotY : function (yvalue) {
+    yvalue = (yvalue + this[this.sequence_order[this.current_seq]].yorigin
+                     + this[this.sequence_order[this.current_seq]].ydistance);
+    return yvalue;
+  },
+
   advance : function () {
     var cs = this.current_seq,
         order = this.sequence_order,
-        i,
-        c_len;
+        i;
 
     this[order[cs]].xdistance = Math.round((this[order[cs]].xdistance + this[order[cs]].xinc) * 100) / 100;
     this[order[cs]].ydistance = Math.round((this[order[cs]].ydistance + this[order[cs]].yinc) * 100) / 100;
@@ -152,6 +166,7 @@ Character.prototype = {
         this.current_seq += 1;
         if (this.current_seq >= order.length) {
           this.current_seq = (order.length - 1);
+          this[order[this.current_seq]].current_cel = (this[order[this.current_seq]].cels.length - 1);
         }
         else {
           this[order[this.current_seq]].xdistance = this[order[cs]].xdistance;
@@ -167,119 +182,232 @@ Character.prototype = {
     }
   },
 
-  /* ... drawing instructions that update their coordinates before processing ... */
+  /* ... drawing instructions that update their coordinates before processing ...
   beginPath : function () {
-    context.beginPath();
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.beginPath();
+    });
   },
 
   moveTo : function (xpos, ypos) {
-    xpos = (xpos + this[this.sequence_order[this.current_seq]].xorigin 
-                 + this[this.sequence_order[this.current_seq]].xdistance);
-
-    ypos = (ypos + this[this.sequence_order[this.current_seq]].yorigin 
-                 + this[this.sequence_order[this.current_seq]].ydistance);
-
-    context.moveTo(xpos, ypos);
+    xpos = this.plotX(xpos);
+    ypos = this.plotY(ypos);
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.moveTo(xpos, ypos);
+    });
   },
 
   lineTo : function (xpos, ypos) {
-    xpos = (xpos + this[this.sequence_order[this.current_seq]].xorigin 
-                 + this[this.sequence_order[this.current_seq]].xdistance);
-
-    ypos = (ypos + this[this.sequence_order[this.current_seq]].yorigin
-                 + this[this.sequence_order[this.current_seq]].ydistance);
-
-    context.lineTo(xpos, ypos);
+    xpos = this.plotX(xpos);
+    ypos = this.plotY(ypos);
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.lineTo(xpos, ypos);
+    });
   },
 
   lineWidth : function (line_width) {
-    context.lineWidth = line_width;
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.lineWidth = line_width;
+    });
   },
 
   lineJoin : function (line_join) {
-    context.lineJoin = line_join;
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.lineJoin = line_join;
+    });
   },
 
   miterLimit : function (miter_limit) {
-    context.miterLimit = miter_limit;
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.miterLimit = miter_limit;
+    });
   },
 
   bezierCurveTo : function (xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos) {
-    xctrl_1 = (xctrl_1 + this[this.sequence_order[this.current_seq]].xorigin
-                       + this[this.sequence_order[this.current_seq]].xdistance);
-
-    yctrl_1 = (yctrl_1 + this[this.sequence_order[this.current_seq]].yorigin
-                       + this[this.sequence_order[this.current_seq]].ydistance);
-                       
-    xctrl_2 = (xctrl_2 + this[this.sequence_order[this.current_seq]].xorigin
-                       + this[this.sequence_order[this.current_seq]].xdistance);
-
-    yctrl_2 = (yctrl_2 + this[this.sequence_order[this.current_seq]].yorigin
-                       + this[this.sequence_order[this.current_seq]].ydistance);
-
-    xpos = (xpos + this[this.sequence_order[this.current_seq]].xorigin
-                 + this[this.sequence_order[this.current_seq]].xdistance);
-
-    ypos = (ypos + this[this.sequence_order[this.current_seq]].yorigin
-                 + this[this.sequence_order[this.current_seq]].ydistance);
-                 
-    context.bezierCurveTo(xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos);
+    xctrl_1 = this.plotX(xctrl_1);
+    yctrl_1 = this.plotY(yctrl_1);
+    xctrl_2 = this.plotX(xctrl_2);
+    yctrl_2 = this.plotY(yctrl_2);
+    xpos = this.plotX(xpos);
+    ypos = this.plotY(ypos);
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.bezierCurveTo(xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos);
+    });
   },
 
   strokeRect : function (xpos, ypos, width, height) {
-    xpos = (xpos + this[this.sequence_order[this.current_seq]].xorigin
-                 + this[this.sequence_order[this.current_seq]].xdistance);
-                 
-    ypos = (ypos + this[this.sequence_order[this.current_seq]].yorigin
-                 + this[this.sequence_order[this.current_seq]].ydistance);
-                 
-    context.strokeRect(xpos, ypos, width, height);
+    xpos = this.plotX(xpos);
+    ypos = this.plotY(ypos);
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.strokeRect(xpos, ypos, width, height);
+    });
   },
 
   fillRect : function (xpos, ypos, width, height) {
-    xpos = (xpos + this[this.sequence_order[this.current_seq]].xorigin
-                 + this[this.sequence_order[this.current_seq]].xdistance);
-                 
-    ypos = (ypos + this[this.sequence_order[this.current_seq]].yorigin
-                 + this[this.sequence_order[this.current_seq]].ydistance);
-                 
-    context.fillRect(xpos, ypos, width, height);
+    xpos = this.plotX(xpos);
+    ypos = this.plotY(ypos);
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.fillRect(xpos, ypos, width, height);
+    });
   },
 
   closePath : function () {
-    context.closePath();
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.closePath();
+    });
   },
 
   createLinearGradient : function (xstart, ystart, xend, yend) {
-    return context.createLinearGradient(xstart, ystart, xend, yend);
+    this.timeline.frames3[this.timeline.frame_index].push(context.createLinearGradient(xstart, ystart, xend, yend));
   },
 
   addColorStop : function (gradient, offset, color_string) {
-    gradient.addColorStop(offset, color_string);
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      gradient.addColorStop(offset, color_string);
+    });
   },
 
   fill : function () {
-    context.fill();
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.fill();
+    });
   },
 
   fillStyle : function (style_string) {
-    context.fillStyle = style_string;
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.fillStyle = style_string;
+    });
   },
 
   stroke : function () {
-    context.stroke();
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.stroke();
+    });
   },
 
   strokeStyle : function (style_string) {
-    context.strokeStyle = style_string;
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.strokeStyle = style_string;
+    });
   },
 
   save : function () {
-    context.save();
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.save();
+    });
   },
 
   restore : function () {
-    context.restore();
+    this.timeline.frames3[this.timeline.frame_index].push(function () {
+      context.restore();
+    });
+  },
+  */
+  
+  parseDrawingObject : function (coord_obj, instruction_array) {
+    var action,
+        xpos,
+        ypos,
+        xctrl_1,
+        yctrl_1,
+        xctrl_2,
+        yctrl_2,
+        stop,
+        value,
+        xstart,
+        ystart,
+        xend,
+        yend; /* ### all these values are inside a closure; their memory space needs to be reclaimed ### */
+
+    for (action in coord_obj) {
+      if (typeof coord_obj[action] == "object") {
+        if (action == "gradient") {
+          xstart = coord_obj[action][0];
+          ystart = coord_obj[action][1];
+          xend = coord_obj[action][2];
+          yend = coord_obj[action][3];
+          instruction_array.push(function () {
+            gradient = context.createLinearGradient(xstart, ystart, xend, yend);
+          });
+        }
+        if (action == "addColorStop") {
+          stop = coord_obj[action][0];
+          value = coord_obj[action][1];
+          instruction_array.push(function () {
+            gradient.addColorStop(stop, value);
+          });
+        }
+        if (action == "moveTo" || action == "lineTo") {
+          xpos = this.plotX(coord_obj[action][0]);
+          ypos = this.plotY(coord_obj[action][1]);
+          instruction_array.push(function () {
+            context[action](xpos, ypos);
+          });
+        }
+        if (action == "fillRect") {
+          xpos = this.plotX(coord_obj[action][0]);
+          ypos = this.plotY(coord_obj[action][1]);
+          instruction_array.push(function () {
+            context[action](xpos, ypos, coord_obj[action][2], coord_obj[action][3]);
+          });
+        }
+        if (action == "bezierCurveTo") {
+          xctrl_1 = this.plotX(coord_obj[action][0]);
+          yctrl_1 = this.plotY(coord_obj[action][1]);
+          xctrl_2 = this.plotX(coord_obj[action][2]);
+          yctrl_2 = this.plotY(coord_obj[action][3]);
+          xpos = this.plotX(coord_obj[action][4]);
+          ypos = this.plotY(coord_obj[action][5]);
+          instruction_array.push(function () {
+            context[action](xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos);
+          });
+        }
+      }
+      if (typeof coord_obj[action] == "string" || typeof coord_obj[action] == "number") {
+        if (action == "fillStyle" || action == "strokeStyle" || action == "miterLimit" ||
+            action == "lineWidth" || action == "lineJoin" ) {
+          instruction_array.push(function () {
+            context[action] = coord_obj[action];
+          });
+        }
+      }
+    }
+  },
+
+  makeFrameInstructions : function (current_frame, obj) {
+    var order = obj.sequence_order,
+        cs = obj.current_seq,
+        cc = obj[order[cs]].current_cel,
+        i,
+        len = obj[order[cs]].cels[cc].length,
+        instructions = [];
+
+    for (i = 0; i < len; i += 1) {
+      /* ... this immediate function creates a new context in which to pass these variables
+             so they can be stored by value, not by reference ... */
+      (function (i, len, cs, cc) {
+        if (typeof obj[order[cs]].cels[cc][i] == "string") {
+          instructions.push(function () {
+            context[obj[order[cs]].cels[cc][i]]();
+          });
+        }
+        if (typeof obj[order[cs]].cels[cc][i] == "object") {
+          obj.parseDrawingObject(obj[order[cs]].cels[cc][i], instructions);
+        }
+      })(i, len, cs, cc);
+    }
+
+    obj.timeline.frames[current_frame].push(function () {
+      var i,
+          len = instructions.length;
+
+      if (obj.visible) {
+        for (i = 0; i < instructions.length; i += 1) {
+          instructions[i]();
+        }
+      }
+    });
+    obj.advance();
   }
 
 };
@@ -519,7 +647,7 @@ EventDispatcher.prototype = {
         for (j = 0; j < len2; j += 1) {
           event_string = this.timeline.queue[i].userEvents[j];
           dispatch_method_string = "dispatch" + event_string.charAt(0).toUpperCase() + event_string.slice(1);
-          this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
+          // this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
           len3 = this.listeners.length;
           if (len3 > 0) {
             for (k = 0; k < len3; k += 1) {
@@ -529,10 +657,12 @@ EventDispatcher.prototype = {
               }
             }
           }
+          /*
           if (!match) {
             the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
             this.listeners.push(dispatch_method_string);
           }
+          */
         }
         match = false;
       }
@@ -548,8 +678,10 @@ function Timeline (anim, events) {
   this.animator = anim;
   this.event_dispatcher = events;
   this.queue = [];
+  this.controls = [];
   this.frame_total = 0;
   this.frames = [];
+  this.frame_index = 0;
   this.current_frame = 0;
   this.breakpoints = [46, 49, 81];
   this.current_bp = 0; // by default, the first breakpoint
@@ -579,32 +711,34 @@ Timeline.prototype = {
   store : function () {
     var i,
         j,
-        len2 = this.queue.length;
+        len = this.queue.length,
+        obj,
+        order,
+        cs,
+        cc;
 
     for (i = 0; i < this.frame_total; i += 1) {
-      for (j = 0; j < len2; j += 1) {
-        if (this.queue[j].constructor == Slider) {
-          continue;
-        }
-        if (typeof this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].cels[this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].current_cel] == "function") {
-          this.frames[i].push(this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].cels[this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].current_cel]);
+      for (j = 0; j < len; j += 1) {
+        obj = this.queue[j];
+        order = obj.sequence_order;
+        cs = obj.current_seq;
+        cc = obj[order[cs]].current_cel;
+
+        if (i < obj.span) {
+          obj.makeFrameInstructions(i, obj);
         }
         else {
-          this.frames[i].push(this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].cels[(this.queue[j][this.queue[j].sequence_order[this.queue[j].current_seq]].cels.length - 1)]);
+          obj.makeFrameInstructions((obj[order[cs]].cels.length - 1), obj);
         }
-        this.queue[j].advance();
       }
     }
   },
 
   init : function () {
-    var i, 
-        len = this.queue.length;
-
     this.setFrameTotal();
     this.setFinalBreakpoint();
     this.declareFrames();
-      this.store();
+    this.store();
     this.animator.timeline = this;
     this.animator.init();
     this.event_dispatcher.timeline = this;
@@ -635,79 +769,6 @@ Timeline.prototype = {
 
     for (i = 0; i < this.frame_total; i += 1) {
       this.frames[i] = [];
-    }
-  },
-
-  storeInFrames : function (character) {
-    var i, 
-        frame_count = 0,
-        cs = (character.constructor == Slider) ? 1 : 0,
-        cc = 0,
-        it = 0,
-        xd = 0,
-        yd = 0,
-        visible = true;
-
-    /* ... variables won't work as keys in an object literal. this helper gets around that ... */
-    function objKeyMaker (name, current_seq, current_cel, visible, xdist, ydist) {
-      var obj = {};
-
-      obj[name] = {
-        cs : current_seq,
-        cc : current_cel,
-        vis : visible, 
-        xd : xdist,
-        yd : ydist
-      };
-      
-      /* ### how will we check for visibility on a specified frame? ### */
-      return obj;
-    };
-
-    for (i = 0; i < this.frame_total; i += 1) {
-
-      this.frames[frame_count].push(
-        objKeyMaker(character.name, cs, cc, visible, xd, yd)
-      );
-      frame_count += 1;
-
-      /* ... if this Character has cels that haven't been drawn ... */
-      if (frame_count < character.span) {
-        cc += 1;
-
-        /* ... if frame_count reaches the end of a sequence before it's done iterating ... */
-        if (character[character.sequence_order[cs]].iterations > 1 && 
-            frame_count % character[character.sequence_order[cs]].cels.length == 0) {
-          it += 1;
-          cc = 0;
-        }
-        /* ... if frame_count reaches the end of a sequence that's done iterating
-        and there's another sequence on deck ... */
-        if (character.sequence_order[(cs + 1)]) {
-          if (it == character[character.sequence_order[cs]].iterations &&
-              frame_count == character[character.sequence_order[(cs + 1)]].starting_frame) {
-            cs += 1;
-            it = 0;
-            cc = 0;
-          }
-        }
-        /* ... if there are x- or y-increments set... */
-        if (character[character.sequence_order[cs]].xinc != 0) {
-          xd = Math.round((character[character.sequence_order[cs]].xinc * frame_count) * 100) / 100;
-        }
-        if (character[character.sequence_order[cs]].yinc != 0) {
-          yd = Math.round((character[character.sequence_order[cs]].yinc * frame_count) * 100) / 100;
-        }
-      }
-      /* ... if we\'ve run out of Character cels before running out of frames ... */
-      else {
-        if (character[character.sequence_order[cs]].xinc != 0) {
-          xd = Math.round((character[character.sequence_order[cs]].xinc * frame_count) * 100) / 100;
-        }
-        if (character[character.sequence_order[cs]].yinc != 0) {
-          yd = Math.round((character[character.sequence_order[cs]].yinc * frame_count) * 100) / 100;
-        }
-      }
     }
   },
 
@@ -755,7 +816,8 @@ Timeline.prototype = {
 
   jumpToFrame : function (frame_index) {
     var i,
-        len = this.frames[frame_index].length;
+        len = this.frames[frame_index].length,
+        character;
 
     // console.log("James is " + frame_index + ".");
     for (i = 0; i < len; i += 1) {
@@ -816,7 +878,7 @@ Animator.prototype = {
       if (obj.timeline.live) {
         if (obj.timeline.current_frame >= obj.timeline.frame_total) {
           // console.log("First condition: animate() exited on frame " + obj.timeline.current_frame + ".");
-          obj.advanceAll();
+          // obj.advanceAll();
           obj.timeline.current_frame = 0;
           obj.timeline.current_bp = 0;
           obj.timeline.stop();
@@ -832,9 +894,9 @@ Animator.prototype = {
           obj.timeline.stop();
           return "paused";
         }
-        obj.drawFrame(obj.timeline.queue); 
+        // obj.drawFrame(obj.timeline.queue); 
         // console.log(obj.timeline.current_frame);
-        obj.advanceAll();
+        // obj.advanceAll();
         obj.timeline.current_frame += 1;
         setTimeout(obj.animate, obj.fps);
       }
@@ -844,48 +906,20 @@ Animator.prototype = {
 
   init : function () {
     this.animate = this.makeAnimate(this.me);
-    this.drawFrame();
+    this.drawFrame(this.timeline.current_frame);
   },
 
-  renderCharacter : function (obj, ctx) {
-    var cs = obj.sequence_order[obj.current_seq],
-        cc = obj[obj.sequence_order[obj.current_seq]].current_cel;
-
-    ctx = (ctx) ? ctx : context;
-    
-    /* ... if this is a slider, always draw the track before drawing the scrubber
-    on the same frame ... */
-    if (obj.constructor == Slider) {
-      if (typeof obj[cs].cels[cc] == "function") {
-        obj.current_seq = 0;
-        obj.track.cels[cc](ctx);
-        obj.current_seq = 1;
-        obj.scrubber.cels[cc](ctx);
-      }
-      else {
-        obj.current_seq = 0;
-        obj.track.cels[(obj.track.cels.length - 1)](ctx);
-        obj.current_seq = 1;
-        obj.scrubber.cels[(obj.scrubber.cels.length - 1)](ctx);
-      }
-    }
-    else {
-      if (typeof obj[cs].cels[cc] == "function") {
-        obj[cs].cels[cc](ctx);
-      }
-      else {
-        obj[cs].cels[(obj[cs].cels.length - 1)](ctx);
-      }
-    }
-  },
-  
   /* ...only thinks about drawing... */
-  drawFrame : function () {
-    var i, len;
+  drawFrame : function (requested_frame) {
+    var i,
+        len;
+        
     context.clearRect(0, 0, 800, 476);
-    len = this.timeline.queue.length;
+    len = this.timeline.frames[requested_frame].length;
     for (i = 0; i < len; i += 1) {
-      this.renderCharacter(this.timeline.queue[i], context);
+      if (this.timeline.frames[requested_frame][i]) {
+        this.timeline.frames[requested_frame][i]();
+      }
     }
   },
 

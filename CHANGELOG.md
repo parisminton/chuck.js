@@ -4,6 +4,31 @@ chuck.js
 Changelog
 ---------
 
+**12/27/11**
+
+1. Added a `controls` array to the `Timeline` object.
+
+
+
+**12/26/11**
+
+*The overhaul of the playthrough system continues. I read somewhere that it's bad to check in code that breaks the build, so I'm refraining from the atomic commits until everything works without errors.*
+
+1. Converted members of the `Character.sequence.cels` array from functions to arrays of objects. The key is the Canvas drawing instruction and the value is the argument: `{ lineTo : [ 487.8, 45.2 ] }`.
+
+2. Made `Character.parseDrawingObject()`, which converts the object in the `Character.sequence.cels` array into a function that performs one drawing instruction when fired. So the object above is rendered as
+
+    function () {
+      context["lineTo"](487.8, 45.2);
+    }
+... before it's pushed to the `Timeline.frames` array for the current frame.
+
+3. Got rid of `Animator.renderCharacter().` In this system, `Animator.drawFrame()` is all that's necessary.
+
+4. Got rid of `Timeline.setInFrames()`.
+
+
+
 **12/23/11**
 
 1. Revamping the timeline playthrough system. Instead of doing all the calculations right before each frame is drawn, I can calculate and save the drawing instructions for every frame before anything gets drawn to the screen. `Timeline.store()` is the first step in this effort.
