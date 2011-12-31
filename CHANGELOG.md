@@ -6,9 +6,9 @@ Changelog
 
 **12/31/11**
 
-*In terms of functionality, I'm all caught up with last week when I decided to change the playthrough system. It was challenge, but so far, it's made many of the `Animator`, `Timeline` and `EventDispatcher` methods much less complicated and the animation machinery seems more streamlined and sensible.
+*In terms of functionality, I'm all caught up with last week when I decided to change the playthrough system. It was challenge, but so far, it's made many of the `Animator`, `Timeline` and `EventDispatcher` methods much less complicated and the animation machinery seems more streamlined and sensible.*
 
-There are a lot of closures here, so I'll be keeping a close eye on memory and testing for leaks. But all the important math is done before runtime, which gives the browser an easier task of rapid-fire drawing.*
+*There are a lot of closures here, so I'll be keeping a close eye on memory and testing for leaks. But all the important math is done before runtime, which gives the browser an easier task of rapid-fire drawing.*
 
 1. Adapted `Button.drawBoundary()` to the new playthrough system and made it self-defining. After initialization, it works with the event system right out of the box.
 
@@ -50,18 +50,28 @@ There are a lot of closures here, so I'll be keeping a close eye on memory and t
 
 *The overhaul of the playthrough system continues. I read somewhere that it's bad to check in code that breaks the build, so I'm refraining from the atomic commits until everything works without errors.*
 
-1. Converted members of the `Character.sequence.cels` array from functions to arrays of objects. The key is the Canvas drawing instruction and the value is the argument: `{ lineTo : [ 487.8, 45.2 ] }`.
+1. Got rid of `Animator.renderCharacter().` In this system, `Animator.drawFrame()` is all that's necessary.
 
-2. Made `Character.parseDrawingObject()`, which converts the object in the `Character.sequence.cels` array into a function that performs one drawing instruction when fired. So the object above is rendered as
+2. Got rid of `Timeline.setInFrames()`.
 
-    function () {
-      context["lineTo"](487.8, 45.2);
-    }
-... before it's pushed to the `Timeline.frames` array for the current frame.
+3. Converted members of the `Character.sequence.cels` array from functions to arrays of objects. The key is the Canvas drawing instruction and the value is the argument. An example follows.
 
-3. Got rid of `Animator.renderCharacter().` In this system, `Animator.drawFrame()` is all that's necessary.
+4. Made `Character.parseDrawingObject()`, which converts the object in the `Character.sequence.cels` array into a function that performs one drawing instruction when fired.
 
-4. Got rid of `Timeline.setInFrames()`.
+So, given the two updates immediately above:
+
+*celhelper.sh* turns the Canvas drawing instruction into a JavaScript object ...
+```javascript 
+{ lineTo : [ 487.8, 45.2 ] }
+```
+... then, before runtime, math is done on the coordinates array in this object and it's made into a function by `Character.parseDrawingObject()` ...
+
+```javascript
+function () {
+  context["lineTo"](497.8, 45.2);
+}
+```
+... before it's pushed to the `Timeline.frames` array for the current frame. When the user hits the "play" button, the functions in this array are fired off in sequence, drawing the entire image on the canvas for a split second. Then it happens again for the next frame, and so on...
 
 
 
