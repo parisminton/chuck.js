@@ -4,11 +4,33 @@ chuck.js
 Changelog
 ---------
 
+**12/31/11**
+
+1. Adapted `Button.drawBoundary()` to the new playthrough system and made it self-defining. After initialization, it works with the event system right out of the box.
+
+
+
+**12/30/11**
+
+1. Modified `Animator.animate()` to define itself, setting `this` to the `Animator` constructor the first time it's called. The result: It retains its scope during repeated calls by `window.setTimeout()`. This makes `Animator.makeAnimate()` unnecessary -- it's gone.
+
+2. Gave the `Slider` prototype a modified version of `makeFrameInstructions()` that always draws the track before drawing the scrubber on every frame. It defines a `track_operation` property and sets it to `true` right before drawing the track, and `false` right before drawing the scrubber.
+
+3. Modified `Character.plotX()` and `Character.plotY()` to test whether `track_operation` is true. If it is, the distance is excluded from the calculation so the track stays put while the scrubber moves. 
+
+
+
 **12/28/11**
 
 1. Removed the `Character.span` test from `Timeline.store()`. Cels seem to be spread evenly across frames and early animation tests in this new system look good in Chrome, Firefox, Safari and Opera on OSX.
 
 2. Started the animator from within `Timeline.init()` just for testing. I'll remove it once the EventDispatcher is working.
+
+3. Renamed `Animator.drawFrame()` to `Animator.draw()`. This name change accompanies an abstraction to work with *any* collection of drawing instructions, not just those in the timeline... Drawing boundaries on demand for mouse event detection, for instance.
+
+4. Modified `Character.parseDrawingObject()` to return an array of drawing instructions if an existing array isn't passed as the function's second argument.
+
+5. Added a test to `Timeline.setFinalBreakpoint()` to fire only if the final frame is not already the final breakpoint.
 
 
 

@@ -35,6 +35,7 @@ function stage () {
   e = new EventDispatcher();
   a = new Animator(75, c);
   t = new Timeline(a, e);
+  t.breakpoints = [46, 49, 81];
 
   play = new Button("play", false);
   play.show();
@@ -174,11 +175,14 @@ function stage () {
     { lineTo : [ 328.6, 425.9 ] },
     { lineTo : [ 328.6, 446.9 ] },
     "closePath",
+    { strokeStyle : "rgb(255, 0, 0)" },
+    "stroke",
     "restore"
   ];
   play.clickHandler = function () {
     this.timeline.play();
   };
+  play.init();
 
   
 
@@ -721,11 +725,14 @@ function stage () {
     { lineTo : [ 497.3, 425.9 ] },
     { lineTo : [ 497.3, 446.9 ] },
     "closePath",
+    { strokeStyle : "rgb(255, 0, 0)" },
+    "stroke",
     "restore"
   ];
   step.clickHandler = function () {
     this.timeline.stepThrough();
   };
+  step.init();
 
   
 
@@ -838,7 +845,6 @@ function stage () {
       "restore"
     ]
   ];
-  slider.scrubber.xinc = 1.63; 
   slider.makeSequence("boundary");
   slider.boundary = [
     "save",
@@ -902,11 +908,14 @@ function stage () {
     { lineTo : [ 468.3, 386.8 ] },
     { bezierCurveTo : [ 469.4, 386.8, 470.3, 387.7, 470.3, 388.8 ] },
     { lineTo : [ 470.3, 404.8 ] },
-    "closePath"
+    "closePath",
+    { strokeStyle : "rgb(255, 0, 0)" },
+    "stroke"
   ];
   back.clickHandler = function () {
     this.timeline.play();
   };
+  back.init();
 
 
   forward = new Button("forward", false);
@@ -954,11 +963,14 @@ function stage () {
     { lineTo : [ 479.3, 386.8 ] },
     { bezierCurveTo : [ 478.2, 386.8, 477.3, 387.7, 477.3, 388.8 ] },
     { lineTo : [ 477.3, 404.8 ] },
-    "closePath"
+    "closePath",
+    { strokeStyle : "rgb(255, 0, 0)" },
+    "stroke"
   ];
   forward.clickHandler = function () {
     this.timeline.play();
   };
+  forward.init();
 
 
   track = new Character("track", false);

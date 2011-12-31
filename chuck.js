@@ -62,7 +62,7 @@ Character.prototype = {
         len = arguments.length;
     this.sequence_order.length = 0;
     for (i = 0; i < len; i += 1) {
-      if (this[arguments[i]].cels.length == 0) {
+      if (this[arguments[i]].cels.length === 0) {
         console.log("ERROR from setSequenceOrder(): *" + arguments[i] + "* looks like it hasn't been created yet. If you want to add *" + arguments[i] + "* to the sequence, create it first, then run me.");
       }
         this.sequence_order.push(arguments[i]);
@@ -140,14 +140,18 @@ Character.prototype = {
   },
 
   plotX : function (xvalue) {
-    xvalue = (xvalue + this[this.sequence_order[this.current_seq]].xorigin
-                     + this[this.sequence_order[this.current_seq]].xdistance);
+    var xo = this[this.sequence_order[this.current_seq]].xorigin,
+        xd = this[this.sequence_order[this.current_seq]].xdistance;
+        
+    xvalue = (this.track_operation) ? (xvalue + xo) : (xvalue + xo + xd); 
     return xvalue;
   },
 
   plotY : function (yvalue) {
-    yvalue = (yvalue + this[this.sequence_order[this.current_seq]].yorigin
-                     + this[this.sequence_order[this.current_seq]].ydistance);
+    var yo = this[this.sequence_order[this.current_seq]].yorigin,
+        yd = this[this.sequence_order[this.current_seq]].ydistance;
+        
+    yvalue = (this.track_operation) ? (yvalue + yo) : (yvalue + yo + yd); 
     return yvalue;
   },
 
@@ -158,7 +162,7 @@ Character.prototype = {
 
     this[order[cs]].xdistance = Math.round((this[order[cs]].xdistance + this[order[cs]].xinc) * 100) / 100;
     this[order[cs]].ydistance = Math.round((this[order[cs]].ydistance + this[order[cs]].yinc) * 100) / 100;
-    
+
     this[order[cs]].current_cel += 1;
     if (this[order[cs]].current_cel >= this[order[cs]].cels.length) {
       this[order[cs]].current_iteration += 1;
@@ -304,8 +308,9 @@ Character.prototype = {
   },
   */
   
-  parseDrawingObject : function (coord_obj, instruction_array) {
+  parseDrawingObject : function (param, instruction_array) {
     var action,
+        instructions = (instruction_array) ? instruction_array : [],
         xpos,
         ypos,
         xctrl_1,
@@ -317,60 +322,71 @@ Character.prototype = {
         xstart,
         ystart,
         xend,
-        yend; /* ### all these values are inside a closure; their memory space needs to be reclaimed ### */
+        yend; 
 
-    for (action in coord_obj) {
-      if (typeof coord_obj[action] == "object") {
-        if (action == "gradient") {
-          xstart = coord_obj[action][0];
-          ystart = coord_obj[action][1];
-          xend = coord_obj[action][2];
-          yend = coord_obj[action][3];
-          instruction_array.push(function () {
-            gradient = context.createLinearGradient(xstart, ystart, xend, yend);
-          });
+    if (typeof param === "string") {
+      instructions.push(function () {
+        context[param]();
+      });
+    }
+    if (typeof param === "object") {
+      for (action in param) {
+        if (typeof param[action] === "object") {
+          if (action === "gradient") {
+            xstart = param[action][0];
+            ystart = param[action][1];
+            xend = param[action][2];
+            yend = param[action][3];
+            instructions.push(function () {
+              gradient = context.createLinearGradient(xstart, ystart, xend, yend);
+            });
+          }
+          if (action === "addColorStop") {
+            stop = param[action][0];
+            value = param[action][1];
+            instructions.push(function () {
+              gradient.addColorStop(stop, value);
+            });
+          }
+          if (action === "moveTo" || action === "lineTo") {
+            xpos = this.plotX(param[action][0]);
+            ypos = this.plotY(param[action][1]);
+            instructions.push(function () {
+              context[action](xpos, ypos);
+            });
+          }
+          if (action === "fillRect") {
+            xpos = this.plotX(param[action][0]);
+            ypos = this.plotY(param[action][1]);
+            instructions.push(function () {
+              context[action](xpos, ypos, param[action][2], param[action][3]);
+            });
+          }
+          if (action === "bezierCurveTo") {
+            xctrl_1 = this.plotX(param[action][0]);
+            yctrl_1 = this.plotY(param[action][1]);
+            xctrl_2 = this.plotX(param[action][2]);
+            yctrl_2 = this.plotY(param[action][3]);
+            xpos = this.plotX(param[action][4]);
+            ypos = this.plotY(param[action][5]);
+            instructions.push(function () {
+              context[action](xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos);
+            });
+          }
         }
-        if (action == "addColorStop") {
-          stop = coord_obj[action][0];
-          value = coord_obj[action][1];
-          instruction_array.push(function () {
-            gradient.addColorStop(stop, value);
-          });
-        }
-        if (action == "moveTo" || action == "lineTo") {
-          xpos = this.plotX(coord_obj[action][0]);
-          ypos = this.plotY(coord_obj[action][1]);
-          instruction_array.push(function () {
-            context[action](xpos, ypos);
-          });
-        }
-        if (action == "fillRect") {
-          xpos = this.plotX(coord_obj[action][0]);
-          ypos = this.plotY(coord_obj[action][1]);
-          instruction_array.push(function () {
-            context[action](xpos, ypos, coord_obj[action][2], coord_obj[action][3]);
-          });
-        }
-        if (action == "bezierCurveTo") {
-          xctrl_1 = this.plotX(coord_obj[action][0]);
-          yctrl_1 = this.plotY(coord_obj[action][1]);
-          xctrl_2 = this.plotX(coord_obj[action][2]);
-          yctrl_2 = this.plotY(coord_obj[action][3]);
-          xpos = this.plotX(coord_obj[action][4]);
-          ypos = this.plotY(coord_obj[action][5]);
-          instruction_array.push(function () {
-            context[action](xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos);
-          });
+        if (typeof param[action] === "string" || typeof param[action] === "number") {
+          if (action === "fillStyle" || action === "strokeStyle" || action === "miterLimit" ||
+              action === "lineWidth" || action === "lineJoin" ) {
+            instructions.push(function () {
+              context[action] = param[action];
+            });
+          }
         }
       }
-      if (typeof coord_obj[action] == "string" || typeof coord_obj[action] == "number") {
-        if (action == "fillStyle" || action == "strokeStyle" || action == "miterLimit" ||
-            action == "lineWidth" || action == "lineJoin" ) {
-          instruction_array.push(function () {
-            context[action] = coord_obj[action];
-          });
-        }
-      }
+    }
+    /* ... if an instructions array wasn\'t passed in by the caller, return this local one ... */ 
+    if (!instruction_array) {
+      return instructions;
     }
   },
 
@@ -385,16 +401,9 @@ Character.prototype = {
     for (i = 0; i < len; i += 1) {
       /* ... this immediate function creates a new context in which to pass these variables
              so they can be stored by value, not by reference ... */
-      (function (i, len, cs, cc) {
-        if (typeof obj[order[cs]].cels[cc][i] == "string") {
-          instructions.push(function () {
-            context[obj[order[cs]].cels[cc][i]]();
-          });
-        }
-        if (typeof obj[order[cs]].cels[cc][i] == "object") {
-          obj.parseDrawingObject(obj[order[cs]].cels[cc][i], instructions);
-        }
-      })(i, len, cs, cc);
+      (function (cs, cc) {
+        obj.parseDrawingObject(obj[order[cs]].cels[cc][i], instructions);
+      })(cs, cc);
     }
 
     obj.timeline.frames[current_frame].push(function () {
@@ -437,8 +446,30 @@ function Button (obj_name) {
   this.constructor = Button;
 };
 Button.prototype = new Character();
+/* ... created in this tricky way to avoid losing local scope when it\'s called by 
+       the window object. using *this* won't retain the instance\'s scope .. */
 Button.prototype.drawBoundary = function () {
-  this.boundary();
+  var obj = this,
+      i,
+      len = obj.boundary.length,
+      instructions = [];
+
+  for (i = 0; i < len; i += 1) {
+    /* ... this immediate function creates a new context in which to pass these variables
+           so they can be stored by value, not by reference ... */
+    obj.parseDrawingObject(obj.boundary[i], instructions);
+  }
+
+  obj.drawBoundary = function () {
+    var i,
+        len = instructions.length;
+
+    if (obj.visible) {
+      for (i = 0; i < instructions.length; i += 1) {
+        instructions[i]();
+      }
+    }
+  }
 };
 Button.prototype.userEvents = ["click", "mouseover", "mouseout"];
 Button.prototype.mouseoverHandler = function () {
@@ -447,7 +478,9 @@ Button.prototype.mouseoverHandler = function () {
 Button.prototype.mouseoutHandler = function () {
 
 };
-
+Button.prototype.init = function () {
+  this.drawBoundary();
+}
 
 
 /* CONSTRUCTOR ... a control that lets the user slide through a range ... */
@@ -493,6 +526,42 @@ function Slider (obj_name, min_edge, max_edge, touchable) {
 };
 Slider.prototype = new Character(); 
 
+Slider.prototype.makeFrameInstructions = function (current_frame, obj) {
+  var cc = obj.scrubber.current_cel,
+      i,
+      t_len = obj.track.cels[0].length,
+      s_len = obj.scrubber.cels[cc].length,
+      orig_xdist,
+      orig_ydist,
+      instructions = [];
+
+  this.track_operation = true;
+  for (i = 0; i < t_len; i += 1) {
+    obj.parseDrawingObject(obj.track.cels[0][i], instructions);
+  }
+
+  this.track_operation = false;
+  for (i = 0; i < s_len; i += 1) {
+    /* ... this immediate function creates a new context in which to pass these variables
+           so they can be stored by value, not by reference ... */
+    (function (cc) {
+      obj.parseDrawingObject(obj.scrubber.cels[cc][i], instructions);
+    })(cc);
+  }
+
+  obj.timeline.frames[current_frame].push(function () {
+    var i,
+        len = instructions.length;
+
+    if (obj.visible) {
+      for (i = 0; i < instructions.length; i += 1) {
+        instructions[i]();
+      }
+    }
+  });
+  obj.advance();
+};
+
 Slider.prototype.scale = function () {
   var near_xinc = Math.round((this.scrubber.xdistance / this.scrubber.original_xinc) * 100) / 100, // lower limit
       mod = Math.round((this.scrubber.xdistance % this.scrubber.original_xinc) * 100) / 100,
@@ -510,43 +579,37 @@ Slider.prototype.setScrubberLimits = function () {
   for (i = 0; i < len; i += 1) {
     cs_string = this.sequence_order[i];
 
-    if (cs_string == "scrubber") {
+    if (cs_string === "scrubber") {
       this[cs_string].xlimit = ((this.timeline.frame_total * this[cs_string].xinc) - this[cs_string].xinc);
       this[cs_string].ylimit = ((this.timeline.frame_total * this[cs_string].yinc) - this[cs_string].yinc);
     }
   }
 };
-/* ... created in this tricky way to avoid the scope problems with repeated calls to 
-       setTimeout. using *this* won't retain the instance\'s scope .. */
+/* ... created in this tricky way to avoid losing local scope when it\'s called by 
+       the window object. using *this* won't retain the instance\'s scope .. */
 Slider.prototype.makeDrawBoundary = function (obj) {
-  return function () {
-    var old_cs = obj.current_seq,
-        cs = obj.current_seq = 1,
-        cs_string = obj.sequence_order[cs];
 
-    /* ... when the scrubber\'s all the way right ... */
-    if (obj.timeline.current_frame == 0 && obj.timeline.playthrough_count > 0) {
-      obj[cs_string].xdistance = obj[cs_string].xlimit; 
-      obj[cs_string].ydistance = obj[cs_string].ylimit; 
-      obj.boundary();
-      // console.log(cs_string);
-      obj[cs_string].xdistance = 0;
-      obj[cs_string].ydistance = 0; 
-    }
-    /* ... when the scrubber\'s somewhere in between ... */
-    else if (obj.timeline.current_frame > 0 && obj.timeline.current_frame < obj.timeline.frame_total) {
-      obj[cs_string].xdistance -= obj[cs_string].xinc; 
-      obj[cs_string].ydistance -= obj[cs_string].yinc; 
-      // console.log(cs_string);
-      obj.boundary();
-      obj[cs_string].xdistance += obj[cs_string].xinc;
-      obj[cs_string].ydistance += obj[cs_string].yinc;
-    }
-    else { // ... when the scrubber\'s all the way left ...
-      obj.boundary();
-    }
-    obj.current_seq = old_cs;
+  var i,
+      len = obj.boundary.length,
+      instructions = [];
+
+  for (i = 0; i < len; i += 1) {
+    /* ... this immediate function creates a new context in which to pass these variables
+           so they can be stored by value, not by reference ... */
+    obj.parseDrawingObject(obj.boundary, instructions);
   }
+
+  return function () {
+    var i,
+        len = instructions.length;
+
+    if (obj.visible) {
+      for (i = 0; i < instructions.length; i += 1) {
+        instructions[i]();
+      }
+    }
+  }
+
 };
 Slider.prototype.selectScrubber = function () {
   this.scrubber.selected = true;
@@ -556,7 +619,7 @@ Slider.prototype.releaseScrubber = function () {
 };
 Slider.prototype.init = function () {
   this.breadth = (this.max_edge - this.min_edge);
-  this.scrubber.xinc = this.scrubber.original_xinc = Math.round((this.breadth / this.timeline.frame_total) * 100) / 100;
+  this.scrubber.xinc = this.scrubber.original_xinc = Math.round(((this.breadth + 4 ) / this.timeline.frame_total) * 100) / 100;
   this.drawBoundary = this.makeDrawBoundary(this.me);
 };
 Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
@@ -579,7 +642,7 @@ Slider.prototype.mousemoveHandler = function () {
     }
     nearest_frame = this.scale();
     this.timeline.jumpToFrame(nearest_frame);
-    this.animator.drawFrame(this.timeline.queue);
+    this.animator.draw(this.timeline.queue);
     // console.log(nearest_frame);
   }
 };
@@ -610,9 +673,9 @@ EventDispatcher.prototype = {
       obj.mouse_x = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
       obj.mouse_y = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
       for (i = 0; i < len; i += 1) {
-        if (obj.timeline.queue[i].drawBoundary && typeof obj.timeline.queue[i].drawBoundary == "function") {
+        if (obj.timeline.queue[i].drawBoundary && typeof obj.timeline.queue[i].drawBoundary === "function") {
           /* ... if the user has selected the scrubber, we don't care whether they're in the boundary ... */
-          if (obj.timeline.queue[i].constructor == Slider && obj.timeline.queue[i].scrubber.selected) {
+          if (obj.timeline.queue[i].constructor === Slider && obj.timeline.queue[i].scrubber.selected) {
             if (obj.timeline.queue[i][handler_string]) {
               obj.timeline.queue[i][handler_string]();
             }
@@ -647,22 +710,20 @@ EventDispatcher.prototype = {
         for (j = 0; j < len2; j += 1) {
           event_string = this.timeline.queue[i].userEvents[j];
           dispatch_method_string = "dispatch" + event_string.charAt(0).toUpperCase() + event_string.slice(1);
-          // this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
+          this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
           len3 = this.listeners.length;
           if (len3 > 0) {
             for (k = 0; k < len3; k += 1) {
-              if (this.listeners[k] == dispatch_method_string) {
+              if (this.listeners[k] === dispatch_method_string) {
                 match = true;
                 break;
               }
             }
           }
-          /*
           if (!match) {
             the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
             this.listeners.push(dispatch_method_string);
           }
-          */
         }
         match = false;
       }
@@ -678,12 +739,11 @@ function Timeline (anim, events) {
   this.animator = anim;
   this.event_dispatcher = events;
   this.queue = [];
-  this.controls = [];
   this.frame_total = 0;
   this.frames = [];
   this.frame_index = 0;
   this.current_frame = 0;
-  this.breakpoints = [46, 49, 81];
+  this.breakpoints = [];
   this.current_bp = 0; // by default, the first breakpoint
   this.live = false;
   this.playthrough_count = 0;
@@ -711,11 +771,7 @@ Timeline.prototype = {
   store : function () {
     var i,
         j,
-        len = this.queue.length,
-        obj,
-        order,
-        cs,
-        cc;
+        len = this.queue.length;
 
     for (i = 0; i < this.frame_total; i += 1) {
       for (j = 0; j < len; j += 1) {
@@ -728,14 +784,17 @@ Timeline.prototype = {
     this.setFrameTotal();
     this.setFinalBreakpoint();
     this.declareFrames();
+    for (var i = 0; i < this.queue.length; i += 1) {
+      if (this.queue[i].constructor === Slider) {
+        this.queue[i].init();
+      }
+    }
     this.store();
     this.animator.timeline = this;
     this.animator.init();
     this.event_dispatcher.timeline = this;
     this.event_dispatcher.init();
     this.animator.event_dispatcher = this.event_dispatcher;
-    this.live = true;
-    this.animator.animate();
   },
 
   setFrameTotal : function () {
@@ -765,11 +824,13 @@ Timeline.prototype = {
   },
 
   setFinalBreakpoint : function () {
-    if (this.setFinalBreakpoint.alreadySet) {
-      this.setFinalBreakpoint.lastRemovedValue = this.breakpoints.pop();
+    if (this.breakpoints[(this.breakpoints.length - 1)] !== this.frame_total) {
+      if (this.setFinalBreakpoint.alreadySet) {
+        this.setFinalBreakpoint.lastRemovedValue = this.breakpoints.pop();
+      }
+      this.breakpoints.push(this.frame_total);
+      this.setFinalBreakpoint.alreadySet = true;
     }
-    this.breakpoints.push(this.frame_total);
-    this.setFinalBreakpoint.alreadySet = true;
   },
 
   advanceBreakpoint : function () {
@@ -832,7 +893,7 @@ Timeline.prototype = {
     if (!this.live) {
       this.ready();
       // retreatAll();
-      this.animator.drawFrame();
+      this.animator.draw();
       this.stop();
     }
   },
@@ -841,7 +902,7 @@ Timeline.prototype = {
     if (!this.live) {
       this.ready();
       this.animator.advanceAll();
-      this.animator.drawFrame();
+      this.animator.draw();
       this.stop();
     }
   }
@@ -859,12 +920,13 @@ function Animator (fps, copy) {
 };
 Animator.prototype = {
 
-  /* ... only thinks about repeating calls to drawFrame() ... */ 
-  /* ... created in this tricky way to avoid the scope problems with repeated calls to 
-         setTimeout. using *this* won't retain the instance\'s scope .. */
-  makeAnimate : function (obj) {
-    
-    return function () {
+  /* ... only thinks about repeating calls to draw() ... */ 
+  /* ... created in this tricky, self-defining way to avoid the scope problems with repeated calls 
+         to setTimeout. using *this* won't retain the instance\'s scope .. */
+  animate : function () { 
+    var obj = this; /* ... closure ... */
+
+    this.animate = function () {
 
       /* ... timeline advancement ... */
       if (obj.timeline.live) {
@@ -886,7 +948,7 @@ Animator.prototype = {
           obj.timeline.stop();
           return "paused";
         }
-        obj.drawFrame(obj.timeline.current_frame); 
+        obj.draw(obj.timeline.frames[obj.timeline.current_frame]); 
         // console.log(obj.timeline.current_frame);
         // obj.advanceAll();
         obj.timeline.current_frame += 1;
@@ -897,20 +959,19 @@ Animator.prototype = {
   },
 
   init : function () {
-    this.animate = this.makeAnimate(this.me);
-    this.drawFrame(this.timeline.current_frame);
+    this.animate(); /* ... this call redefines it with \'this\' set to Animator ... */  
+    this.draw(this.timeline.frames[this.timeline.current_frame]);
   },
 
   /* ...only thinks about drawing... */
-  drawFrame : function (requested_frame) {
+  draw : function (requested_frame) {
     var i,
-        len;
+        len = requested_frame.length;
         
     context.clearRect(0, 0, 800, 476);
-    len = this.timeline.frames[requested_frame].length;
     for (i = 0; i < len; i += 1) {
-      if (this.timeline.frames[requested_frame][i]) {
-        this.timeline.frames[requested_frame][i]();
+      if (typeof requested_frame[i] === "function") {
+        requested_frame[i]();
       }
     }
   },
