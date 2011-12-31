@@ -6,7 +6,13 @@ Changelog
 
 **12/31/11**
 
+*In terms of functionality, I'm all caught up with last week when I decided to change the playthrough system. It was challenge, but so far, it's made many of the `Animator`, `Timeline` and `EventDispatcher` methods much less complicated and the animation machinery seems more streamlined and sensible.
+
+There are a lot of closures here, so I'll be keeping a close eye on memory and testing for leaks. But all the important math is done before runtime, which gives the browser an easier task of rapid-fire drawing.*
+
 1. Adapted `Button.drawBoundary()` to the new playthrough system and made it self-defining. After initialization, it works with the event system right out of the box.
+
+2. Updated `Slider.drawBoundary()` to the new playthrough system. This required a new storage step in `Slider.makeFrameInstructions()` that pushes the scrubber boundary instructions to `Scrubber.boundary.cels` on every frame. The movement of the scrubber boundary is now in sync with the movement of the scrubber itself. 
 
 
 

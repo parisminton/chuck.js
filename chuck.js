@@ -142,7 +142,13 @@ Character.prototype = {
   plotX : function (xvalue) {
     var xo = this[this.sequence_order[this.current_seq]].xorigin,
         xd = this[this.sequence_order[this.current_seq]].xdistance;
-        
+    /*
+    if (this.scrubber_boundary_operation) {
+      xd = (this.scrubber.xinc * this.timeline.current_frame);
+      console.log(xd);
+    }
+    */   
+    /* ... if we\'re drawing the track, exclude the xdistance ... */
     xvalue = (this.track_operation) ? (xvalue + xo) : (xvalue + xo + xd); 
     return xvalue;
   },
@@ -151,6 +157,7 @@ Character.prototype = {
     var yo = this[this.sequence_order[this.current_seq]].yorigin,
         yd = this[this.sequence_order[this.current_seq]].ydistance;
         
+    /* ... if we\'re drawing the track, exclude the xdistance ... */
     yvalue = (this.track_operation) ? (yvalue + yo) : (yvalue + yo + yd); 
     return yvalue;
   },
@@ -186,128 +193,6 @@ Character.prototype = {
     }
   },
 
-  /* ... drawing instructions that update their coordinates before processing ...
-  beginPath : function () {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.beginPath();
-    });
-  },
-
-  moveTo : function (xpos, ypos) {
-    xpos = this.plotX(xpos);
-    ypos = this.plotY(ypos);
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.moveTo(xpos, ypos);
-    });
-  },
-
-  lineTo : function (xpos, ypos) {
-    xpos = this.plotX(xpos);
-    ypos = this.plotY(ypos);
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.lineTo(xpos, ypos);
-    });
-  },
-
-  lineWidth : function (line_width) {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.lineWidth = line_width;
-    });
-  },
-
-  lineJoin : function (line_join) {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.lineJoin = line_join;
-    });
-  },
-
-  miterLimit : function (miter_limit) {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.miterLimit = miter_limit;
-    });
-  },
-
-  bezierCurveTo : function (xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos) {
-    xctrl_1 = this.plotX(xctrl_1);
-    yctrl_1 = this.plotY(yctrl_1);
-    xctrl_2 = this.plotX(xctrl_2);
-    yctrl_2 = this.plotY(yctrl_2);
-    xpos = this.plotX(xpos);
-    ypos = this.plotY(ypos);
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.bezierCurveTo(xctrl_1, yctrl_1, xctrl_2, yctrl_2, xpos, ypos);
-    });
-  },
-
-  strokeRect : function (xpos, ypos, width, height) {
-    xpos = this.plotX(xpos);
-    ypos = this.plotY(ypos);
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.strokeRect(xpos, ypos, width, height);
-    });
-  },
-
-  fillRect : function (xpos, ypos, width, height) {
-    xpos = this.plotX(xpos);
-    ypos = this.plotY(ypos);
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.fillRect(xpos, ypos, width, height);
-    });
-  },
-
-  closePath : function () {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.closePath();
-    });
-  },
-
-  createLinearGradient : function (xstart, ystart, xend, yend) {
-    this.timeline.frames3[this.timeline.frame_index].push(context.createLinearGradient(xstart, ystart, xend, yend));
-  },
-
-  addColorStop : function (gradient, offset, color_string) {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      gradient.addColorStop(offset, color_string);
-    });
-  },
-
-  fill : function () {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.fill();
-    });
-  },
-
-  fillStyle : function (style_string) {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.fillStyle = style_string;
-    });
-  },
-
-  stroke : function () {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.stroke();
-    });
-  },
-
-  strokeStyle : function (style_string) {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.strokeStyle = style_string;
-    });
-  },
-
-  save : function () {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.save();
-    });
-  },
-
-  restore : function () {
-    this.timeline.frames3[this.timeline.frame_index].push(function () {
-      context.restore();
-    });
-  },
-  */
-  
   parseDrawingObject : function (param, instruction_array) {
     var action,
         instructions = (instruction_array) ? instruction_array : [],
@@ -446,7 +331,7 @@ function Button (obj_name) {
   this.constructor = Button;
 };
 Button.prototype = new Character();
-/* ... created in this tricky way to avoid losing local scope when it\'s called by 
+/* ... defines itself on the first call to avoid losing local scope when it\'s called by 
        the window object. using *this* won't retain the instance\'s scope .. */
 Button.prototype.drawBoundary = function () {
   var obj = this,
@@ -455,8 +340,6 @@ Button.prototype.drawBoundary = function () {
       instructions = [];
 
   for (i = 0; i < len; i += 1) {
-    /* ... this immediate function creates a new context in which to pass these variables
-           so they can be stored by value, not by reference ... */
     obj.parseDrawingObject(obj.boundary[i], instructions);
   }
 
@@ -533,7 +416,8 @@ Slider.prototype.makeFrameInstructions = function (current_frame, obj) {
       s_len = obj.scrubber.cels[cc].length,
       orig_xdist,
       orig_ydist,
-      instructions = [];
+      instructions = [],
+      boundary_instructions = [];
 
   this.track_operation = true;
   for (i = 0; i < t_len; i += 1) {
@@ -546,6 +430,7 @@ Slider.prototype.makeFrameInstructions = function (current_frame, obj) {
            so they can be stored by value, not by reference ... */
     (function (cc) {
       obj.parseDrawingObject(obj.scrubber.cels[cc][i], instructions);
+      obj.parseDrawingObject(obj.boundary[i], boundary_instructions);
     })(cc);
   }
 
@@ -554,11 +439,21 @@ Slider.prototype.makeFrameInstructions = function (current_frame, obj) {
         len = instructions.length;
 
     if (obj.visible) {
-      for (i = 0; i < instructions.length; i += 1) {
+      for (i = 0; i < len; i += 1) {
         instructions[i]();
       }
     }
   });
+
+  obj.boundary.cels.push(function () {
+    var i,
+        len = boundary_instructions.length;
+
+    for (i = 0; i < len; i += 1) {
+      boundary_instructions[i]();
+    }
+  });
+  
   obj.advance();
 };
 
@@ -585,27 +480,28 @@ Slider.prototype.setScrubberLimits = function () {
     }
   }
 };
-/* ... created in this tricky way to avoid losing local scope when it\'s called by 
+/* ... defines itself on the first call to avoid losing local scope when it\'s called by 
        the window object. using *this* won't retain the instance\'s scope .. */
-Slider.prototype.makeDrawBoundary = function (obj) {
+Slider.prototype.drawBoundary = function () {
+  var obj = this;
+      obj.boundary.cels = [];
 
-  var i,
-      len = obj.boundary.length,
-      instructions = [];
-
-  for (i = 0; i < len; i += 1) {
-    /* ... this immediate function creates a new context in which to pass these variables
-           so they can be stored by value, not by reference ... */
-    obj.parseDrawingObject(obj.boundary, instructions);
-  }
-
-  return function () {
+  obj.drawBoundary = function () {
     var i,
-        len = instructions.length;
+        len = obj.boundary.cels.length;
 
     if (obj.visible) {
-      for (i = 0; i < instructions.length; i += 1) {
-        instructions[i]();
+      /* ... when the scrubber\'s all the way right ... */
+      if (obj.timeline.current_frame === 0 && obj.timeline.playthrough_count > 0) { 
+        obj.boundary.cels[(obj.timeline.frame_total - 1)]();
+      }
+      /* ... when the scrubber\'s somewhere in between ... */
+      else if (obj.timeline.current_frame > 0 && obj.timeline.current_frame < obj.timeline.frame_total) {
+        obj.boundary.cels[(obj.timeline.current_frame - 1)]();
+      }
+      /* ... when the scrubber\'s all the way left ... */
+      else {
+        obj.boundary.cels[obj.timeline.current_frame]();
       }
     }
   }
@@ -620,7 +516,7 @@ Slider.prototype.releaseScrubber = function () {
 Slider.prototype.init = function () {
   this.breadth = (this.max_edge - this.min_edge);
   this.scrubber.xinc = this.scrubber.original_xinc = Math.round(((this.breadth + 4 ) / this.timeline.frame_total) * 100) / 100;
-  this.drawBoundary = this.makeDrawBoundary(this.me);
+  this.drawBoundary(); 
 };
 Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
 Slider.prototype.reset = function () {
