@@ -537,9 +537,9 @@ Slider.prototype.mousemoveHandler = function () {
       this.scrubber.xdistance = Math.round((this.event_dispatcher.mouse_x - this.min_edge) * 100) / 100;
     }
     nearest_frame = this.scale();
-    this.timeline.jumpToFrame(nearest_frame);
-    this.animator.draw(this.timeline.queue);
-    // console.log(nearest_frame);
+    // this.timeline.jumpToFrame(nearest_frame);
+    this.animator.draw(this.timeline.frames[nearest_frame]);
+    console.log(nearest_frame);
   }
 };
 Slider.prototype.mouseupHandler = function () {

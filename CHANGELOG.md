@@ -14,6 +14,8 @@ Changelog
 
 2. Updated `Slider.drawBoundary()` to the new playthrough system. This required a new storage step in `Slider.makeFrameInstructions()` that pushes the scrubber boundary instructions to `Scrubber.boundary.cels` on every frame. The movement of the scrubber boundary is now in sync with the movement of the scrubber itself. 
 
+3. Updated `Slider.mousemoveHandler()` to the new playthrough system. It works!
+
 
 
 **12/30/11**
@@ -61,9 +63,11 @@ Changelog
 So, given the two updates immediately above:
 
 *celhelper.sh* turns the Canvas drawing instruction into a JavaScript object ...
+
 ```javascript 
 { lineTo : [ 487.8, 45.2 ] }
 ```
+
 ... then, before runtime, math is done on the coordinates array in this object and it's made into a function by `Character.parseDrawingObject()` ...
 
 ```javascript
@@ -71,6 +75,7 @@ function () {
   context["lineTo"](497.8, 45.2);
 }
 ```
+
 ... before it's pushed to the `Timeline.frames` array for the current frame. When the user hits the "play" button, the functions in this array are fired off in sequence, drawing the entire image on the canvas for a split second. Then it happens again for the next frame, and so on...
 
 
