@@ -457,12 +457,11 @@ Slider.prototype.makeFrameInstructions = function (current_frame, obj) {
   obj.advance();
 };
 
-Slider.prototype.scale = function () {
-  var near_xinc = Math.round((this.scrubber.xdistance / this.scrubber.original_xinc) * 100) / 100, // lower limit
-      mod = Math.round((this.scrubber.xdistance % this.scrubber.original_xinc) * 100) / 100,
+Slider.prototype.scale = function (xdist) {
+  var near_xinc = Math.round((xdist / this.scrubber.original_xinc) * 100) / 100, // lower limit
+      mod = Math.round((xdist % this.scrubber.original_xinc) * 100) / 100,
       nearest_frame = (mod < (this.scrubber.original_xinc - mod)) ? Math.floor(near_xinc) : Math.ceil(near_xinc);
 
-  this.scrubber.xdistance = Math.round((nearest_frame * this.scrubber.original_xinc) * 100) / 100;
   return nearest_frame;
 };
 
@@ -495,11 +494,6 @@ Slider.prototype.drawBoundary = function () {
       if (obj.timeline.current_frame === 0 && obj.timeline.playthrough_count > 0) { 
         obj.boundary.cels[(obj.timeline.frame_total - 1)]();
       }
-      /* ... when the scrubber\'s somewhere in between ... */
-      else if (obj.timeline.current_frame > 0 && obj.timeline.current_frame < obj.timeline.frame_total) {
-        obj.boundary.cels[(obj.timeline.current_frame - 1)]();
-      }
-      /* ... when the scrubber\'s all the way left ... */
       else {
         obj.boundary.cels[obj.timeline.current_frame]();
       }
@@ -523,30 +517,29 @@ Slider.prototype.reset = function () {
   /* ### round to nearest xinc ### */
 };
 Slider.prototype.mousedownHandler = function () {
-  this.original_mouse_x = this.event_dispatcher.mouse_x;
+  // this.original_mouse_x = this.event_dispatcher.mouse_x;
   this.timeline.stop();
   this.selectScrubber();
 };
 Slider.prototype.mousemoveHandler = function () {
-  var nearest_frame;
-
   if (this.scrubber.selected) {
-    this.scrubber.xinc = 0;
-    if (this.event_dispatcher.mouse_x > this.min_edge &&
-        this.event_dispatcher.mouse_x < this.max_edge) {
-      this.scrubber.xdistance = Math.round((this.event_dispatcher.mouse_x - this.min_edge) * 100) / 100;
+    if (this.event_dispatcher.mouse_x < this.min_edge) {
+      this.timeline.current_frame = 0;
     }
-    nearest_frame = this.scale();
-    // this.timeline.jumpToFrame(nearest_frame);
-    this.animator.draw(this.timeline.frames[nearest_frame]);
-    console.log(nearest_frame);
+    else if (this.event_dispatcher.mouse_x > this.max_edge) {
+      this.timeline.current_frame = (this.timeline.frame_total - 1);
+    }
+    else {
+      this.timeline.current_frame = this.scale((Math.round((this.event_dispatcher.mouse_x - this.min_edge) * 100) / 100));
+    }
+    this.animator.draw(this.timeline.frames[this.timeline.current_frame]);
   }
 };
 Slider.prototype.mouseupHandler = function () {
   if (this.scrubber.selected) {
     this.releaseScrubber();
     // this.scrubber.reset();
-    this.scrubber.xinc = this.scrubber.original_xinc;
+    // this.scrubber.xinc = this.scrubber.original_xinc;
   }
 };
 

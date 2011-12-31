@@ -6,7 +6,7 @@ Changelog
 
 **12/31/11**
 
-*In terms of functionality, I'm all caught up with last week when I decided to change the playthrough system. It was challenge, but so far, it's made many of the `Animator`, `Timeline` and `EventDispatcher` methods much less complicated and the animation machinery seems more streamlined and sensible.*
+*In terms of functionality, I'm all caught up with last week when I decided to change the playthrough system. It was a challenge, but so far, it's made many of the `Animator`, `Timeline` and `EventDispatcher` methods much less complicated and the animation machinery seems more streamlined and sensible.*
 
 *There are a lot of closures here, so I'll be keeping a close eye on memory and testing for leaks. But all the important math is done before runtime, which gives the browser an easier task of rapid-fire drawing.*
 
@@ -14,7 +14,15 @@ Changelog
 
 2. Updated `Slider.drawBoundary()` to the new playthrough system. This required a new storage step in `Slider.makeFrameInstructions()` that pushes the scrubber boundary instructions to `Scrubber.boundary.cels` on every frame. The movement of the scrubber boundary is now in sync with the movement of the scrubber itself. 
 
-3. Updated `Slider.mousemoveHandler()` to the new playthrough system. It works!
+3. Updated `Slider.mousemoveHandler()` to the new playthrough system. It works! The whole reason I wanted to make a new playthrough system -- the engine that powers these animations -- was to enable this very important feature. Yes.
+
+4. Scrapped `Timeline.controls`. The slowdown of having the browser loop through and draw from two arrays concurrently was unacceptable.
+
+5. Also got rid of all the drawing methods inside `Character`. We don't need them in this new system.
+
+6. Lost an unnecessary `else if` test from `Slider.drawBoundary()`.
+
+7. Removed the assignments to `Slider` properties inside `Slider.scale()` and the scrubber mouse event handlers. Don't need 'em.
 
 
 
@@ -140,7 +148,7 @@ function () {
 
 **12/18/11**
 
-1. First set of changes in this new repo, the library's new home. A `Copy` object collects all the behavior and details for any text that needs to respond to events.
+1. **First set of changes in this new repo**, the library's new home. A `Copy` object collects all the behavior and details for any text that needs to respond to events.
 
 2. Made a `Button` object with `Character` as its prototype. Sequences include`off`, `on`, `hover` and `click`.
 
@@ -222,7 +230,7 @@ function () {
 
 2. Modified `setFrameTotal()` to work with these new values. 
 
-3. Added a `runup` sequence to `vaulter`: a loopable series of strides to showthe vaulter approaching the pit.
+3. Added a `runup` sequence to `vaulter`: a loopable series of strides to show the vaulter approaching the pit.
 
 4. Moved `sequenceOrder` out of the `Character` prototype and into its constructor, fixing the mistake I just introduced.
 
