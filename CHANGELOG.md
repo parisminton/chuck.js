@@ -24,6 +24,12 @@ Changelog
 
 7. Removed the assignments to `Slider` properties inside `Slider.scale()` and the scrubber mouse event handlers. Don't need 'em.
 
+8. Added a `last_action` property to `EventDispatcher` that will hold a string: `scrubber`, `play`, `step`, `ff` or `rw`.
+
+9. Got rid of `Timeline.jumpToFrame()`.
+
+10. Activated `Timeline.frameForward()` and `Timeline.frameBack()`. These are called from the click event dispatchers on the forward and back buttons.
+
 
 
 **12/30/11**

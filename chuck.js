@@ -142,12 +142,7 @@ Character.prototype = {
   plotX : function (xvalue) {
     var xo = this[this.sequence_order[this.current_seq]].xorigin,
         xd = this[this.sequence_order[this.current_seq]].xdistance;
-    /*
-    if (this.scrubber_boundary_operation) {
-      xd = (this.scrubber.xinc * this.timeline.current_frame);
-      console.log(xd);
-    }
-    */   
+
     /* ... if we\'re drawing the track, exclude the xdistance ... */
     xvalue = (this.track_operation) ? (xvalue + xo) : (xvalue + xo + xd); 
     return xvalue;
@@ -157,7 +152,7 @@ Character.prototype = {
     var yo = this[this.sequence_order[this.current_seq]].yorigin,
         yd = this[this.sequence_order[this.current_seq]].ydistance;
         
-    /* ... if we\'re drawing the track, exclude the xdistance ... */
+    /* ... if we\'re drawing the track, exclude the ydistance ... */
     yvalue = (this.track_operation) ? (yvalue + yo) : (yvalue + yo + yd); 
     return yvalue;
   },
@@ -396,8 +391,6 @@ function Slider (obj_name, min_edge, max_edge, touchable) {
     ydistance : 0,
     xinc : 0,
     yinc : 0,
-    xlimit : 0, 
-    ylimit : 0, 
     starting_frame : 0,
     iterations : 1,
     current_iteration : 0,
@@ -465,20 +458,6 @@ Slider.prototype.scale = function (xdist) {
   return nearest_frame;
 };
 
-Slider.prototype.setScrubberLimits = function () {
-  var i,
-      len = this.sequence_order.length,
-      cs_string; 
-
-  for (i = 0; i < len; i += 1) {
-    cs_string = this.sequence_order[i];
-
-    if (cs_string === "scrubber") {
-      this[cs_string].xlimit = ((this.timeline.frame_total * this[cs_string].xinc) - this[cs_string].xinc);
-      this[cs_string].ylimit = ((this.timeline.frame_total * this[cs_string].yinc) - this[cs_string].yinc);
-    }
-  }
-};
 /* ... defines itself on the first call to avoid losing local scope when it\'s called by 
        the window object. using *this* won't retain the instance\'s scope .. */
 Slider.prototype.drawBoundary = function () {
@@ -491,7 +470,8 @@ Slider.prototype.drawBoundary = function () {
 
     if (obj.visible) {
       /* ... when the scrubber\'s all the way right ... */
-      if (obj.timeline.current_frame === 0 && obj.timeline.playthrough_count > 0) { 
+      if (obj.timeline.current_frame === 0 &&
+         (obj.event_dispatcher.last_action === "play" || obj.event_dispatcher.last_action === "step")) { 
         obj.boundary.cels[(obj.timeline.frame_total - 1)]();
       }
       else {
@@ -501,26 +481,28 @@ Slider.prototype.drawBoundary = function () {
   }
 
 };
+
 Slider.prototype.selectScrubber = function () {
   this.scrubber.selected = true;
 };
+
 Slider.prototype.releaseScrubber = function () {
   this.scrubber.selected = false;
 };
+
 Slider.prototype.init = function () {
   this.breadth = (this.max_edge - this.min_edge);
   this.scrubber.xinc = this.scrubber.original_xinc = Math.round(((this.breadth + 4 ) / this.timeline.frame_total) * 100) / 100;
   this.drawBoundary(); 
 };
+
 Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
-Slider.prototype.reset = function () {
-  /* ### round to nearest xinc ### */
-};
+
 Slider.prototype.mousedownHandler = function () {
-  // this.original_mouse_x = this.event_dispatcher.mouse_x;
   this.timeline.stop();
   this.selectScrubber();
 };
+
 Slider.prototype.mousemoveHandler = function () {
   if (this.scrubber.selected) {
     if (this.event_dispatcher.mouse_x < this.min_edge) {
@@ -535,11 +517,11 @@ Slider.prototype.mousemoveHandler = function () {
     this.animator.draw(this.timeline.frames[this.timeline.current_frame]);
   }
 };
+
 Slider.prototype.mouseupHandler = function () {
   if (this.scrubber.selected) {
     this.releaseScrubber();
-    // this.scrubber.reset();
-    // this.scrubber.xinc = this.scrubber.original_xinc;
+    this.event_dispatcher.last_action = "scrubber";
   }
 };
 
@@ -548,6 +530,7 @@ Slider.prototype.mouseupHandler = function () {
 /* CONSTRUCTOR ... event management ... */
 function EventDispatcher () {
   this.listeners = [];
+  this.last_action = null;
   this.me = this;
   this.constructor = EventDispatcher;
 };
@@ -674,7 +657,7 @@ Timeline.prototype = {
     this.setFinalBreakpoint();
     this.declareFrames();
     for (var i = 0; i < this.queue.length; i += 1) {
-      if (this.queue[i].constructor === Slider) {
+      if (this.queue[i].constructor === Slider || this.queue[i].constructor === Button) {
         this.queue[i].init();
       }
     }
@@ -744,6 +727,7 @@ Timeline.prototype = {
       this.current_frame = 0;
       this.animator.resetAllCels();
       this.animator.animate();
+      this.event_dispatcher.last_action = "play";
     }
   },
 
@@ -753,46 +737,23 @@ Timeline.prototype = {
       this.animator.animate();
       this.animator.copy.swapText();
       this.animator.copy.insertText();
-    }
-  },
-
-  jumpToFrame : function (frame_index) {
-    var i,
-        len = this.frames[frame_index].length,
-        character;
-
-    // console.log("James is " + frame_index + ".");
-    for (i = 0; i < len; i += 1) {
-      for (character in this.frames[frame_index][i]) {
-        this.queue[i].visible = this.frames[frame_index][i][character].vis;
-
-        this.queue[i].current_seq = this.frames[frame_index][i][character].cs; 
-
-        this.queue[i].sequence_order[this.queue[i].current_seq].current_cel =
-        this.frames[frame_index][i][character].cc;
-        
-        this.queue[i].sequence_order[this.queue[i].current_seq].xdistance = this.frames[frame_index][i][character].xd; 
-        
-        this.queue[i].sequence_order[this.queue[i].current_seq].ydistance = this.frames[frame_index][i][character].yd; 
-      }
+      this.event_dispatcher.last_action = "step";
     }
   },
 
   frameBack : function () {
     if (!this.live) {
-      this.ready();
-      // retreatAll();
-      this.animator.draw();
-      this.stop();
+      this.current_frame -= 1;
+      this.animator.draw(this.frames[this.current_frame]);
+      this.event_dispatcher.last_action == "back"
     }
   },
 
   frameForward : function () {
     if (!this.live) {
-      this.ready();
-      this.animator.advanceAll();
-      this.animator.draw();
-      this.stop();
+      this.current_frame += 1;
+      this.animator.draw(this.frames[this.current_frame]);
+      this.event_dispatcher.last_action == "forward"
     }
   }
   
