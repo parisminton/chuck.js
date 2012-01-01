@@ -286,6 +286,8 @@ Character.prototype = {
       })(cs, cc);
     }
 
+    /* ... if this object has a userEvents array, we need a different rendering function ...*/
+
     obj.timeline.frames[current_frame].push(function () {
       var i,
           len = instructions.length;
@@ -325,7 +327,40 @@ function Button (obj_name) {
   this.me = this;
   this.constructor = Button;
 };
+
 Button.prototype = new Character();
+
+Button.prototype.makeFrameInstructions = function (current_frame, obj) {
+  var order = obj.sequence_order,
+      cs = obj.current_seq,
+      cc = obj[order[cs]].current_cel,
+      i,
+      len = obj[order[cs]].cels[cc].length,
+      instructions = [];
+
+  for (i = 0; i < len; i += 1) {
+    /* ... this immediate function creates a new context in which to pass these variables
+           so they can be stored by value, not by reference ... */
+    (function (cs, cc) {
+      obj.parseDrawingObject(obj[order[cs]].cels[cc][i], instructions);
+    })(cs, cc);
+  }
+
+  /* ... if this object has a userEvents array, we need a different rendering function ...*/
+
+  obj.timeline.frames[current_frame].push(function () {
+    var i,
+        len = instructions.length;
+
+    if (obj.visible) {
+      for (i = 0; i < instructions.length; i += 1) {
+        instructions[i]();
+      }
+    }
+  });
+  obj.advance();
+};
+
 /* ... defines itself on the first call to avoid losing local scope when it\'s called by 
        the window object. using *this* won't retain the instance\'s scope .. */
 Button.prototype.drawBoundary = function () {
@@ -349,12 +384,15 @@ Button.prototype.drawBoundary = function () {
     }
   }
 };
+
 Button.prototype.userEvents = ["click", "mouseover", "mouseout"];
+
 Button.prototype.mouseoverHandler = function () {
-
+  this.event_dispatcher.mouseover = this.name;
 };
-Button.prototype.mouseoutHandler = function () {
 
+Button.prototype.mouseoutHandler = function () {
+  this.event_dispatcher.mouseout = null;
 };
 Button.prototype.init = function () {
   this.drawBoundary();
@@ -732,7 +770,7 @@ Timeline.prototype = {
     if (!this.live) {
       this.ready();
       this.current_bp = (this.breakpoints.length - 1);  // ### a chance current_bp becomes a negative number ###
-      this.current_frame = 0;
+      // this.current_frame = 0;
       this.animator.resetAllCels();
       this.animator.animate();
       this.event_dispatcher.last_action = "play";
@@ -751,7 +789,12 @@ Timeline.prototype = {
 
   frameBack : function () {
     if (!this.live) {
-      this.current_frame -= 1;
+      if (this.current_frame <= 0) {
+        this.current_frame = (this.frame_total - 1);
+      }
+      else {
+        this.current_frame -= 1;
+      }
       this.animator.draw(this.frames[this.current_frame]);
       this.event_dispatcher.last_action == "back"
     }
@@ -759,7 +802,12 @@ Timeline.prototype = {
 
   frameForward : function () {
     if (!this.live) {
-      this.current_frame += 1;
+      if (this.current_frame >= (this.frame_total - 1)) {
+        this.current_frame = 0;
+      }
+      else {
+        this.current_frame += 1;
+      }
       this.animator.draw(this.frames[this.current_frame]);
       this.event_dispatcher.last_action == "forward"
     }

@@ -8,6 +8,10 @@ Changelog
 
 1. Fixed the scrubber boundary bug.
 
+2. Updated `Timeline.frameBack()` and `Timeline.frameForward()` to cycle through to the other end of the timeline once they've reached its opposite.
+
+3. Noted out the assignment of current_frame to 0 inside `Timeline.play()`. I'm toying with the idea of the play button not resetting the animation from the beginning, but simply picking up from the current frame, wherever that happens to be.
+
 
 
 **12/31/11**

@@ -11017,8 +11017,10 @@ function stage () {
       "restore"
     ]
   ];
+  /*
   vaulter.setOrigins(-550, 50);
   vaulter.runup.xinc = 25;
+  */
   t.load(play, step, slider, back, forward, track, pit, shadow, pitshadow, vaulter, pitforeground);
   
 };
