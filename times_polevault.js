@@ -182,7 +182,6 @@ function stage () {
   play.clickHandler = function () {
     this.timeline.play();
   };
-  play.init();
 
   
 
@@ -732,7 +731,6 @@ function stage () {
   step.clickHandler = function () {
     this.timeline.stepThrough();
   };
-  step.init();
 
   
 
@@ -913,9 +911,8 @@ function stage () {
     "stroke"
   ];
   back.clickHandler = function () {
-    this.timeline.play();
+    this.timeline.frameBack();
   };
-  back.init();
 
 
   forward = new Button("forward", false);
@@ -968,9 +965,8 @@ function stage () {
     "stroke"
   ];
   forward.clickHandler = function () {
-    this.timeline.play();
+    this.timeline.frameForward();
   };
-  forward.init();
 
 
   track = new Character("track", false);
@@ -11021,10 +11017,8 @@ function stage () {
       "restore"
     ]
   ];
-  /*  
   vaulter.setOrigins(-550, 50);
   vaulter.runup.xinc = 25;
-  */
   t.load(play, step, slider, back, forward, track, pit, shadow, pitshadow, vaulter, pitforeground);
   
 };

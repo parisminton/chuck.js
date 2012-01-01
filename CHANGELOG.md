@@ -4,6 +4,12 @@ chuck.js
 Changelog
 ---------
 
+**1/1/12**
+
+1. Fixed the scrubber boundary bug.
+
+
+
 **12/31/11**
 
 *In terms of functionality, I'm all caught up with last week when I decided to change the playthrough system. It was a challenge, but so far, it's made many of the `Animator`, `Timeline` and `EventDispatcher` methods much less complicated and the animation machinery seems more streamlined and sensible.*

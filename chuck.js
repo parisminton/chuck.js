@@ -470,8 +470,10 @@ Slider.prototype.drawBoundary = function () {
 
     if (obj.visible) {
       /* ... when the scrubber\'s all the way right ... */
-      if (obj.timeline.current_frame === 0 &&
-         (obj.event_dispatcher.last_action === "play" || obj.event_dispatcher.last_action === "step")) { 
+      if (obj.timeline.current_frame === 0 && obj.event_dispatcher.last_action === "scrubber") {
+        obj.boundary.cels[0]();
+      }
+      else if (obj.timeline.current_frame === 0 && obj.timeline.playthrough_count > 0) { 
         obj.boundary.cels[(obj.timeline.frame_total - 1)]();
       }
       else {
@@ -499,6 +501,7 @@ Slider.prototype.init = function () {
 Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
 
 Slider.prototype.mousedownHandler = function () {
+  this.scrubber.play_status = this.timeline.live;
   this.timeline.stop();
   this.selectScrubber();
 };
@@ -522,6 +525,11 @@ Slider.prototype.mouseupHandler = function () {
   if (this.scrubber.selected) {
     this.releaseScrubber();
     this.event_dispatcher.last_action = "scrubber";
+  }
+  if (this.scrubber.play_status) {
+    this.timeline.ready();
+    this.animator.animate();
+    this.event_dispatcher.last_action = "play";
   }
 };
 
@@ -782,7 +790,6 @@ Animator.prototype = {
       if (obj.timeline.live) {
         if (obj.timeline.current_frame >= obj.timeline.frame_total) {
           // console.log("First condition: animate() exited on frame " + obj.timeline.current_frame + ".");
-          // obj.advanceAll();
           obj.timeline.current_frame = 0;
           obj.timeline.current_bp = 0;
           obj.timeline.stop();
@@ -800,7 +807,6 @@ Animator.prototype = {
         }
         obj.draw(obj.timeline.frames[obj.timeline.current_frame]); 
         // console.log(obj.timeline.current_frame);
-        // obj.advanceAll();
         obj.timeline.current_frame += 1;
         setTimeout(obj.animate, obj.fps);
       }
