@@ -389,11 +389,18 @@ Button.prototype.userEvents = ["click", "mouseover", "mouseout"];
 
 Button.prototype.mouseoverHandler = function () {
   this.event_dispatcher.mouseover = this.name;
+  if (!this.timeline.live) {
+    this.animator.redraw();
+  }
 };
 
 Button.prototype.mouseoutHandler = function () {
   this.event_dispatcher.mouseout = null;
+  if (!this.timeline.live) {
+    this.animator.redraw();
+  }
 };
+
 Button.prototype.init = function () {
   this.drawBoundary();
 }
@@ -771,7 +778,6 @@ Timeline.prototype = {
       this.ready();
       this.current_bp = (this.breakpoints.length - 1);  // ### a chance current_bp becomes a negative number ###
       // this.current_frame = 0;
-      this.animator.resetAllCels();
       this.animator.animate();
       this.event_dispatcher.last_action = "play";
     }
@@ -880,20 +886,8 @@ Animator.prototype = {
     }
   },
 
-  getAllCels : function (method_string) {
-    var i,
-        len = this.timeline.queue.length;
-    for (i = 0; i < len; i += 1) {
-      this.timeline.queue[i][method_string]();
-    }
-  },
-
-  advanceAll : function () {
-    this.getAllCels("advance");
-  },
-
-  resetAllCels : function () {
-    this.getAllCels("reset");
+  redraw : function () {
+    this.draw(this.timeline.frames[this.timeline.current_frame]);
   }
 
 };
