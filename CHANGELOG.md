@@ -4,6 +4,12 @@ chuck.js
 Changelog
 ---------
 
+**1/2/12**
+
+1. Renamed `Button.mouseoverHandler()` to `Button.mousemoveHandler()`. It's challenging to set a mouseover event handler on the Canvas, so I'm simulating a mouseover event by testing for mousemove within the button boundaries. Still working this out.
+
+
+
 **1/1/12**
 
 1. Fixed the scrubber boundary bug.
@@ -13,6 +19,8 @@ Changelog
 3. Noted out the assignment of current_frame to 0 inside `Timeline.play()`. I'm toying with the idea of the play button not resetting the animation from the beginning, but simply picking up from the current frame, wherever that happens to be.
 
 4. Got rid of `Animator.getAllCels()`, `Animator.resetAllCels()`, and `Animator.advanceAll()`. They're unused in the new system.
+
+5. Updated the `Button` constructor to define `enabled`, `disabled`, `over`, `out` and `click` states. `enabled` is -- forgive the pun -- enabled and populated by default.
 
 
 

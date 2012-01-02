@@ -188,7 +188,7 @@ Character.prototype = {
     }
   },
 
-  parseDrawingObject : function (param, instruction_array) {
+  parseDrawingObject : function (param, instruction_array, obj) {
     var action,
         instructions = (instruction_array) ? instruction_array : [],
         xpos,
@@ -202,7 +202,8 @@ Character.prototype = {
         xstart,
         ystart,
         xend,
-        yend; 
+        yend,
+        hover_color;
 
     if (typeof param === "string") {
       instructions.push(function () {
@@ -255,8 +256,20 @@ Character.prototype = {
           }
         }
         if (typeof param[action] === "string" || typeof param[action] === "number") {
-          if (action === "fillStyle" || action === "strokeStyle" || action === "miterLimit" ||
-              action === "lineWidth" || action === "lineJoin" ) {
+          if (action === "fillStyle") {
+            if (param[action] == "hover_state") { /* ### need a way to map this ### */
+              instructions.push(function () {
+                context[action] = obj.colors.hover_state; 
+              });
+            }
+            else {
+              instructions.push(function () {
+                context[action] = param[action];
+              });
+            }
+          }
+          if (action === "strokeStyle" || action === "miterLimit" || action === "lineWidth" ||
+              action === "lineJoin" ) {
             instructions.push(function () {
               context[action] = param[action];
             });
@@ -310,8 +323,8 @@ function Button (obj_name) {
   this.visible = true;
   this.touchable = true;
   this.current_seq = 0;
-  this.sequence_order = ["off"];
-  this.off = {
+  this.sequence_order = ["enabled"];
+  this.enabled = {
     xorigin : 0,
     yorigin : 0,
     xdistance : 0,
@@ -324,6 +337,7 @@ function Button (obj_name) {
     current_cel : 0,
     cels : []
   };
+  this.colors = {};
   this.me = this;
   this.constructor = Button;
 };
@@ -342,17 +356,21 @@ Button.prototype.makeFrameInstructions = function (current_frame, obj) {
     /* ... this immediate function creates a new context in which to pass these variables
            so they can be stored by value, not by reference ... */
     (function (cs, cc) {
-      obj.parseDrawingObject(obj[order[cs]].cels[cc][i], instructions);
+      obj.parseDrawingObject(obj[order[cs]].cels[cc][i], instructions, obj);
     })(cs, cc);
   }
-
-  /* ... if this object has a userEvents array, we need a different rendering function ...*/
 
   obj.timeline.frames[current_frame].push(function () {
     var i,
         len = instructions.length;
 
     if (obj.visible) {
+      if (obj.event_dispatcher.mouseover === obj.name) {
+        obj.colors.hover_state = obj.colors.over;
+      }
+      if (obj.event_dispatcher.mouseout === obj.name) {
+        obj.colors.hover_state = obj.colors.out;
+      }
       for (i = 0; i < instructions.length; i += 1) {
         instructions[i]();
       }
@@ -385,25 +403,37 @@ Button.prototype.drawBoundary = function () {
   }
 };
 
-Button.prototype.userEvents = ["click", "mouseover", "mouseout"];
+Button.prototype.userEvents = ["click", "mousemove"];
 
-Button.prototype.mouseoverHandler = function () {
-  this.event_dispatcher.mouseover = this.name;
-  if (!this.timeline.live) {
-    this.animator.redraw();
-  }
-};
+/* ... defines itself so it can retain scope after being called by the window object ... */
+Button.prototype.mousemoveHandler = function () {
+  var obj = this;
 
-Button.prototype.mouseoutHandler = function () {
-  this.event_dispatcher.mouseout = null;
-  if (!this.timeline.live) {
-    this.animator.redraw();
+  /* ... we\'re simulating a mouseover by detecting whether the mouse moves into or out of this path.
+         a true mouseover fires once for the whole canvas, so once you've hovered over it, you have one
+         extremely small shot to land inside the path. if you miss, you have to mouse out of the whole
+         canvas element, then back in to fire another mouseover. this is way more forgiving. ... */
+
+  this.mousemoveHandler = function (evt) {
+    obj.drawBoundary();
+    if (context.isPointInPath(obj.event_dispatcher.mouse_x, obj.event_dispatcher.mouse_y)) {
+      obj.event_dispatcher.mouseover = obj.name;
+    }
+    else {
+      obj.event_dispatcher.mouseover = null;
+      obj.event_dispatcher.mouseout = obj.name;
+    }
+    if (!obj.timeline.live) {
+      obj.animator.redraw();
+    }
   }
 };
 
 Button.prototype.init = function () {
+  this.colors.hover_state = this.colors.out;
   this.drawBoundary();
-}
+  this.mousemoveHandler();
+};
 
 
 /* CONSTRUCTOR ... a control that lets the user slide through a range ... */
@@ -583,6 +613,8 @@ Slider.prototype.mouseupHandler = function () {
 /* CONSTRUCTOR ... event management ... */
 function EventDispatcher () {
   this.listeners = [];
+  this.mouseover = null;
+  this.mouseout = null;
   this.last_action = null;
   this.me = this;
   this.constructor = EventDispatcher;
@@ -607,6 +639,11 @@ EventDispatcher.prototype = {
           }
           else {
             obj.timeline.queue[i].drawBoundary();
+            /*
+            if (evt.type === "mousemove" && obj.timeline.queue[i].name === "play") {
+              console.log(evt, obj.timeline.queue[i].name, context.isPointInPath(obj.mouse_x, obj.mouse_y));
+            }
+            */
             if (context.isPointInPath(obj.mouse_x, obj.mouse_y)) {
               if (obj.timeline.queue[i][handler_string]) {
                 obj.timeline.queue[i][handler_string]();

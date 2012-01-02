@@ -39,7 +39,7 @@ function stage () {
 
   play = new Button("play", false);
   play.show();
-  play.off.cels = [
+  play.enabled.cels = [
     [
       "save",
       "save",
@@ -62,7 +62,7 @@ function stage () {
       { lineTo : [ 288.1, 436.4 ] },
       { lineTo : [ 280.6, 431.9 ] },
       "closePath",
-      { fillStyle : "rgb(255, 255, 255)" },
+      { fillStyle : "hover_state" },
       "fill",
       "save",
       "beginPath",
@@ -166,6 +166,10 @@ function stage () {
       "restore"
     ]
   ];
+  play.colors.enabled = "rgb(38, 90, 137)";
+  play.colors.disabled = "rgb(204, 255, 238)";
+  play.colors.over = "rgb(134, 220, 102)";
+  play.colors.out = "rgb(255, 255, 255)";
   play.boundary = [
     "save",
     "beginPath",
@@ -187,7 +191,7 @@ function stage () {
 
   step = new Button("step", false);
   step.show();
-  step.off.cels = [
+  step.enabled.cels = [
     [
       "save",
       "save",
@@ -715,6 +719,10 @@ function stage () {
       "restore"
     ]
   ];
+  step.colors.enabled = "rgb(38, 90, 137)";
+  step.colors.disabled = "rgb(204, 255, 238)";
+  step.colors.over = "rgb(134, 220, 102)";
+  step.colors.out = "rgb(255, 255, 255)";
   step.boundary = [
     "save",
     "beginPath",
@@ -864,7 +872,7 @@ function stage () {
 
   back = new Button("back", false);
   back.show();
-  back.off.cels = [
+  back.enabled.cels = [
     [
       "save",
       "beginPath",
@@ -894,6 +902,10 @@ function stage () {
       "restore"
     ]
   ];
+  back.colors.enabled = "rgb(119, 119, 119)";
+  back.colors.disabled = "rgb(220, 220, 220)";
+  back.colors.over = "rgb(102, 204, 0)";
+  back.colors.out = "rgb(182, 182, 182)";
   back.boundary = [
     "save",
     "beginPath",
@@ -917,7 +929,7 @@ function stage () {
 
   forward = new Button("forward", false);
   forward.show();
-  forward.off.cels = [
+  forward.enabled.cels = [
     [
       "save",
       "beginPath",
@@ -948,6 +960,10 @@ function stage () {
       "restore"
     ]
   ];
+  forward.colors.enabled = "rgb(119, 119, 119)";
+  forward.colors.disabled = "rgb(220, 220, 220)";
+  forward.colors.over = "rgb(102, 204, 0)";
+  forward.colors.out = "rgb(182, 182, 182)";
   forward.boundary = [
     "save",
     "beginPath",
