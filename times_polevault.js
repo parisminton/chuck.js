@@ -183,8 +183,13 @@ function stage () {
     "stroke",
     "restore"
   ];
-  play.clickHandler = function () {
-    this.timeline.play();
+  play.clickHandler = function (evt) {
+    var mx = this.event_dispatcher.mouse_x,
+        my = this.event_dispatcher.mouse_y;
+
+    if (context.isPointInPath(mx, my)) {
+      this.timeline.play();
+    }
   };
 
   
@@ -240,7 +245,7 @@ function stage () {
       { bezierCurveTo : [ 370.3, 438.5, 370.0, 437.9, 370.0, 437.0 ] },
       { lineTo : [ 371.0, 437.0 ] },
       "closePath",
-      { fillStyle : "rgb(255, 255, 255)" },
+      { fillStyle : "hover_state" },
       "fill",
       "beginPath",
       { moveTo : [ 377.7, 432.2 ] },
@@ -736,8 +741,13 @@ function stage () {
     "stroke",
     "restore"
   ];
-  step.clickHandler = function () {
-    this.timeline.stepThrough();
+  step.clickHandler = function (evt) {
+    var mx = this.event_dispatcher.mouse_x,
+        my = this.event_dispatcher.mouse_y;
+
+    if (context.isPointInPath(mx, my)) {
+      this.timeline.stepThrough();
+    }
   };
 
   
@@ -922,8 +932,13 @@ function stage () {
     { strokeStyle : "rgb(255, 0, 0)" },
     "stroke"
   ];
-  back.clickHandler = function () {
-    this.timeline.frameBack();
+  back.clickHandler = function (evt) {
+    var mx = this.event_dispatcher.mouse_x,
+        my = this.event_dispatcher.mouse_y;
+
+    if (context.isPointInPath(mx, my)) {
+      this.timeline.frameBack();
+    }
   };
 
 
@@ -980,8 +995,14 @@ function stage () {
     { strokeStyle : "rgb(255, 0, 0)" },
     "stroke"
   ];
-  forward.clickHandler = function () {
-    this.timeline.frameForward();
+  forward.clickHandler = function (evt) {
+    var mx = this.event_dispatcher.mouse_x,
+        my = this.event_dispatcher.mouse_y;
+
+    if (context.isPointInPath(mx, my)) {
+      this.timeline.frameForward();
+      console.log("Monkey.");
+    }
   };
 
 

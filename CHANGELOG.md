@@ -4,6 +4,12 @@ chuck.js
 Changelog
 ---------
 
+**1/4/12**
+
+1. Moved the `isPointInPath()` tests out of `EventDispatcher.makeDispatchers()` and into the handlers. Testing this now.
+
+
+
 **1/2/12**
 
 1. Renamed `Button.mouseoverHandler()` to `Button.mousemoveHandler()`. It's challenging to set a mouseover event handler on the Canvas, so I'm simulating a mouseover event by testing for mousemove within the button boundaries. Still working this out.
