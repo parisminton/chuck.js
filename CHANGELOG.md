@@ -4,6 +4,18 @@ chuck.js
 Changelog
 ---------
 
+**1/10/12**
+
+1. Added `EventDispatcher.getUserEvents()` to collect all the user event strings it will need to attach listeners to the Canvas.
+
+
+
+**1/5/12**
+
+1. Added a *tests* directory that includes unit tests in Jasmine. Playing catch-up on testing the code I've already written. But from now on, anything that doesn't pass won't get committed.
+
+
+
 **1/4/12**
 
 1. Moved the `isPointInPath()` tests out of `EventDispatcher.makeDispatchers()` and into the handlers. Testing this now.

@@ -636,41 +636,91 @@ function EventDispatcher () {
 };
 EventDispatcher.prototype = {
 
-  makeDispatchers : function (obj, event_string) {
-    return function (evt) {
-      var i,
-          len = obj.timeline.queue.length,
-          handler_string = event_string + "Handler";
-          // anti_handler_string = "anti" + event_string.charAt(0).toUpperCase() + event_string.slice(1) + "Handler";
-          
-      obj.mouse_x = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
-      obj.mouse_y = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
-      for (i = 0; i < len; i += 1) {
-        if (obj.timeline.queue[i].drawBoundary && typeof obj.timeline.queue[i].drawBoundary === "function") {
-          /* ... if the user has selected the scrubber, we don't care whether they're in the boundary ... */
-          if (obj.timeline.queue[i].constructor === Slider && obj.timeline.queue[i].scrubber.selected) {
-            if (obj.timeline.queue[i][handler_string]) {
-              obj.timeline.queue[i][handler_string]();
+  getUserEvents : function () {
+    var i,
+        j,
+        k = 0,
+        len = this.timeline.queue.length,
+        len_2,
+        len_3,
+        handlers = [],
+        match = false;
+
+    function compare (value, collection) {
+      if (collection.length > 0 && collection[k]) {
+        if (value === collection[k]) {
+          match = true;
+          k = 0;
+          return;
+        }
+        else {
+          match = false;
+          k += 1;
+          compare(value, collection);
+        }
+      }
+      k = 0;
+    }
+
+    for (i = 0; i < len; i += 1) {
+      if (this.timeline.queue[i].userEvents && this.timeline.queue[i].userEvents.length > 0) {
+        len_2 = this.timeline.queue[i].userEvents.length;
+        for (j = 0; j < len_2; j += 1) {
+          compare(this.timeline.queue[i].userEvents[j], handlers);
+          /*
+          len_3 = handlers.length;
+          for (k = 0; k < len_3; k += 1) {
+            if (this.timeline.queue[i].userEvents[j] === handlers[k]) {
+              match = true;
+              continue;
             }
           }
-          else {
-            obj.timeline.queue[i].drawBoundary();
-            /*
-            if (evt.type === "mousemove" && obj.timeline.queue[i].name === "play") {
-              console.log(evt, obj.timeline.queue[i].name, context.isPointInPath(obj.mouse_x, obj.mouse_y));
-            }
-            */
-              if (obj.timeline.queue[i][handler_string]) {
-                obj.timeline.queue[i][handler_string]();
-              }
-            /*
-            else if (event_string === "mousemove" && obj.timeline.queue[i][anti_handler_string]) {
-              obj.timeline.queue[i][anti_handler_string]();
-            }
-            */
+          */
+          if (!match) {
+            handlers.push(this.timeline.queue[i].userEvents[j]);
           }
         }
       }
+      match = false;
+    }
+    return handlers;
+  },
+
+  makeDispatchers : function (obj, event_string) {
+    return function (evt) {
+      var handler_instructions = [],
+          handlers = ["clickHandler", "mousemoveHandler", "mousedownHandler", "mouseupHandler"],
+          i,
+          j,
+          len = handlers.length,
+          len_2 = obj.timeline.queue.length;
+          // handler_string = event_string + "Handler";
+          
+      obj.mouse_x = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
+      obj.mouse_y = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
+      
+      for (i = 0; i < len; i += 1) {
+        for (j = 0; j < len_2; j += 1) {
+          if (typeof obj.timeline.queue[j][handlers[i]] === "function") {
+            handler_instructions.push(function () {
+              obj.timeline.queue[j].drawBoundary();
+              obj.timeline.queue[j][handlers[i]]();
+            }); 
+          }
+        }
+ 
+      }
+
+      /*
+      for (i = 0; i < len; i += 1) {
+        if (obj.timeline.queue[i].drawBoundary && typeof obj.timeline.queue[i].drawBoundary === "function") {
+          obj.timeline.queue[i].drawBoundary();
+          if (obj.timeline.queue[i][handler_string]) {
+            obj.timeline.queue[i][handler_string]();
+          }
+        }
+      }
+      */
     }
   },
 
@@ -680,8 +730,11 @@ EventDispatcher.prototype = {
         len = this.timeline.queue.length,
         len2,
         event_string,
-        dispatch_method_string;
+        dispatch_method_string,
+        count = 0;
 
+    var mokey = this.getUserEvents();
+    console.log(mokey);
     for (i = 0; i < len; i += 1) {
       if (this.timeline.queue[i].userEvents) {
         len2 = this.timeline.queue[i].userEvents.length;
@@ -689,8 +742,10 @@ EventDispatcher.prototype = {
           event_string = this.timeline.queue[i].userEvents[j];
           dispatch_method_string = "dispatch" + event_string.charAt(0).toUpperCase() + event_string.slice(1);
           this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
-            the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
-            this.listeners.push(dispatch_method_string);
+          the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
+          this.listeners.push(dispatch_method_string);
+          console.log(count + ": " + this.timeline.queue[i].name + ": " + dispatch_method_string);
+          count += 1;
         }
       }
     }
