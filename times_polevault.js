@@ -37,7 +37,7 @@ function stage () {
   t = new Timeline(a, e);
   t.breakpoints = [46, 49, 81];
 
-  play = new Button("play", false);
+  play = new Button("play");
   play.show();
   play.enabled.cels = [
     [

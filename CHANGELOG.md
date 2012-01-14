@@ -4,6 +4,20 @@ chuck.js
 Changelog
 ---------
 
+**1/14/12**
+
+1. Added the `isNotEmpty()` helper inside `EventDispatcher.getUserEvents()`.
+
+
+
+**1/11/12**
+
+1. Removed the `false` argument from the `Button` instantiations. We don't need it. Buttons are always touchable.
+
+2. Added unit tests for the `Button` and `EventDispatcher` objects.
+
+
+
 **1/10/12**
 
 1. Added `EventDispatcher.getUserEvents()` to collect all the user event strings it will need to attach listeners to the Canvas.

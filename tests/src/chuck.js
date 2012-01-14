@@ -637,129 +637,80 @@ function EventDispatcher () {
 EventDispatcher.prototype = {
 
   getUserEvents : function () {
-    var obj = this,
-        i,
+    var i,
         j,
-        k = 0,
+        k,
         len = this.timeline.queue.length,
         len_2,
-        // handlers = [],
-        dispatchers = {},
-        match = false;
-
-    function isNotEmpty (obj) {
-      var test = Object.prototype.toString.call(obj);
-
-      if (test === "[object Object]") {
-        for (prop in obj) {
-          if (obj.hasOwnProperty(prop)) {
-            return true;
-          }
-          return false;
-        }
-      }
-      
-      if (test === "[object Array]") {
-        if (obj.length > 0) {
-          return true;
-        }
-        return false;
-      }
-    }
-
-    /* ... recursive looping ... */
-    function compare (value, collection) {
-      if (isNotEmpty(collection) && collection[k]) {
-        if ((value + "Handler") === collection[k]) {
-          match = true;
-          k = 0;
-          return;
-        }
-        else {
-          match = false;
-          k += 1;
-          compare(value, collection);
-        }
-      }
-      k = 0;
-    }
+        len_3,
+        handlers = [];
 
     for (i = 0; i < len; i += 1) {
-      if (this.timeline.queue[i].userEvents && this.timeline.queue[i].userEvents.length > 0) {
+      if (this.timeline.queue[i].userEvents.length > 0) {
         len_2 = this.timeline.queue[i].userEvents.length;
         for (j = 0; j < len_2; j += 1) {
-          compare(this.timeline.queue[i].userEvents[j], this.listeners);
-          if (!match) {
-            // handlers.push(this.timeline.queue[i].userEvents[j] + "Handler");
-            this.listeners.push(this.timeline.queue[i].userEvents[j] + "Handler");
-            // console.log("created");
-            dispatchers[this.timeline.queue[i].userEvents[j]] = [];
+          len_3 = handlers.length;
+          for (k = 0; k < 1; k += 1) {
+            if (this.timeline.queue[i].userEvents[j] === handlers[k]) {
+              continue;
+            }
+            else {
+              handlers.push(this.timeline.queue[i].userEvents[j]);
+            }
           }
-          dispatchers[this.timeline.queue[i].userEvents[j]].push(function () {
-            this.timeline.queue[i].drawBoundary();
-            this.timeline.queue[i][this.timeline.queue[i].userEvents[j] + "Handler"]();
-          });
-          console.log(dispatchers[this.timeline.queue[i].userEvents[j]].length + " items in the " + this.timeline.queue[i].userEvents[j] + " function.");
         }
       }
-      match = false;
     }
-    return dispatchers;
+    return handlers;
   },
 
   makeDispatchers : function (obj, event_string) {
-    var handler_instructions = [], /* ... closure ... */
-        i,
-        len = obj.timeline.queue.length;
-
-    /*
-    for (i = 0; i < len; i += 1) {
-      if (typeof obj.timeline.queue[i][event_string + "Handler"] === "function") {
-        handler_instructions.push(function () {
-          obj.timeline.queue[i].drawBoundary(); // draws the current path ...
-          obj.timeline.queue[i][handlers[i]](); // tests for mouse coordinates in the current path ...
-        }); 
-      }
-    }
-    */
-
     return function (evt) {
-      var len = handler_instructions.length;
+      var handler_instructions = [],
+          handlers = ["clickHandler", "mousemoveHandler", "mousedownHandler", "mouseupHandler"],
+          i,
+          j,
+          len = handlers.length,
+          len_2 = obj.timeline.queue.length,
+          // handler_string = event_string + "Handler";
           
       obj.mouse_x = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
       obj.mouse_y = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
       
       for (i = 0; i < len; i += 1) {
-        handler_instructions[i]();
+        for (j = 0; j < len_2; j += 1) {
+          if (typeof obj.timeline.queue[j][handlers[i]] === "function") {
+            handler_instructions.push(function () {
+              obj.timeline.queue[j].drawBoundary();
+              obj.timeline.queue[j][handlers[i]]();
+            }); 
+          }
+        }
+ 
       }
+
+      /*
+      for (i = 0; i < len; i += 1) {
+        if (obj.timeline.queue[i].drawBoundary && typeof obj.timeline.queue[i].drawBoundary === "function") {
+          obj.timeline.queue[i].drawBoundary();
+          if (obj.timeline.queue[i][handler_string]) {
+            obj.timeline.queue[i][handler_string]();
+          }
+        }
+      }
+      */
     }
   },
 
   init : function () {
-    var dispatchers,
-        i,
-        len;
-
-    dispatchers = this.getUserEvents();
-    len = dispatchers.length;
-
-    for (key in dispatchers) {
-      console.log(this.listeners);
-      console.log(dispatchers[key]);
-      the_canvas.addEventListener(key, dispatchers[key], false);
-    }
-
-  /*
     var i, 
         j,
         len = this.timeline.queue.length,
         len2,
         event_string,
-        dispatch_method_string;
-        // count = 0;
+        dispatch_method_string,
+        count = 0;
 
-    // var mokey = this.getUserEvents();
-    // console.log(mokey);
     for (i = 0; i < len; i += 1) {
       if (this.timeline.queue[i].userEvents) {
         len2 = this.timeline.queue[i].userEvents.length;
@@ -769,12 +720,11 @@ EventDispatcher.prototype = {
           this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
           the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
           this.listeners.push(dispatch_method_string);
-          // console.log(count + ": " + this.timeline.queue[i].name + ": " + dispatch_method_string);
-          // count += 1;
+          console.log(count + ": " + this.timeline.queue[i].name + ": " + dispatch_method_string);
+          count += 1;
         }
       }
     }
-  */
   }
 
 };
