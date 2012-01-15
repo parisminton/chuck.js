@@ -10,6 +10,8 @@ Changelog
 
 2. Added the `setKey()` helper inside `EventDispatcher.getUserEvents()`.
 
+3. Removed the old `EventDispatcher.makeDispatchers()` function and other obsolete code. Listeners seem attached, and there are no compile-time errors. But I can only get an event for `Slider`, the first loaded item with listeners.
+
 
 
 **1/11/12**
