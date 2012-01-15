@@ -8,6 +8,8 @@ Changelog
 
 1. Added the `isNotEmpty()` helper inside `EventDispatcher.getUserEvents()`.
 
+2. Added the `setKey()` helper inside `EventDispatcher.getUserEvents()`.
+
 
 
 **1/11/12**

@@ -640,15 +640,18 @@ EventDispatcher.prototype = {
     var obj = this,
         i,
         j,
-        k = 0,
         len = this.timeline.queue.length,
         len_2,
         // handlers = [],
         dispatchers = {},
         match = false;
 
+    function typeTest (obj) {
+      return Object.prototype.toString.call(obj);
+    }
+
     function isNotEmpty (obj) {
-      var test = Object.prototype.toString.call(obj);
+      var test = typeTest(obj);
 
       if (test === "[object Object]") {
         for (prop in obj) {
@@ -666,29 +669,53 @@ EventDispatcher.prototype = {
         return false;
       }
     }
-
+    
     /* ... recursive looping ... */
     function compare (value, collection) {
-      if (isNotEmpty(collection) && collection[k]) {
-        if ((value + "Handler") === collection[k]) {
-          match = true;
-          k = 0;
-          return;
-        }
-        else {
-          match = false;
-          k += 1;
-          compare(value, collection);
-        }
+      var i = 0,
+          test = typeTest(collection),
+          props = [],
+          key;
+
+      function setKey () {
+        key = (test === "[object Object]") ? props[i] : i;
       }
-      k = 0;
+
+      if (test === "[object Object]") {
+        for (prop in collection) {
+          props.push(prop);
+        }
+        key = props[i];
+      }
+      else if (test === "[object Array]") {
+        key = i;
+      }
+
+      (function recurse () {
+        if (isNotEmpty(collection) && key) {
+          if ((value) === key) {
+            match = true;
+            i = 0;
+            // console.log("Moodymann " + key);
+            return;
+          }
+          else {
+            match = false;
+            i += 1;
+            setKey();
+            // console.log(value, key)
+            recurse(value, collection);
+          }
+        }
+        i = 0;
+      })();
     }
 
     for (i = 0; i < len; i += 1) {
       if (this.timeline.queue[i].userEvents && this.timeline.queue[i].userEvents.length > 0) {
         len_2 = this.timeline.queue[i].userEvents.length;
         for (j = 0; j < len_2; j += 1) {
-          compare(this.timeline.queue[i].userEvents[j], this.listeners);
+          compare(this.timeline.queue[i].userEvents[j], dispatchers);
           if (!match) {
             // handlers.push(this.timeline.queue[i].userEvents[j] + "Handler");
             this.listeners.push(this.timeline.queue[i].userEvents[j] + "Handler");
