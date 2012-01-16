@@ -312,6 +312,28 @@ Character.prototype = {
       }
     });
     obj.advance();
+  },
+
+  initBoundary : function () {
+    this.drawBoundary();
+  },
+
+  initHandlers : function () {
+    var i = 0,
+        len = this.userEvents.length;
+
+    for (i = 0; i < len; i += 1) {
+      this[this.userEvents[i] + "Handler"]();
+    }
+  },
+
+  init : function () {
+    if (this.userEvents && this.userEvents.length > 0) {
+      this.initHandlers();
+    }
+    if (this.boundary) {
+      this.drawBoundary();
+    }
   }
 
 };
@@ -411,14 +433,13 @@ Button.prototype.mousemoveHandler = function () {
   var obj = this;
 
   /* ... we\'re simulating a mouseover by detecting whether the mouse moves into or out of this path.
-         a true mouseover fires once for the whole canvas, so once you've hovered over it, you have one
-         extremely small shot to land inside the path. if you miss, you have to mouse out of the whole
-         canvas element, then back in to fire another mouseover. this is way more forgiving. ... */
+         a true mouseover fires once for the whole canvas, not just the small path we\'ve defined.
+         so once you mouse anywhere over the canvas, you have a fraction of a second to land inside
+         the path. if you miss, you have to mouse out of the whole canvas element, then back in,
+         to fire another mouseover.
+         this method subverts that behavior for the behavior we want. ... */
 
-  this.mousemoveHandler = function () {
-    var mx = obj.event_dispatcher.mouse_x,
-        my = obj.event_dispatcher.mouse_y;
-
+  this.mousemoveHandler = function (mx, my) {
     if (context.isPointInPath(mx, my)) {
       // console.log("Yes, " + obj.name + ".");
       obj.over = true;
@@ -438,7 +459,7 @@ Button.prototype.mousemoveHandler = function () {
 Button.prototype.init = function () {
   this.colors.hover_state = this.colors.out;
   this.drawBoundary();
-  this.mousemoveHandler();
+  this.initHandlers(); 
 };
 
 
@@ -577,57 +598,67 @@ Slider.prototype.init = function () {
   this.breadth = (this.max_edge - this.min_edge);
   this.scrubber.xinc = this.scrubber.original_xinc = Math.round(((this.breadth + 4 ) / this.timeline.frame_total) * 100) / 100;
   this.drawBoundary(); 
+  this.initHandlers();
 };
 
 Slider.prototype.userEvents = ["mousedown", "mousemove", "mouseup"];
 
-Slider.prototype.mousedownHandler = function (evt) {
-  var mx = this.event_dispatcher.mouse_x,
-      my = this.event_dispatcher.mouse_y;
+Slider.prototype.mousedownHandler = function () {
+  var obj = this;
 
-  if (context.isPointInPath(mx, my)) {
-    this.scrubber.play_status = this.timeline.live;
-    this.timeline.stop();
-    this.selectScrubber();
-    console.log("Scrubber selected.");
+  this.mousedownHandler = function (mx, my) {
+    // console.log("Mordecai.");
+    if (context.isPointInPath(mx, my)) {
+      obj.scrubber.play_status = obj.timeline.live;
+      obj.timeline.stop();
+      obj.selectScrubber();
+      console.log("Scrubber selected.");
+    }
+    // console.log("Rigby.");
   }
 };
 
 Slider.prototype.mousemoveHandler = function () {
-  if (this.scrubber.selected) {
-    if (this.event_dispatcher.mouse_x < this.min_edge) {
-      this.timeline.current_frame = 0;
+  var obj = this;
+
+  this.mousemoveHandler = function (mx, my) {
+    if (obj.scrubber.selected) {
+      if (obj.event_dispatcher.mouse_x < obj.min_edge) {
+        obj.timeline.current_frame = 0;
+      }
+      else if (obj.event_dispatcher.mouse_x > obj.max_edge) {
+        obj.timeline.current_frame = (obj.timeline.frame_total - 1);
+      }
+      else {
+        obj.timeline.current_frame = obj.scale((Math.round((obj.event_dispatcher.mouse_x - obj.min_edge) * 100) / 100));
+      }
+      obj.animator.draw(obj.timeline.frames[obj.timeline.current_frame]);
     }
-    else if (this.event_dispatcher.mouse_x > this.max_edge) {
-      this.timeline.current_frame = (this.timeline.frame_total - 1);
-    }
-    else {
-      this.timeline.current_frame = this.scale((Math.round((this.event_dispatcher.mouse_x - this.min_edge) * 100) / 100));
-    }
-    this.animator.draw(this.timeline.frames[this.timeline.current_frame]);
   }
 };
 
-Slider.prototype.mouseupHandler = function (evt) {
-  var mx = this.event_dispatcher.mouse_x,
-      my = this.event_dispatcher.mouse_y;
+Slider.prototype.mouseupHandler = function () {
+  var obj = this;
 
-    if (this.scrubber.selected) {
-      this.releaseScrubber();
+  this.mouseupHandler = function () {
+    if (obj.scrubber.selected) {
+      obj.releaseScrubber();
       console.log("Scrubber Let go.");
-      this.event_dispatcher.last_action = "scrubber";
+      obj.event_dispatcher.last_action = "scrubber";
     }
-    if (this.scrubber.play_status) {
-      this.timeline.ready();
-      this.animator.animate();
-      this.event_dispatcher.last_action = "play";
+    if (obj.scrubber.play_status) {
+      obj.timeline.ready();
+      obj.animator.animate();
+      obj.event_dispatcher.last_action = "play";
     }
+  }
 };
 
 
 
 /* CONSTRUCTOR ... event management ... */
 function EventDispatcher () {
+  this.listeners = [];
   this.dispatchers = {};
   this.mouseover = null;
   this.last_action = null;
@@ -638,6 +669,8 @@ EventDispatcher.prototype = {
 
   getUserEvents : function () {
     var obj = this,
+        character,
+        character_event,
         i,
         j,
         len = this.timeline.queue.length,
@@ -709,36 +742,112 @@ EventDispatcher.prototype = {
     }
 
     /* ... a separate storing function to retain scope. the least-elegant part of this library ... */
-    function store (collection, value1, value2) {
+    /*
+    function store (i, j, collection, value1, value2) {
       collection.push(function () {
         value1.drawBoundary();
         value1[value2 + "Handler"]();
-        console.log(value1);
+        console.log(i, j);
       });
     }
+    */
 
     for (i = 0; i < len; i += 1) {
       if (this.timeline.queue[i].userEvents && this.timeline.queue[i].userEvents.length > 0) {
+        character = this.timeline.queue[i];
         len_2 = this.timeline.queue[i].userEvents.length;
+        // console.log("Outer loop iterated " + i + " times.");
         for (j = 0; j < len_2; j += 1) {
-          compare(this.timeline.queue[i].userEvents[j], this.dispatchers);
+          character_event = this.timeline.queue[i].userEvents[j];
+          // console.log("Inner loop iterated " + j + " times.");
+          compare(character_event, this.dispatchers);
           if (!match) {
-            this.dispatchers[this.timeline.queue[i].userEvents[j]] = [];
+            this.dispatchers[character_event] = [];
           }
-          store(this.dispatchers[this.timeline.queue[i].userEvents[j]], obj.timeline.queue[i], obj.timeline.queue[i].userEvents[j]);
+          (function (character, character_event) {
+            obj.dispatchers[character_event].push(character.drawBoundary);
+            obj.dispatchers[character_event].push(character[character_event + "Handler"]);
+          })(character, character_event);
         }
       }
       match = false;
+      // console.log("The final value of j is " + j + ".");
+    }
+    // console.log("The final value of i is " + i + ".");
+  },
+
+  makeDispatchers : function (obj, event_string) {
+    return function (evt) {
+      var i,
+          len = obj.timeline.queue.length,
+          handler_string = event_string + "Handler";
+          
+      obj.mx = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
+      obj.my = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
+      for (i = 0; i < len; i += 1) {
+        if (obj.timeline.queue[i].drawBoundary && typeof obj.timeline.queue[i].drawBoundary === "function") {
+          /* ... if the user has selected the scrubber, we don't care whether they're in the boundary ... */
+          if (obj.timeline.queue[i].constructor === Slider && obj.timeline.queue[i].scrubber.selected) {
+            if (obj.timeline.queue[i][handler_string]) {
+              obj.timeline.queue[i][handler_string]();
+            }
+          }
+          else {
+            obj.timeline.queue[i].drawBoundary();
+            if (obj.timeline.queue[i][handler_string]) {
+              obj.timeline.queue[i][handler_string](obj.mx, obj.my);
+            }
+          }
+        }
+      }
     }
   },
 
+  init : function () {
+    var i, 
+        j,
+        k,
+        len = this.timeline.queue.length,
+        len2,
+        len3,
+        event_string,
+        dispatch_method_string,
+        match = false;
+
+    for (i = 0; i < len; i += 1) {
+      if (this.timeline.queue[i].userEvents) {
+        len2 = this.timeline.queue[i].userEvents.length;
+        for (j = 0; j < len2; j += 1) {
+          event_string = this.timeline.queue[i].userEvents[j];
+          dispatch_method_string = "dispatch" + event_string.charAt(0).toUpperCase() + event_string.slice(1);
+          this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
+          len3 = this.listeners.length;
+          if (len3 > 0) {
+            for (k = 0; k < len3; k += 1) {
+              if (this.listeners[k] === dispatch_method_string) {
+                match = true;
+                break;
+              }
+            }
+          }
+          if (!match) {
+            the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
+            this.listeners.push(dispatch_method_string);
+          }
+        }
+        match = false;
+      }
+    }
+  }
+
+  /*
   init : function () {
     var obj = this;
 
     this.getUserEvents();
 
     for (key in this.dispatchers) {
-      // console.log(this.dispatchers[key]);
+      console.log(this.dispatchers[key]);
       the_canvas.addEventListener(key,
       function (e) {
         var i,
@@ -751,6 +860,7 @@ EventDispatcher.prototype = {
       false);
     }
   }
+  */
 
 };
 
@@ -807,9 +917,9 @@ Timeline.prototype = {
     this.setFinalBreakpoint();
     this.declareFrames();
     for (var i = 0; i < this.queue.length; i += 1) {
-      if (this.queue[i].constructor === Slider || this.queue[i].constructor === Button) {
+      // if (this.queue[i].constructor === Slider || this.queue[i].constructor === Button) {
         this.queue[i].init();
-      }
+      // }
     }
     this.store();
     this.animator.timeline = this;

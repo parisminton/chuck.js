@@ -183,12 +183,13 @@ function stage () {
     "stroke",
     "restore"
   ];
-  play.clickHandler = function (evt) {
-    var mx = this.event_dispatcher.mouse_x,
-        my = this.event_dispatcher.mouse_y;
+  play.clickHandler = function () {
+    var obj = this;
 
-    if (context.isPointInPath(mx, my)) {
-      this.timeline.play();
+    this.clickHandler = function (mx, my) {
+      if (context.isPointInPath(mx, my)) {
+        obj.timeline.play();
+      }
     }
   };
 
@@ -741,12 +742,13 @@ function stage () {
     "stroke",
     "restore"
   ];
-  step.clickHandler = function (evt) {
-    var mx = this.event_dispatcher.mouse_x,
-        my = this.event_dispatcher.mouse_y;
+  step.clickHandler = function () {
+    var obj = this;
 
-    if (context.isPointInPath(mx, my)) {
-      this.timeline.stepThrough();
+    this.clickHandler = function (mx, my) {
+      if (context.isPointInPath(mx, my)) {
+        obj.timeline.stepThrough();
+      }
     }
   };
 
@@ -932,12 +934,13 @@ function stage () {
     { strokeStyle : "rgb(255, 0, 0)" },
     "stroke"
   ];
-  back.clickHandler = function (evt) {
-    var mx = this.event_dispatcher.mouse_x,
-        my = this.event_dispatcher.mouse_y;
+  back.clickHandler = function () {
+    var obj = this;
 
-    if (context.isPointInPath(mx, my)) {
-      this.timeline.frameBack();
+    this.clickHandler = function (mx, my) {
+      if (context.isPointInPath(mx, my)) {
+        obj.timeline.frameBack();
+      }
     }
   };
 
@@ -995,13 +998,14 @@ function stage () {
     { strokeStyle : "rgb(255, 0, 0)" },
     "stroke"
   ];
-  forward.clickHandler = function (evt) {
-    var mx = this.event_dispatcher.mouse_x,
-        my = this.event_dispatcher.mouse_y;
+  forward.clickHandler = function () {
+    var obj = this;
 
-    if (context.isPointInPath(mx, my)) {
-      this.timeline.frameForward();
-      console.log("Monkey.");
+    this.clickHandler = function (mx, my) {
+      if (context.isPointInPath(mx, my)) {
+        obj.timeline.frameForward();
+        // console.log("Monkey.");
+      }
     }
   };
 

@@ -4,13 +4,29 @@ chuck.js
 Changelog
 ---------
 
+**1/16/12**
+
+1. Added `Character.init()` and `Character.initHandlers()`.
+
+2. Restored the old `EventDispatcher.makeDispatchers()`. It became clear the new aggregated handler instructions complicate things unnecessarily. Trying a new branch out of this old base.
+
+3. Moved `isPointInPath()` test from the dispatcher function to the individual handlers. We need to define behavior for when the mouse is on either side of the boundary, and this can't be done from within the dispatcher.
+
+4. Added `Character.initBoundary()`.
+
+5. Slider and buttons are mostly fixed, though there's a problem with setting the frame after the slider is dragged.
+
+
+
 **1/14/12**
 
 1. Added the `isNotEmpty()` helper inside `EventDispatcher.getUserEvents()`.
 
 2. Added the `setKey()` helper inside `EventDispatcher.getUserEvents()`.
 
-3. Removed the old `EventDispatcher.makeDispatchers()` function and other obsolete code. Listeners seem attached, and there are no compile-time errors. But I can only get an event for `Slider`, the first loaded item with listeners.
+3. Removed the old `EventDispatcher.makeDispatchers()` function and other obsolete code. Listeners seem attached, and there are no compile-time errors. But I can only get an event for `Slider`, the first loaded item with handlers.
+
+4. Renamed `getUserEvents()` to `makeDispatchers()`, which is now what it does.
 
 
 
