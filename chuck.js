@@ -658,7 +658,6 @@ Slider.prototype.mouseupHandler = function () {
 
 /* CONSTRUCTOR ... event management ... */
 function EventDispatcher () {
-  this.listeners = [];
   this.dispatchers = {};
   this.mouseover = null;
   this.last_action = null;
@@ -667,14 +666,40 @@ function EventDispatcher () {
 };
 EventDispatcher.prototype = {
 
-  getUserEvents : function () {
-    var obj = this,
-        character,
-        character_event,
-        i,
+  makeDispatchers : function (obj, event_string) {
+    return function (evt) {
+      var i,
+          len = obj.timeline.queue.length,
+          handler_string = event_string + "Handler";
+          
+      obj.mx = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
+      obj.my = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
+      for (i = 0; i < len; i += 1) {
+        if (obj.timeline.queue[i].drawBoundary && typeof obj.timeline.queue[i].drawBoundary === "function") {
+          /* ... if the user has selected the scrubber, we don't care whether they're in the boundary ... */
+          if (obj.timeline.queue[i].constructor === Slider && obj.timeline.queue[i].scrubber.selected) {
+            if (obj.timeline.queue[i][handler_string]) {
+              obj.timeline.queue[i][handler_string]();
+            }
+          }
+          else {
+            obj.timeline.queue[i].drawBoundary();
+            if (obj.timeline.queue[i][handler_string]) {
+              obj.timeline.queue[i][handler_string](obj.mx, obj.my);
+            }
+          }
+        }
+      }
+    }
+  },
+
+  init : function () {
+    var i, 
         j,
         len = this.timeline.queue.length,
-        len_2,
+        len2,
+        event_string,
+        dispatch_method_string,
         match = false;
 
     function typeTest (o) {
@@ -741,127 +766,24 @@ EventDispatcher.prototype = {
       })();
     }
 
-    /* ... a separate storing function to retain scope. the least-elegant part of this library ... */
-    /*
-    function store (i, j, collection, value1, value2) {
-      collection.push(function () {
-        value1.drawBoundary();
-        value1[value2 + "Handler"]();
-        console.log(i, j);
-      });
-    }
-    */
-
-    for (i = 0; i < len; i += 1) {
-      if (this.timeline.queue[i].userEvents && this.timeline.queue[i].userEvents.length > 0) {
-        character = this.timeline.queue[i];
-        len_2 = this.timeline.queue[i].userEvents.length;
-        // console.log("Outer loop iterated " + i + " times.");
-        for (j = 0; j < len_2; j += 1) {
-          character_event = this.timeline.queue[i].userEvents[j];
-          // console.log("Inner loop iterated " + j + " times.");
-          compare(character_event, this.dispatchers);
-          if (!match) {
-            this.dispatchers[character_event] = [];
-          }
-          (function (character, character_event) {
-            obj.dispatchers[character_event].push(character.drawBoundary);
-            obj.dispatchers[character_event].push(character[character_event + "Handler"]);
-          })(character, character_event);
-        }
-      }
-      match = false;
-      // console.log("The final value of j is " + j + ".");
-    }
-    // console.log("The final value of i is " + i + ".");
-  },
-
-  makeDispatchers : function (obj, event_string) {
-    return function (evt) {
-      var i,
-          len = obj.timeline.queue.length,
-          handler_string = event_string + "Handler";
-          
-      obj.mx = (evt.clientX + document.body.scrollLeft + document.documentElement.scrollLeft - the_canvas.offsetLeft),
-      obj.my = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
-      for (i = 0; i < len; i += 1) {
-        if (obj.timeline.queue[i].drawBoundary && typeof obj.timeline.queue[i].drawBoundary === "function") {
-          /* ... if the user has selected the scrubber, we don't care whether they're in the boundary ... */
-          if (obj.timeline.queue[i].constructor === Slider && obj.timeline.queue[i].scrubber.selected) {
-            if (obj.timeline.queue[i][handler_string]) {
-              obj.timeline.queue[i][handler_string]();
-            }
-          }
-          else {
-            obj.timeline.queue[i].drawBoundary();
-            if (obj.timeline.queue[i][handler_string]) {
-              obj.timeline.queue[i][handler_string](obj.mx, obj.my);
-            }
-          }
-        }
-      }
-    }
-  },
-
-  init : function () {
-    var i, 
-        j,
-        k,
-        len = this.timeline.queue.length,
-        len2,
-        len3,
-        event_string,
-        dispatch_method_string,
-        match = false;
-
     for (i = 0; i < len; i += 1) {
       if (this.timeline.queue[i].userEvents) {
         len2 = this.timeline.queue[i].userEvents.length;
         for (j = 0; j < len2; j += 1) {
           event_string = this.timeline.queue[i].userEvents[j];
           dispatch_method_string = "dispatch" + event_string.charAt(0).toUpperCase() + event_string.slice(1);
-          this[dispatch_method_string] = this.makeDispatchers(this.me, event_string);
-          len3 = this.listeners.length;
-          if (len3 > 0) {
-            for (k = 0; k < len3; k += 1) {
-              if (this.listeners[k] === dispatch_method_string) {
-                match = true;
-                break;
-              }
-            }
-          }
+
+          compare(event_string, this.dispatchers);
+          
           if (!match) {
-            the_canvas.addEventListener(event_string, this[dispatch_method_string], false);
-            this.listeners.push(dispatch_method_string);
+            this.dispatchers[event_string] = this.makeDispatchers(this.me, event_string);
+            the_canvas.addEventListener(event_string, this.dispatchers[event_string], false);
           }
         }
         match = false;
       }
     }
   }
-
-  /*
-  init : function () {
-    var obj = this;
-
-    this.getUserEvents();
-
-    for (key in this.dispatchers) {
-      console.log(this.dispatchers[key]);
-      the_canvas.addEventListener(key,
-      function (e) {
-        var i,
-            len = obj.dispatchers[key].length;
-
-        for (i = 0; i < len; i += 1) {
-          obj.dispatchers[key][i]();
-        }
-      },
-      false);
-    }
-  }
-  */
-
 };
 
 

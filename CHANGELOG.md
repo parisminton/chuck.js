@@ -18,6 +18,10 @@ Changelog
 
 6. Changed all references to `EventDispatcher.mouse_x` to `EventDispatcher.mx`.
 
+7. Merged `compare()` from the unused `EventDispatcher.getUserEvents()` methodinto `EventDispatcher.init().` `compare()`'s recursive looping allows us to properly store the handler functions. And now I barely have to change the wiki. Bonus.
+
+8. Got rid of `EventDispatcher.getUserEvents()` now that its most important pieces are inside `EventDispatcher.init()`. Ditto related unnecessary code.
+
 
 
 **1/14/12**
