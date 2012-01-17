@@ -623,14 +623,14 @@ Slider.prototype.mousemoveHandler = function () {
 
   this.mousemoveHandler = function (mx, my) {
     if (obj.scrubber.selected) {
-      if (obj.event_dispatcher.mouse_x < obj.min_edge) {
+      if (obj.event_dispatcher.mx < obj.min_edge) {
         obj.timeline.current_frame = 0;
       }
-      else if (obj.event_dispatcher.mouse_x > obj.max_edge) {
+      else if (obj.event_dispatcher.mx > obj.max_edge) {
         obj.timeline.current_frame = (obj.timeline.frame_total - 1);
       }
       else {
-        obj.timeline.current_frame = obj.scale((Math.round((obj.event_dispatcher.mouse_x - obj.min_edge) * 100) / 100));
+        obj.timeline.current_frame = obj.scale((Math.round((obj.event_dispatcher.mx - obj.min_edge) * 100) / 100));
       }
       obj.animator.draw(obj.timeline.frames[obj.timeline.current_frame]);
     }

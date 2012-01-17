@@ -16,6 +16,8 @@ Changelog
 
 5. Slider and buttons are mostly fixed, though there's a problem with setting the frame after the slider is dragged.
 
+6. Changed all references to `EventDispatcher.mouse_x` to `EventDispatcher.mx`.
+
 
 
 **1/14/12**
