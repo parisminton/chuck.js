@@ -567,20 +567,8 @@ Slider.prototype.drawBoundary = function () {
       obj.boundary.cels = [];
 
   obj.drawBoundary = function () {
-    var i,
-        len = obj.boundary.cels.length;
-
     if (obj.visible) {
-      /* ... when the scrubber\'s all the way right ... */
-      if (obj.timeline.current_frame === 0 && obj.event_dispatcher.last_action === "scrubber") {
-        obj.boundary.cels[0]();
-      }
-      else if (obj.timeline.current_frame === 0 && obj.timeline.playthrough_count > 0) { 
-        obj.boundary.cels[(obj.timeline.frame_total - 1)]();
-      }
-      else {
-        obj.boundary.cels[obj.timeline.current_frame]();
-      }
+      obj.boundary.cels[obj.timeline.current_frame]();
     }
   }
 
@@ -676,7 +664,7 @@ EventDispatcher.prototype = {
       obj.my = (evt.clientY + document.body.scrollTop + document.documentElement.scrollTop - the_canvas.offsetTop);
       for (i = 0; i < len; i += 1) {
         if (obj.timeline.queue[i].drawBoundary && typeof obj.timeline.queue[i].drawBoundary === "function") {
-          /* ... if the user has selected the scrubber, we don't care whether they're in the boundary ... */
+          /* ... if the user has selected the scrubber, we don't care if they're in the boundary ... */
           if (obj.timeline.queue[i].constructor === Slider && obj.timeline.queue[i].scrubber.selected) {
             if (obj.timeline.queue[i][handler_string]) {
               obj.timeline.queue[i][handler_string]();
@@ -839,9 +827,7 @@ Timeline.prototype = {
     this.setFinalBreakpoint();
     this.declareFrames();
     for (var i = 0; i < this.queue.length; i += 1) {
-      // if (this.queue[i].constructor === Slider || this.queue[i].constructor === Button) {
-        this.queue[i].init();
-      // }
+      this.queue[i].init();
     }
     this.store();
     this.animator.timeline = this;
@@ -971,9 +957,11 @@ Animator.prototype = {
 
       /* ... timeline advancement ... */
       if (obj.timeline.live) {
-        if (obj.timeline.current_frame >= obj.timeline.frame_total) {
+        /* ... draw the last frame, exit and don\'t roll current_frame over to zero ... */
+        if (obj.timeline.current_frame === (obj.timeline.frame_total - 2)) {
+          obj.timeline.current_frame = (obj.timeline.frame_total - 1);
           // console.log("First condition: animate() exited on frame " + obj.timeline.current_frame + ".");
-          obj.timeline.current_frame = 0;
+          obj.draw(obj.timeline.frames[obj.timeline.current_frame]); 
           obj.timeline.current_bp = 0;
           obj.timeline.stop();
           obj.timeline.playthrough_count += 1;
@@ -982,15 +970,16 @@ Animator.prototype = {
           }
           return "done";
         }
-        if (obj.timeline.current_frame >= obj.timeline.breakpoints[obj.timeline.current_bp]) {
+        if (obj.timeline.current_frame >= obj.timeline.breakpoints[obj.timeline.current_bp] &&
+            obj.timeline.current_frame != (obj.timeline.frame_total - 1)) {
           // console.log("Second condition: animate() exited on frame " + obj.timeline.current_frame + ".");
           obj.timeline.advanceBreakpoint(); 
           obj.timeline.stop();
           return "paused";
         }
+        obj.timeline.current_frame = (obj.timeline.current_frame >= (obj.timeline.frame_total - 1)) ? 0 : obj.timeline.current_frame += 1;
         obj.draw(obj.timeline.frames[obj.timeline.current_frame]); 
         // console.log(obj.timeline.current_frame);
-        obj.timeline.current_frame += 1;
         setTimeout(obj.animate, obj.fps);
       }
 

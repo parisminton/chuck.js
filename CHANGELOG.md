@@ -4,6 +4,14 @@ chuck.js
 Changelog
 ---------
 
+**1/17/12**
+
+1. Fixed the redraw problem by incrementing `Timeline.current_frame` *before* the frame is drawn, then exiting on the final frame by testing for `(Timeline.frame_total - 2)`.
+
+2. Removed the extraneous conditions for `Slider.drawBoundary()`.
+
+
+
 **1/16/12**
 
 1. Added `Character.init()` and `Character.initHandlers()`.
