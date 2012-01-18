@@ -4,6 +4,12 @@ chuck.js
 Changelog
 ---------
 
+**1/18/12**
+
+1. Added an `Action` object so Characters can have chainable `onFrame()` methods for their "doer" functions. Made `Character.show()` and `Character.hide()` `Action` instances.
+
+
+
 **1/17/12**
 
 1. Fixed the redraw problem by incrementing `Timeline.current_frame` *before* the frame is drawn, then exiting on the final frame by testing for `(Timeline.frame_total - 2)`.

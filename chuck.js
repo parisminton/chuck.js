@@ -1,6 +1,6 @@
 /*
 
-Copyright (c) 2011 James Thomas (parisminton)
+Copyright (c) 2012 James Thomas (parisminton)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and 
 associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -22,6 +22,21 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 var the_canvas = document.getElementById("main-stage"),
     context = the_canvas.getContext("2d"),
     gradient;
+
+/* CONSTRUCTOR ... "doer" functions for the Characters. each has an onFrame() method ... */
+function Action (obj, func) {
+  this.func = func;
+  this.invoker = obj;
+};
+Action.prototype = {
+  onFrame : function (frame) {
+    console.log("Mordecai\'s function is: " + this.func + "."); 
+    console.log("Mordecai\'s invoker is: " + this.invoker.name + "."); 
+    console.log(frame);
+  }
+};
+
+
 
 /* CONSTRUCTOR ... an entity on the screen with one or more cels ... */
 function Character (obj_name, touchable) {
@@ -49,13 +64,21 @@ function Character (obj_name, touchable) {
 };
 Character.prototype = {
 
+  travelTo : new Action(this, function () {
+    this.visible = true; 
+  }),
+
   show : function () {
-    this.visible = true;
+    var obj = this;
+
+    this.show = new Action(obj, function () {
+      this.visible = true;
+    });
   },
 
-  hide : function () {
+  hide : new Action(this, function () {
     this.visible = false;
-  },
+  }),
 
   setSequenceOrder : function() {
     var i,
@@ -441,12 +464,10 @@ Button.prototype.mousemoveHandler = function () {
 
   this.mousemoveHandler = function (mx, my) {
     if (context.isPointInPath(mx, my)) {
-      // console.log("Yes, " + obj.name + ".");
       obj.over = true;
       obj.event_dispatcher.mouseover = obj.name;
     }
     else {
-      // console.log("No, " + obj.name + ".");
       obj.over = false;
       obj.event_dispatcher.mouseover = null;
     }
@@ -595,14 +616,11 @@ Slider.prototype.mousedownHandler = function () {
   var obj = this;
 
   this.mousedownHandler = function (mx, my) {
-    // console.log("Mordecai.");
     if (context.isPointInPath(mx, my)) {
       obj.scrubber.play_status = obj.timeline.live;
       obj.timeline.stop();
       obj.selectScrubber();
-      console.log("Scrubber selected.");
     }
-    // console.log("Rigby.");
   }
 };
 
@@ -631,7 +649,6 @@ Slider.prototype.mouseupHandler = function () {
   this.mouseupHandler = function () {
     if (obj.scrubber.selected) {
       obj.releaseScrubber();
-      console.log("Scrubber Let go.");
       obj.event_dispatcher.last_action = "scrubber";
     }
     if (obj.scrubber.play_status) {
