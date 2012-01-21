@@ -50,6 +50,26 @@ describe("Testing chuck.js", function () {
       });
     });
 
+    describe("character.triggers", function () {
+      it("should be an empty object", function () {
+        var i = 0;
+        expect(typeof character.triggers).toBe("object");
+        for (key in character.triggers) {
+          i += 1;
+        }
+        expect(i).toBe(0);
+      });
+    });
+
+    describe("character.checkTrigger", function () {
+      it("should create an empty array", function () {
+        character.checkTrigger(2);
+        len = character.checkTrigger.length;
+        expect(Array.isArray(character.triggers["2"])).toBe(true);
+        expect(character.triggers["2"].length).toBe(0);
+      });
+    });
+
   });
 
 
@@ -78,6 +98,7 @@ describe("Testing chuck.js", function () {
   describe("Within the Button object", function () {
 
     beforeEach(function () {
+      spyOn(window, "Button").andCallThrough();
       play = new Button("play", false);
     });
 
@@ -89,9 +110,8 @@ describe("Testing chuck.js", function () {
 
     describe("play.name", function () {
       it("should be the first argument passed to the Button constructor", function () {
-        spyOn(window, "Button");
         // ... remove this, and the beforeEach above seems to not apply ...
-        play = new Button("play", false);
+        // play = new Button("play", false);
         expect(window.Button).toHaveBeenCalledWith("play", false);
       });
       it("should be 'play'", function () {
