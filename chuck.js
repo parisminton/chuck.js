@@ -24,15 +24,23 @@ var the_canvas = document.getElementById("main-stage"),
     gradient;
 
 /* CONSTRUCTOR ... "doer" functions for the Characters. each has an onFrame() method ... */
-function Action (obj, func) {
+function Action (obj, func_name, func) {
+  this.obj = obj;
   this.func = func;
-  this.invoker = obj;
+  this.constructor = Action;
+  obj[func_name] = func; // ... the member needs to be able to fire the function that it passed in ...
 };
 Action.prototype = {
   onFrame : function (frame) {
+    ob = this;
+    this.obj.checkTrigger(frame);
+    this.obj.triggers[frame].push(function () {
+      ob.func();
+    });
     console.log("Mordecai\'s function is: " + this.func + "."); 
-    console.log("Mordecai\'s invoker is: " + this.invoker.name + "."); 
+    console.log("Mordecai\'s invoker is: " + this.obj.name + "."); 
     console.log(frame);
+    // return this.obj;
   }
 };
 
@@ -43,6 +51,12 @@ function Character (obj_name, touchable) {
   this.name = obj_name;
   this.visible = false;
   this.touchable = touchable;
+  this.triggers = {};
+  this.checkTrigger = function(frame) {
+    if (!this.triggers[frame]) {
+      this.triggers[frame] = [];
+    }
+  };
   this.current_seq = 0; 
   this.sequence_order = ["main"];
   this.main = {
@@ -71,8 +85,9 @@ Character.prototype = {
   show : function () {
     var obj = this;
 
-    this.show = new Action(obj, function () {
-      this.visible = true;
+    this.show = new Action(obj, "show", function () {
+      obj.visible = true;
+      return obj;
     });
   },
 
@@ -311,18 +326,28 @@ Character.prototype = {
         cs = obj.current_seq,
         cc = obj[order[cs]].current_cel,
         i,
+        j,
         len = obj[order[cs]].cels[cc].length,
+        len_2,
+        frame_string = current_frame.toString(),
         instructions = [];
 
-    for (i = 0; i < len; i += 1) {
+    /* ... these object keys look like numbers, but they're strings. so convert before checking ... */
+    if (typeof obj.triggers[frame_string] != "undefined" && obj.triggers[frame_string].length > 0) {
+      len_2 = obj.triggers[frame_string].length;
+      for (i = 0; i < len_2; i += 1) {
+        obj.triggers[frame_string][i]();
+        console.log("Fired trigger " + obj.triggers[frame_string][i] + " on frame " + current_frame + ".");
+      }
+    }
+
+    for (j = 0; j < len; j += 1) {
       /* ... this immediate function creates a new context in which to pass these variables
              so they can be stored by value, not by reference ... */
       (function (cs, cc) {
-        obj.parseDrawingObject(obj[order[cs]].cels[cc][i], instructions);
+        obj.parseDrawingObject(obj[order[cs]].cels[cc][j], instructions);
       })(cs, cc);
     }
-
-    /* ... if this object has a userEvents array, we need a different rendering function ...*/
 
     obj.timeline.frames[current_frame].push(function () {
       var i,

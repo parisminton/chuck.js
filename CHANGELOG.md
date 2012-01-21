@@ -8,6 +8,12 @@ Changelog
 
 1. Added unit tests for `Action`.
 
+2. Added `Character.triggers` and `Character.checkTrigger()`.
+
+3. Added unit tests for `Character.triggers` and `Character.checkTrigger()`.
+
+4. Testing for triggers inside `Character.makeFrameInstructions()`.
+
 
 
 **1/18/12**
