@@ -4,6 +4,12 @@ chuck.js
 Changelog
 ---------
 
+**1/20/12**
+
+1. Added unit tests for `Action`.
+
+
+
 **1/18/12**
 
 1. Added an `Action` object so Characters can have chainable `onFrame()` methods for their "doer" functions. Made `Character.show()` and `Character.hide()` `Action` instances.

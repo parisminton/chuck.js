@@ -5,6 +5,7 @@ describe("Testing chuck.js", function () {
       canv,
       para,
       character,
+      act,
       play,
       c,
       t,
@@ -46,6 +47,27 @@ describe("Testing chuck.js", function () {
       it("should create a new instance of Character", function () {
         character = new Character("vaulter", false);
         expect(character).toBeInstanceOf(Character);
+      });
+    });
+
+  });
+
+
+
+  describe("Within the Action Object", function () {
+  
+    describe("The constructor", function () {
+      it("should create a new instance of Action", function () {
+        act = new Action(character, function () {
+          return (1 * 2);
+        });
+        expect(act).toBeInstanceOf(Action);
+      });
+    });
+
+    describe("act.func", function () {
+      it("should be a function", function () {
+        expect(typeof act.func).toBe("function");
       });
     });
 
