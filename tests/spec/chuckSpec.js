@@ -78,7 +78,7 @@ describe("Testing chuck.js", function () {
   
     describe("The constructor", function () {
       it("should create a new instance of Action", function () {
-        act = new Action(character, function () {
+        act = new Action(character, "act", function () {
           return (1 * 2);
         });
         expect(act).toBeInstanceOf(Action);

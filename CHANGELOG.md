@@ -4,6 +4,12 @@ chuck.js
 Changelog
 ---------
 
+**1/21/12**
+
+1. Firing `vaulter.show.onFrame(7)` works. For now, this is done by including `vaulter`'s visibility function in the `Timeline.frames[current_frame]` array. I'm thinking it should be moved elsewhere, though, like into `Animator.animate()`.
+
+
+
 **1/20/12**
 
 1. Added unit tests for `Action`.

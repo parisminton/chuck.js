@@ -226,7 +226,7 @@ Character.prototype = {
     }
   },
 
-  parseDrawingObject : function (param, instruction_array, obj) {
+  parseDrawingObject : function (param, visible, instruction_array, obj) {
     var action,
         instructions = (instruction_array) ? instruction_array : [],
         xpos,
@@ -329,6 +329,7 @@ Character.prototype = {
         j,
         len = obj[order[cs]].cels[cc].length,
         len_2,
+        vis,
         frame_string = current_frame.toString(),
         instructions = [];
 
@@ -336,7 +337,7 @@ Character.prototype = {
     if (typeof obj.triggers[frame_string] != "undefined" && obj.triggers[frame_string].length > 0) {
       len_2 = obj.triggers[frame_string].length;
       for (i = 0; i < len_2; i += 1) {
-        obj.triggers[frame_string][i]();
+        vis = obj.triggers[frame_string][i];
         console.log("Fired trigger " + obj.triggers[frame_string][i] + " on frame " + current_frame + ".");
       }
     }
@@ -344,14 +345,18 @@ Character.prototype = {
     for (j = 0; j < len; j += 1) {
       /* ... this immediate function creates a new context in which to pass these variables
              so they can be stored by value, not by reference ... */
-      (function (cs, cc) {
-        obj.parseDrawingObject(obj[order[cs]].cels[cc][j], instructions);
-      })(cs, cc);
+      (function (cs, cc, vis) {
+        obj.parseDrawingObject(obj[order[cs]].cels[cc][j], vis, instructions);
+      })(cs, cc, vis);
     }
 
     obj.timeline.frames[current_frame].push(function () {
       var i,
           len = instructions.length;
+      
+      if(typeof vis != "undefined" && typeof vis === "function") {
+        vis();
+      }
 
       if (obj.visible) {
         for (i = 0; i < instructions.length; i += 1) {
@@ -427,7 +432,7 @@ Button.prototype.makeFrameInstructions = function (current_frame, obj) {
     /* ... this immediate function creates a new context in which to pass these variables
            so they can be stored by value, not by reference ... */
     (function (cs, cc) {
-      obj.parseDrawingObject(obj[order[cs]].cels[cc][i], instructions, obj);
+      obj.parseDrawingObject(obj[order[cs]].cels[cc][i], true, instructions, obj);
     })(cs, cc);
   }
 
@@ -459,7 +464,7 @@ Button.prototype.drawBoundary = function () {
       instructions = [];
 
   for (i = 0; i < len; i += 1) {
-    obj.parseDrawingObject(obj.boundary[i], instructions);
+    obj.parseDrawingObject(obj.boundary[i], true, instructions);
   }
 
   obj.drawBoundary = function () {
@@ -562,7 +567,7 @@ Slider.prototype.makeFrameInstructions = function (current_frame, obj) {
 
   this.track_operation = true;
   for (i = 0; i < t_len; i += 1) {
-    obj.parseDrawingObject(obj.track.cels[0][i], instructions);
+    obj.parseDrawingObject(obj.track.cels[0][i], true, instructions);
   }
 
   this.track_operation = false;
@@ -570,8 +575,8 @@ Slider.prototype.makeFrameInstructions = function (current_frame, obj) {
     /* ... this immediate function creates a new context in which to pass these variables
            so they can be stored by value, not by reference ... */
     (function (cc) {
-      obj.parseDrawingObject(obj.scrubber.cels[cc][i], instructions);
-      obj.parseDrawingObject(obj.boundary[i], boundary_instructions);
+      obj.parseDrawingObject(obj.scrubber.cels[cc][i], true, instructions);
+      obj.parseDrawingObject(obj.boundary[i], true, boundary_instructions);
     })(cc);
   }
 
