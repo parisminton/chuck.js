@@ -4,6 +4,18 @@ chuck.js
 Changelog
 ---------
 
+**1/27/12**
+
+1. Added `Character.makeAction()`, a wrapper that simulates a constructor's assignment of `this`. A constructor can't return a function, so this allows me to call `vaulter.show()` as well as `vaulter.show.onFrame(22)`.
+
+
+
+**1/26/12**
+
+1. Added a `triggers` property to `EventDispatcher`: an empty object. (For now.)
+
+
+
 **1/21/12**
 
 1. Firing `vaulter.show.onFrame(7)` works. For now, this is done by including `vaulter`'s visibility function in the `Timeline.frames[current_frame]` array. I'm thinking it should be moved elsewhere, though, like into `Animator.animate()`.

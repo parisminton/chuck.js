@@ -24,18 +24,24 @@ var the_canvas = document.getElementById("main-stage"),
     gradient;
 
 /* CONSTRUCTOR ... "doer" functions for the Characters. each has an onFrame() method ... */
-function Action (obj, func_name, func) {
+function Action (obj, func_name) {
   this.obj = obj;
-  this.func = func;
   this.constructor = Action;
-  obj[func_name] = func; // ... the member needs to be able to fire the function that it passed in ...
+  /*
+  this.onFrame = function (frame) {
+    this.obj.checkTrigger(frame);
+    this.obj.triggers[frame].push(function () {
+      obj[func_name]();
+    });
+  }
+  */
 };
 Action.prototype = {
   onFrame : function (frame) {
     ob = this;
     this.obj.checkTrigger(frame);
     this.obj.triggers[frame].push(function () {
-      ob.func();
+      ob();
     });
     console.log("Mordecai\'s function is: " + this.func + "."); 
     console.log("Mordecai\'s invoker is: " + this.obj.name + "."); 
@@ -77,18 +83,35 @@ function Character (obj_name, touchable) {
   this.constructor = Character;
 };
 Character.prototype = {
+  
+  makeAction : function(constructr, func) {
+    return function () {
+      constructr.apply(func, arguments);
+      func.constructor = constructr;
+      for (key in constructr.prototype) {
+        /* ### does this implementation retain the benefits of using a prototype? ### */
+        func[key] = constructr.prototype[key];
+      }
+      return func;
+    }
+  },
 
   travelTo : new Action(this, function () {
     this.visible = true; 
   }),
 
   show : function () {
-    var obj = this;
+    var obj = this,
+        func,
+        maker;
 
-    this.show = new Action(obj, "show", function () {
+    func = function () {
       obj.visible = true;
       return obj;
-    });
+    };
+
+    maker = this.makeAction(Action, func);
+    this.show = maker(obj, "show");
   },
 
   hide : new Action(this, function () {
@@ -694,6 +717,7 @@ Slider.prototype.mouseupHandler = function () {
 /* CONSTRUCTOR ... event management ... */
 function EventDispatcher () {
   this.dispatchers = {};
+  this.triggers = {};
   this.mouseover = null;
   this.last_action = null;
   this.me = this;
