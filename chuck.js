@@ -27,26 +27,10 @@ var the_canvas = document.getElementById("main-stage"),
 function Action (obj, func_name) {
   this.obj = obj;
   this.constructor = Action;
-  /*
   this.onFrame = function (frame) {
-    this.obj.checkTrigger(frame);
-    this.obj.triggers[frame].push(function () {
-      obj[func_name]();
-    });
-  }
-  */
-};
-Action.prototype = {
-  onFrame : function (frame) {
-    ob = this;
-    this.obj.checkTrigger(frame);
-    this.obj.triggers[frame].push(function () {
-      ob();
-    });
-    console.log("Mordecai\'s function is: " + this.func + "."); 
-    console.log("Mordecai\'s invoker is: " + this.obj.name + "."); 
-    console.log(frame);
-    // return this.obj;
+    obj.checkTrigger(frame);
+    obj.triggers[frame].push(this);
+    return obj;
   }
 };
 
@@ -88,10 +72,6 @@ Character.prototype = {
     return function () {
       constructr.apply(func, arguments);
       func.constructor = constructr;
-      for (key in constructr.prototype) {
-        /* ### does this implementation retain the benefits of using a prototype? ### */
-        func[key] = constructr.prototype[key];
-      }
       return func;
     }
   },
@@ -106,12 +86,13 @@ Character.prototype = {
         maker;
 
     func = function () {
+      // obj.initial_vis = obj.visible;
       obj.visible = true;
       return obj;
     };
 
     maker = this.makeAction(Action, func);
-    this.show = maker(obj, "show");
+    this.show = maker(obj, "show"); 
   },
 
   hide : new Action(this, function () {
@@ -157,6 +138,7 @@ Character.prototype = {
       this[this.sequence_order[i]].current_cel = 0;
       this[this.sequence_order[i]].current_iteration = 0;
       this[this.sequence_order[i]].xdistance = 0; 
+      // this.visible = this.initial_vis;
     }
     this.current_seq = 0;
   },
@@ -355,15 +337,6 @@ Character.prototype = {
         vis,
         frame_string = current_frame.toString(),
         instructions = [];
-
-    /* ... these object keys look like numbers, but they're strings. so convert before checking ... */
-    if (typeof obj.triggers[frame_string] != "undefined" && obj.triggers[frame_string].length > 0) {
-      len_2 = obj.triggers[frame_string].length;
-      for (i = 0; i < len_2; i += 1) {
-        vis = obj.triggers[frame_string][i];
-        console.log("Fired trigger " + obj.triggers[frame_string][i] + " on frame " + current_frame + ".");
-      }
-    }
 
     for (j = 0; j < len; j += 1) {
       /* ... this immediate function creates a new context in which to pass these variables
@@ -1035,6 +1008,8 @@ Animator.prototype = {
     var obj = this; /* ... closure ... */
 
     this.animate = function () {
+      var i,
+          len;
 
       /* ... timeline advancement ... */
       if (obj.timeline.live) {
@@ -1059,6 +1034,17 @@ Animator.prototype = {
           return "paused";
         }
         obj.timeline.current_frame = (obj.timeline.current_frame >= (obj.timeline.frame_total - 1)) ? 0 : obj.timeline.current_frame += 1;
+
+        /* ... if this frame has triggers, fire them before drawing ... */
+        if (obj.timeline.event_dispatcher.triggers[obj.timeline.current_frame]) {
+          for (key in obj.timeline.event_dispatcher.triggers[obj.timeline.current_frame]) {
+            len = obj.timeline.event_dispatcher.triggers[obj.timeline.current_frame][key].length;
+            for (i = 0; i < len; i += 1) {
+              obj.timeline.event_dispatcher.triggers[obj.timeline.current_frame][key][i]();
+            }
+          }
+        }
+
         obj.draw(obj.timeline.frames[obj.timeline.current_frame]); 
         // console.log(obj.timeline.current_frame);
         setTimeout(obj.animate, obj.fps);

@@ -12,6 +12,10 @@ Changelog
 
 3. Fixed a bug by defining `triggers` within the Button and Slider constructors.
 
+4. `Animator.animate()` now fires Actions based on the frame.
+
+5. Got rid of `Action.prototype.` We can't take advantage of it, so `onFrame()` becomes an instance method. In the grand scheme, this doesn't seem that costly.
+
 
 
 **1/26/12**
