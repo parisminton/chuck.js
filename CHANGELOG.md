@@ -8,6 +8,10 @@ Changelog
 
 1. Added `Character.makeAction()`, a wrapper that simulates a constructor's assignment of `this`. A constructor can't return a function, so this allows me to call `vaulter.show()` as well as `vaulter.show.onFrame(22)`.
 
+2. `EventDispatcher.init()` now stores trigger objects for each frame.
+
+3. Fixed a bug by defining `triggers` within the Button and Slider constructors.
+
 
 
 **1/26/12**

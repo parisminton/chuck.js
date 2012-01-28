@@ -420,6 +420,7 @@ function Button (obj_name) {
   this.name = obj_name;
   this.visible = true;
   this.touchable = true;
+  this.triggers = {};
   this.over = false;
   this.current_seq = 0;
   this.sequence_order = ["enabled"];
@@ -544,6 +545,7 @@ function Slider (obj_name, min_edge, max_edge, touchable) {
   this.max_edge = max_edge;
   this.touchable = (touchable) ? touchable : false;
   this.visible = true;
+  this.triggers = {};
   this.current_seq = 0; 
   this.sequence_order = ["track", "scrubber"];
   this.track = {
@@ -840,6 +842,14 @@ EventDispatcher.prototype = {
           }
         }
         match = false;
+      }
+      if (isNotEmpty(this.timeline.queue[i].triggers)) {
+        for (key in this.timeline.queue[i].triggers) {
+          if (!this.triggers[key]) {
+            this.triggers[key] = {};
+          }
+          this.triggers[key][this.timeline.queue[i].name] = this.timeline.queue[i].triggers[key];
+        }
       }
     }
   }
