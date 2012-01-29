@@ -65,6 +65,8 @@ function Character (obj_name, touchable) {
   this.xpos;
   this.ypos;
   this.constructor = Character;
+  this.show();
+  this.hide();
 };
 Character.prototype = {
   
@@ -86,7 +88,7 @@ Character.prototype = {
         maker;
 
     func = function () {
-      // obj.initial_vis = obj.visible;
+      obj.initial_vis = obj.visible;
       obj.visible = true;
       return obj;
     };
@@ -95,9 +97,20 @@ Character.prototype = {
     this.show = maker(obj, "show"); 
   },
 
-  hide : new Action(this, function () {
-    this.visible = false;
-  }),
+  hide : function () {
+    var obj = this,
+        func,
+        maker;
+
+    func = function () {
+      obj.initial_vis = obj.visible;
+      obj.visible = false;
+      return obj;
+    };
+    
+    maker = this.makeAction(Action, func);
+    this.hide = maker(obj, "hide");
+  },
 
   setSequenceOrder : function() {
     var i,
@@ -138,7 +151,6 @@ Character.prototype = {
       this[this.sequence_order[i]].current_cel = 0;
       this[this.sequence_order[i]].current_iteration = 0;
       this[this.sequence_order[i]].xdistance = 0; 
-      // this.visible = this.initial_vis;
     }
     this.current_seq = 0;
   },
@@ -225,9 +237,6 @@ Character.prototype = {
       else {
         this[order[cs]].current_cel = 0;
       }
-    }
-    if (this.timeline.current_frame >= this.timeline.frame_total) {
-      this.reset();
     }
   },
 
@@ -389,6 +398,7 @@ Character.prototype = {
 
 
 
+/* CONSTRUCTOR ... a control that fires an event ... */
 function Button (obj_name) {
   this.name = obj_name;
   this.visible = true;
@@ -822,6 +832,7 @@ EventDispatcher.prototype = {
             this.triggers[key] = {};
           }
           this.triggers[key][this.timeline.queue[i].name] = this.timeline.queue[i].triggers[key];
+          console.log(this.timeline.frame_total);
         }
       }
     }

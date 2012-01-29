@@ -4,6 +4,20 @@ chuck.js
 Changelog
 ---------
 
+**1/29/12**
+
+1. Removed an obsolete `if` clause from `Character.advance()`.
+
+
+
+**1/28/12**
+
+1. `Character.hide()` is now a working Action.
+
+2. `show()` and `hide()` are called before the Character constructor returns, initalizing them. The first time the developer would need to call them, they'll behave as expected.
+
+
+
 **1/27/12**
 
 1. Added `Character.makeAction()`, a wrapper that simulates a constructor's assignment of `this`. A constructor can't return a function, so this allows me to call `vaulter.show()` as well as `vaulter.show.onFrame(22)`.
