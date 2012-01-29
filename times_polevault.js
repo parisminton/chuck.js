@@ -1234,6 +1234,7 @@ function stage () {
 
   shadow = new Character("shadow", false);
   shadow.show();
+  shadow.hide.onFrame(52);
   shadow.main.cels = [
     [
       "save",
@@ -1933,7 +1934,6 @@ function stage () {
 
 
   vaulter = new Character("vaulter", false);
-  vaulter.show();
   vaulter.main.cels = [
     [
       "save",
@@ -10877,10 +10877,13 @@ function stage () {
   ];
   vaulter.runup.iterations = 4;
   vaulter.setSequenceOrder("runup", "main");
+  // vaulter.setOrigins(-550, 50);
+  // vaulter.runup.xinc = 25;
+  vaulter.show.onFrame(31);
+  // vaulter.hide.onFrame(51);
 
 
   pitshadow = new Character("pitshadow", false);
-  pitshadow.show();
   pitshadow.main.cels = [
     [
       "save",
@@ -10992,7 +10995,8 @@ function stage () {
       "restore"
     ]
   ];
-  pitshadow.main.starting_frame = 54;
+  pitshadow.main.starting_frame = 86;
+  pitshadow.show.onFrame(86);
 
 
   pitforeground = new Character("pitforeground", false);
@@ -11058,12 +11062,9 @@ function stage () {
       "restore"
     ]
   ];
-  /*
-  vaulter.setOrigins(-550, 50);
-  vaulter.runup.xinc = 25;
-  */
+
   t.load(play, step, slider, back, forward, track, pit, shadow, pitshadow, vaulter, pitforeground);
-  
+
 };
 
 stage();

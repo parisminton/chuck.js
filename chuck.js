@@ -212,30 +212,32 @@ Character.prototype = {
     return yvalue;
   },
 
-  advance : function () {
+  advance : function (current_frame) {
     var cs = this.current_seq,
         order = this.sequence_order,
         i;
 
-    this[order[cs]].xdistance = Math.round((this[order[cs]].xdistance + this[order[cs]].xinc) * 100) / 100;
-    this[order[cs]].ydistance = Math.round((this[order[cs]].ydistance + this[order[cs]].yinc) * 100) / 100;
+    if (current_frame >= this[order[cs]].starting_frame) {
+      this[order[cs]].xdistance = Math.round((this[order[cs]].xdistance + this[order[cs]].xinc) * 100) / 100;
+      this[order[cs]].ydistance = Math.round((this[order[cs]].ydistance + this[order[cs]].yinc) * 100) / 100;
 
-    this[order[cs]].current_cel += 1;
-    if (this[order[cs]].current_cel >= this[order[cs]].cels.length) {
-      this[order[cs]].current_iteration += 1;
-      if (this[order[cs]].current_iteration >= this[order[cs]].iterations) {
-        this.current_seq += 1;
-        if (this.current_seq >= order.length) {
-          this.current_seq = (order.length - 1);
-          this[order[this.current_seq]].current_cel = (this[order[this.current_seq]].cels.length - 1);
+      this[order[cs]].current_cel += 1;
+      if (this[order[cs]].current_cel >= this[order[cs]].cels.length) {
+        this[order[cs]].current_iteration += 1;
+        if (this[order[cs]].current_iteration >= this[order[cs]].iterations) {
+          this.current_seq += 1;
+          if (this.current_seq >= order.length) {
+            this.current_seq = (order.length - 1);
+            this[order[this.current_seq]].current_cel = (this[order[this.current_seq]].cels.length - 1);
+          }
+          else {
+            this[order[this.current_seq]].xdistance = this[order[cs]].xdistance;
+            this[order[this.current_seq]].ydistance = this[order[cs]].ydistance;
+          }
         }
         else {
-          this[order[this.current_seq]].xdistance = this[order[cs]].xdistance;
-          this[order[this.current_seq]].ydistance = this[order[cs]].ydistance;
+          this[order[cs]].current_cel = 0;
         }
-      }
-      else {
-        this[order[cs]].current_cel = 0;
       }
     }
   },
@@ -369,7 +371,7 @@ Character.prototype = {
         }
       }
     });
-    obj.advance();
+    obj.advance(current_frame);
   },
 
   initBoundary : function () {
@@ -459,7 +461,7 @@ Button.prototype.makeFrameInstructions = function (current_frame, obj) {
       }
     }
   });
-  obj.advance();
+  obj.advance(current_frame);
 };
 
 /* ... defines itself on the first call to avoid losing local scope when it\'s called by 
@@ -608,7 +610,7 @@ Slider.prototype.makeFrameInstructions = function (current_frame, obj) {
     }
   });
   
-  obj.advance();
+  obj.advance(current_frame);
 };
 
 Slider.prototype.scale = function (xdist) {

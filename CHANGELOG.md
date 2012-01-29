@@ -8,6 +8,10 @@ Changelog
 
 1. Removed an obsolete `if` clause from `Character.advance()`.
 
+2. Wrapped `Character.advance()`'s instructions in an `if` test to allow Characters with later `starting_frame` values to begin further along in the animation. To allow this, we're now passing `Character.advance()` an argument: the current frame. Updated all calls accordingly. Everything works.
+
+3. In *times_polevault.js*, adjusted `pitshadow`'s starting frame to 86 to sync with the vaulter's fall. 
+
 
 
 **1/28/12**
