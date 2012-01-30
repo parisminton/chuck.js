@@ -28,6 +28,13 @@ function Action (obj) {
   this.obj = obj;
   this.constructor = Action;
   this.onFrame = function (frame) {
+    if (this.name === "show" || this.name === "start") {
+      console.log("Posdnuos" + this.name);
+      this.obj.hide(); // ... delay revealing the Character ...
+    }
+    if (this.name === "start") {
+      this.obj.main.starting_frame = frame;
+    }
     obj.checkTrigger(frame);
     obj.triggers[frame].push(this);
     return obj;
@@ -39,7 +46,7 @@ function Action (obj) {
 /* CONSTRUCTOR ... an entity on the screen with one or more cels ... */
 function Character (obj_name, touchable) {
   this.name = obj_name;
-  this.visible = false;
+  this.visible = true;
   this.touchable = touchable;
   this.triggers = {};
   this.checkTrigger = function(frame) {
@@ -67,6 +74,7 @@ function Character (obj_name, touchable) {
   this.constructor = Character;
   this.show();
   this.hide();
+  this.start();
 };
 Character.prototype = {
   
@@ -109,6 +117,20 @@ Character.prototype = {
     
     maker = this.makeAction(Action, hide);
     this.hide = maker(obj);
+  },
+
+  start : function () {
+    var obj = this,
+        maker;
+
+    function start (frame) {
+      obj.initial_vis = obj.visible;
+      obj.visible = true;
+      return obj;
+    };
+    
+    maker = this.makeAction(Action, start);
+    this.start = maker(obj);
   },
 
   setSequenceOrder : function() {

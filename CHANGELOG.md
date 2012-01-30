@@ -14,6 +14,11 @@ Changelog
 
 4. Changed the `Action` constructor and the way Actions are instantiated and called. They now define a **named** function; this name is also the name of the Action instance. The constructor no longer expects a `func_name` argument. 
 
+5. `Character.visible` is `true` by default.
+
+6. Expanded `Action.onFrame` to test for the name of the function and branch accordingly.
+
+7. Added `Character.start()`, an Action.
 
 
 **1/28/12**
