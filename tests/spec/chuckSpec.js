@@ -70,6 +70,17 @@ describe("Testing chuck.js", function () {
       });
     });
 
+    describe("character.makeAction", function () {
+      it("should return a function", function () {
+        var maker;
+        function thefunction () {
+          return "This is a function.";
+        }
+        maker = character.makeAction(Action, thefunction);
+        expect(typeof maker).toBe("function");
+      });
+    });
+
   });
 
 
@@ -78,16 +89,8 @@ describe("Testing chuck.js", function () {
   
     describe("The constructor", function () {
       it("should create a new instance of Action", function () {
-        act = new Action(character, "act", function () {
-          return (1 * 2);
-        });
+        act = new Action(character);
         expect(act).toBeInstanceOf(Action);
-      });
-    });
-
-    describe("act.func", function () {
-      it("should be a function", function () {
-        expect(typeof act.func).toBe("function");
       });
     });
 
