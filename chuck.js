@@ -24,7 +24,7 @@ var the_canvas = document.getElementById("main-stage"),
     gradient;
 
 /* CONSTRUCTOR ... "doer" functions for the Characters. each has an onFrame() method ... */
-function Action (obj, func_name) {
+function Action (obj) {
   this.obj = obj;
   this.constructor = Action;
   this.onFrame = function (frame) {
@@ -84,32 +84,31 @@ Character.prototype = {
 
   show : function () {
     var obj = this,
-        func,
         maker;
 
-    func = function () {
+    /* ... CAREFUL: this function shares a name with the method that contains it, but they're two distinct values. this is by design, and part of all the Action instantiations that follow. ... */
+    function show () {
       obj.initial_vis = obj.visible;
       obj.visible = true;
       return obj;
     };
 
-    maker = this.makeAction(Action, func);
-    this.show = maker(obj, "show"); 
+    maker = this.makeAction(Action, show);
+    this.show = maker(obj); 
   },
 
   hide : function () {
     var obj = this,
-        func,
         maker;
 
-    func = function () {
+    function hide () {
       obj.initial_vis = obj.visible;
       obj.visible = false;
       return obj;
     };
     
-    maker = this.makeAction(Action, func);
-    this.hide = maker(obj, "hide");
+    maker = this.makeAction(Action, hide);
+    this.hide = maker(obj);
   },
 
   setSequenceOrder : function() {
@@ -834,7 +833,6 @@ EventDispatcher.prototype = {
             this.triggers[key] = {};
           }
           this.triggers[key][this.timeline.queue[i].name] = this.timeline.queue[i].triggers[key];
-          console.log(this.timeline.frame_total);
         }
       }
     }

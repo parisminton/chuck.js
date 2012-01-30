@@ -12,6 +12,8 @@ Changelog
 
 3. In *times_polevault.js*, adjusted `pitshadow`'s starting frame to 86 to sync with the vaulter's fall. 
 
+4. Changed the `Action` constructor and the way Actions are instantiated and called. They now define a **named** function; this name is also the name of the Action instance. The constructor no longer expects a `func_name` argument. 
+
 
 
 **1/28/12**
