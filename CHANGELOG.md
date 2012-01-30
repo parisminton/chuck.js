@@ -4,6 +4,12 @@ chuck.js
 Changelog
 ---------
 
+**1/30/12**
+
+1. Removed all `Character.show()` calls from *times_polevault.js*. Characters are visible by default, making this call unnecessary.
+
+
+
 **1/29/12**
 
 1. Removed an obsolete `if` clause from `Character.advance()`.

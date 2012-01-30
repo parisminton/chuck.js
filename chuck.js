@@ -78,6 +78,7 @@ function Character (obj_name, touchable) {
 };
 Character.prototype = {
   
+  /* ... returns a faux constructor. each instance it creates is also a function. ... */
   makeAction : function(constructr, func) {
     return function () {
       constructr.apply(func, arguments);

@@ -38,7 +38,6 @@ function stage () {
   t.breakpoints = [46, 49, 81];
 
   play = new Button("play");
-  play.show();
   play.enabled.cels = [
     [
       "save",
@@ -196,7 +195,6 @@ function stage () {
   
 
   step = new Button("step", false);
-  step.show();
   step.enabled.cels = [
     [
       "save",
@@ -755,7 +753,6 @@ function stage () {
   
 
   slider = new Slider("slider", 274.6, 425.4, true);
-  slider.show();
   slider.track.cels = [
     [
       "save",
@@ -883,7 +880,6 @@ function stage () {
 
 
   back = new Button("back", false);
-  back.show();
   back.enabled.cels = [
     [
       "save",
@@ -946,7 +942,6 @@ function stage () {
 
 
   forward = new Button("forward", false);
-  forward.show();
   forward.enabled.cels = [
     [
       "save",
@@ -1011,7 +1006,6 @@ function stage () {
 
 
   track = new Character("track", false);
-  track.show();
   track.main.cels = [
     [
       "save",
@@ -1023,7 +1017,6 @@ function stage () {
 
 
   pit = new Character("pit", false);
-  pit.show()
   pit.main.cels = [
     [
       "save",
@@ -1233,7 +1226,6 @@ function stage () {
 
 
   shadow = new Character("shadow", false);
-  shadow.show();
   shadow.hide.onFrame(52);
   shadow.main.cels = [
     [
@@ -10995,12 +10987,10 @@ function stage () {
       "restore"
     ]
   ];
-  pitshadow.main.starting_frame = 86;
-  pitshadow.show.onFrame(86);
+  pitshadow.start.onFrame(86);
 
 
   pitforeground = new Character("pitforeground", false);
-  pitforeground.show();
   pitforeground.main.cels = [
     [
       "save",
