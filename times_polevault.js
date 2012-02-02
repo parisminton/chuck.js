@@ -167,8 +167,8 @@ function stage () {
   ];
   play.colors.enabled = "rgb(38, 90, 137)";
   play.colors.disabled = "rgb(204, 255, 238)";
-  play.colors.over = "rgb(134, 220, 102)";
-  play.colors.out = "rgb(255, 255, 255)";
+  play.colors.over = "rgb(255, 255, 255)";
+  play.colors.out = "rgb(189, 204, 228)";
   play.boundary = [
     "save",
     "beginPath",
@@ -178,8 +178,6 @@ function stage () {
     { lineTo : [ 328.6, 425.9 ] },
     { lineTo : [ 328.6, 446.9 ] },
     "closePath",
-    { strokeStyle : "rgb(255, 0, 0)" },
-    "stroke",
     "restore"
   ];
   play.clickHandler = function () {
@@ -705,7 +703,6 @@ function stage () {
       { lineTo : [ 477.8, 433.8 ] },
       "closePath",
       "fill",
-      "restore",
       "beginPath",
       { moveTo : [ 351.1, 441.1 ] },
       { lineTo : [ 351.1, 437.7 ] },
@@ -717,7 +714,6 @@ function stage () {
       { lineTo : [ 361.3, 441.1 ] },
       { lineTo : [ 351.1, 441.1 ] },
       "closePath",
-      { fillStyle : "rgb(239, 239, 239)" },
       "fill",
       "restore",
       "restore"
@@ -725,8 +721,8 @@ function stage () {
   ];
   step.colors.enabled = "rgb(38, 90, 137)";
   step.colors.disabled = "rgb(204, 255, 238)";
-  step.colors.over = "rgb(134, 220, 102)";
-  step.colors.out = "rgb(255, 255, 255)";
+  step.colors.over = "rgb(255, 255, 255)";
+  step.colors.out = "rgb(189, 204, 228)";
   step.boundary = [
     "save",
     "beginPath",
@@ -736,8 +732,6 @@ function stage () {
     { lineTo : [ 497.3, 425.9 ] },
     { lineTo : [ 497.3, 446.9 ] },
     "closePath",
-    { strokeStyle : "rgb(255, 0, 0)" },
-    "stroke",
     "restore"
   ];
   step.clickHandler = function () {
@@ -873,8 +867,6 @@ function stage () {
     { lineTo : [ 274.6, 401.8 ] },
     { lineTo : [ 280.6, 396.3 ] },
     "closePath",
-    { strokeStyle : "rgb(255, 0, 0)" },
-    "stroke",
     "restore"
   ];
 
@@ -926,9 +918,7 @@ function stage () {
     { lineTo : [ 468.3, 386.8 ] },
     { bezierCurveTo : [ 469.4, 386.8, 470.3, 387.7, 470.3, 388.8 ] },
     { lineTo : [ 470.3, 404.8 ] },
-    "closePath",
-    { strokeStyle : "rgb(255, 0, 0)" },
-    "stroke"
+    "closePath"
   ];
   back.clickHandler = function () {
     var obj = this;
@@ -989,9 +979,7 @@ function stage () {
     { lineTo : [ 479.3, 386.8 ] },
     { bezierCurveTo : [ 478.2, 386.8, 477.3, 387.7, 477.3, 388.8 ] },
     { lineTo : [ 477.3, 404.8 ] },
-    "closePath",
-    { strokeStyle : "rgb(255, 0, 0)" },
-    "stroke"
+    "closePath"
   ];
   forward.clickHandler = function () {
     var obj = this;
@@ -1045,11 +1033,13 @@ function stage () {
       { lineTo : [ 435.0, 338.9 ] },
       { lineTo : [ 435.0, 39.1 ] },
       "closePath",
-      { gradient : [ 434.7, 189.0, 438.5, 189.0 ] },
-      { addColorStop : [ 0.00, "rgb(198, 199, 201)" ] },
-      { addColorStop : [ 0.35, "rgb(255, 255, 255)" ] },
-      { addColorStop : [ 1.00, "rgb(146, 148, 151)" ] },
-      { fillStyle : "grade" },
+      { gradient : [
+        [ 434.7, 189.0, 438.5, 189.0 ],
+        [ 0.00, "rgb(198, 199, 201)" ],
+        [ 0.35, "rgb(255, 255, 255)" ],
+        [ 1.00, "rgb(146, 148, 151)" ],
+        "fillStyle" ]
+      },
       "fill",
       "beginPath",
       { moveTo : [ 430.9, 58.2 ] },
@@ -1058,11 +1048,13 @@ function stage () {
       { lineTo : [ 431.5, 61.3 ] },
       { lineTo : [ 430.9, 58.2 ] },
       "closePath",
-      { gradient : [ 459.3, 51.4, 460.0, 54.8 ] },
-      { addColorStop : [ 0.00, "rgb(198, 199, 201)" ] },
-      { addColorStop : [ 0.35, "rgb(255, 255, 255)" ] },
-      { addColorStop : [ 1.00, "rgb(146, 148, 151)" ] },
-      { fillStyle : "grade" },
+      { gradient : [
+        [ 459.3, 51.4, 460.0, 54.8 ],
+        [ 0.00, "rgb(198, 199, 201)" ],
+        [ 0.35, "rgb(255, 255, 255)" ],
+        [ 1.00, "rgb(146, 148, 151)" ],
+        "fillStyle" ]
+      },
       "fill",
       "beginPath",
       { moveTo : [ 317.9, 311.4 ] },
@@ -1148,11 +1140,13 @@ function stage () {
       { lineTo : [ 435.0, 338.9 ] },
       { lineTo : [ 435.0, 39.1 ] },
       "closePath",
-      { gradient : [ 434.7, 189.0, 438.5, 189.0 ] },
-      { addcolorStop : [ 0.00, "rgb(198, 199, 201)" ] },
-      { addcolorStop : [ 0.35, "rgb(255, 255, 255)" ] },
-      { addcolorStop : [ 1.00, "rgb(146, 148, 151)" ] },
-      { fillStyle : "grade" },
+      { gradient : [
+        [ 434.7, 189.0, 438.5, 189.0 ],
+        [ 0.00, "rgb(198, 199, 201)" ],
+        [ 0.35, "rgb(255, 255, 255)" ],
+        [ 1.00, "rgb(146, 148, 151)" ],
+        "fillStyle" ]
+      },
       "fill",
       "beginPath",
       { moveTo : [ 430.9, 58.2 ] },
@@ -1161,11 +1155,13 @@ function stage () {
       { lineTo : [ 431.5, 61.3 ] },
       { lineTo : [ 430.9, 58.2 ] },
       "closePath",
-      { gradient : [ 459.3, 51.4, 460.0, 54.8 ] },
-      { addcolorStop : [ 0.00, "rgb(198, 199, 201)" ] },
-      { addcolorStop : [ 0.35, "rgb(255, 255, 255)" ] },
-      { addcolorStop : [ 1.00, "rgb(146, 148, 151)" ] },
-      { fillStyle : "grade" },
+      { gradient : [
+        [ 459.3, 51.4, 460.0, 54.8 ],
+        [ 0.00, "rgb(198, 199, 201)" ],
+        [ 0.35, "rgb(255, 255, 255)" ],
+        [ 1.00, "rgb(146, 148, 151)" ],
+        "fillStyle" ]
+      },
       "fill",
       "beginPath",
       { moveTo : [ 317.9, 311.4 ] },
@@ -10871,8 +10867,6 @@ function stage () {
   vaulter.setSequenceOrder("runup", "main");
   // vaulter.setOrigins(-550, 50);
   // vaulter.runup.xinc = 25;
-  vaulter.show.onFrame(31);
-  // vaulter.hide.onFrame(51);
 
 
   pitshadow = new Character("pitshadow", false);
@@ -11001,11 +10995,13 @@ function stage () {
       { lineTo : [ 481.2, 357.4 ] },
       { lineTo : [ 481.2, 27.9 ] },
       "closePath",
-      { gradient : [ 480.9, 192.7, 484.7, 192.7 ] },
-      { addColorStop : [ 0.00, "rgb(198, 199, 201)" ] },
-      { addColorStop : [ 0.35, "rgb(255, 255, 255)" ] },
-      { addColorStop : [ 1.00, "rgb(146, 148, 151)" ] },
-      { fillStyle : "grade" },
+      { gradient : [ 
+        [ 480.9, 192.7, 484.7, 192.7 ],
+        [ 0.00, "rgb(198, 199, 201)" ],
+        [ 0.35, "rgb(255, 255, 255)" ],
+        [ 1.00, "rgb(146, 148, 151)" ],
+        "fillStyle" ]
+      },
       "fill",
       "beginPath",
       { moveTo : [ 480.3, 308.9 ] },
@@ -11043,11 +11039,13 @@ function stage () {
       { lineTo : [ 461.5, 54.5 ] },
       { lineTo : [ 460.8, 51.3 ] },
       "closePath",
-      { gradient : [ 474.3, 48.1, 475.0, 51.3 ] },
-      { addColorStop : [ 0.00, "rgb(198, 199, 201)" ] },
-      { addColorStop : [ 0.35, "rgb(255, 255, 255)" ] },
-      { addColorStop : [ 1.00, "rgb(146, 148, 151)" ] },
-      { fillStyle : "grade" },
+      { gradient : [ 
+        [ 474.3, 48.1, 475.0, 51.3 ],
+        [ 0.00, "rgb(198, 199, 201)" ],
+        [ 0.35, "rgb(255, 255, 255)" ],
+        [ 1.00, "rgb(146, 148, 151)" ],
+        "fillStyle" ]
+      },
       "fill",
       "restore"
     ]

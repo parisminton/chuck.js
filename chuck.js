@@ -20,8 +20,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 var the_canvas = document.getElementById("main-stage"),
-    context = the_canvas.getContext("2d"),
-    gradient;
+    context = the_canvas.getContext("2d");
 
 /* CONSTRUCTOR ... "doer" functions for the Characters. each has an onFrame() method ... */
 function Action (obj) {
@@ -29,7 +28,6 @@ function Action (obj) {
   this.constructor = Action;
   this.onFrame = function (frame) {
     if (this.name === "show" || this.name === "start") {
-      console.log("Posdnuos" + this.name);
       this.obj.hide(); // ... delay revealing the Character ...
     }
     if (this.name === "start") {
@@ -265,8 +263,11 @@ Character.prototype = {
   },
 
   parseDrawingObject : function (param, visible, instruction_array, obj) {
-    var action,
+    var i,
+        len,
+        action,
         instructions = (instruction_array) ? instruction_array : [],
+        gradient,
         xpos,
         ypos,
         xctrl_1,
@@ -290,20 +291,38 @@ Character.prototype = {
       for (action in param) {
         if (typeof param[action] === "object") {
           if (action === "gradient") {
-            xstart = param[action][0];
-            ystart = param[action][1];
-            xend = param[action][2];
-            yend = param[action][3];
-            instructions.push(function () {
-              gradient = context.createLinearGradient(xstart, ystart, xend, yend);
-            });
-          }
-          if (action === "addColorStop") {
-            stop = param[action][0];
-            value = param[action][1];
-            instructions.push(function () {
-              gradient.addColorStop(stop, value);
-            });
+            len = param[action].length;
+            stop_len = (param[action].length - 2);
+            for (i = 0; i < len; i += 1) {
+              /* ... create the gradient ... */
+              if (i === 0) {
+                xstart = param[action][i][0];
+                ystart = param[action][i][1];
+                xend = param[action][i][2];
+                yend = param[action][i][3];
+                instructions.push(function () {
+                  gradient = context.createLinearGradient(xstart, ystart, xend, yend);
+                });
+              }
+              /* ... addColorStop instructions ... */
+              if (i > 0 && i < (len - 1)) {
+                stop = param[action][i][0];
+                value = param[action][i][1];
+                /* ... this immediate function creates a new context in which to pass these variables
+                       so they can be stored by value, not by reference ... */
+                (function (stop, value) {
+                  instructions.push(function () {
+                    gradient.addColorStop(stop, value);
+                  });
+                })(stop, value);
+              }
+              /* ... set the fillStyle ... */ 
+              if (i === (len - 1)) {
+                instructions.push(function () {
+                  context.fillStyle = gradient;
+                });
+              }
+            }
           }
           if (action === "moveTo" || action === "lineTo") {
             xpos = this.plotX(param[action][0]);

@@ -1,0 +1,3606 @@
+/* @import url(/css/0.1/screen/common/sectionfront.css); */
+/* @import url(/css/0.1/screen/interactive/common.css); */
+/* @import url(/css//0.1/screen/common/modules/twittertool.css); */
+/* @import url(/css/0.1/screen/common/modules/sharetools.css); */
+/* @import url(/css/0.1/screen/common/modules/horizontalTools.css); */
+/* @import url(/css/0.1/screen/globalEdition/common.css); */
+
+
+
+/*$Id: global.css 81901 2011-11-14 22:05:54Z helckt $
+/css/0.1/screen/common/global.css 
+(c)2006 - 2008 The New York Times Company */ 
+
+body {
+  margin: 0;
+  padding: 13px 0;
+  font-family: georgia, "times new roman", times, serif;
+  font-size: 62.5%; /* 10px */
+  line-height: 1.5em; /* 15px */
+  color: #333;
+  background-color: #fff;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  margin: 0;
+  color: #000;
+}
+
+p,ul,ol,dl,dd {
+  margin: 0 0 1em 0;
+}
+
+h1 {
+  font-size: 2.4em;
+  line-height: 1.083em; /* 26px */
+}
+
+h2 {
+  font-size: 2em;
+  line-height: 1.1em; /* 22px */
+}
+
+h3 {
+  font-size: 1.5em;
+  line-height: 1.133em; /* 17px */
+}
+
+h4 {
+  font-size: 1.4em;
+  line-height: 1.1429em; /* 16px */
+}
+
+h5, h6 {
+  font-size: 1.2em;
+  line-height: 1.25em; /* 15px */
+}
+
+h6 {
+  font-weight: normal;
+}
+
+p,li,dt,dd {
+  font-size: 1.2em;
+  line-height: 1.25em; /* 15px */
+}
+
+ul li *,
+li li {
+  font-size: 1em;
+}
+
+blockquote {
+  margin: 0 24px;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+ol {
+  padding-left: 0;
+  margin-left: 18px;
+}
+
+ul li {
+  background: url(/images/misc/bullet4x4.gif) no-repeat left 0.45em;
+  padding: 0 0 0 8px;
+}
+
+ul.multiline li {
+  margin-bottom: 1em;
+}
+
+ul.meta li {
+  font-size: 1.1em;
+}
+
+dt {
+  float: left; 
+}
+
+a {
+  color: #004276;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #666699;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a img {
+  border: none;
+}
+
+.image a {
+  display: block;
+}
+
+a.linkedGraphic:hover {
+  text-decoration: none;
+}
+
+/* forms */
+
+form,
+label,
+fieldset {
+  margin: 0;
+  padding: 0;
+} 
+
+fieldset {
+  border: none;
+}
+
+label {
+  display: block;
+}
+
+.inlineLabel {
+  display: inline;
+}
+
+.blockLabel {
+  display: block;
+}
+
+input,
+label,
+textarea,
+select {
+  font-size: 1.1em;
+  color: #000;
+}
+
+input {
+  vertical-align: middle;
+}
+
+.inlineSearchControl .text {
+  margin-right: 2px;
+}
+
+/* BEGIN Generic*/
+
+.story,
+.storyFollowsLede {
+  margin-bottom: 8px;
+}
+
+.story {
+  clear: both;
+}
+
+.ledePhoto {
+  margin-bottom: 4px;
+}
+
+/* Last Child Zero Bottom Margin */
+
+.columnGroup:last-child,
+.story:last-child,
+.story > *:last-child,
+.ledePhoto > *:last-child,
+ul:last-child,
+ul li:last-child,
+ol:last-child,
+ol li:last-child,
+dl:last-child,
+dl dd:last-child,
+p:last-child {
+  margin-bottom: 0;
+}
+
+.kicker, 
+.moduleHeader,
+.moduleHeaderBd,
+.moduleHeaderLg, 
+.sectionHeader,
+.subHeader, 
+.byline,
+.timestamp, 
+.caption,
+.smallCaption,
+.credit, 
+.refer,
+.inTextRefer,
+.commentText,
+.commentCountText,
+.media,
+.more,
+.meta,
+.metaFootnote,
+.disclaimer,
+.date,
+.dateline,
+label,
+input,
+textarea,
+select {
+  font-family: arial, helvetica, sans-serif;
+}
+    
+.kicker, 
+.moduleHeader,
+.moduleHeaderBd {
+  font-size: 1em;
+  font-weight: normal; 
+  line-height: 1.4em;
+  text-transform: uppercase;
+  color: black; 
+}
+
+.moduleHeader,
+.moduleHeaderBd {
+  margin-top: 2px;
+  margin-bottom: 5px;
+}
+
+.moduleHeaderBd {
+  font-weight: bold;
+}
+
+.moduleHeaderLg {
+  margin-bottom: 8px;
+  font-size: 1.1em;
+  font-weight: normal;
+  line-height: 1.2727em; /* 14px*/
+  text-transform: uppercase;
+  color: black;
+}
+
+.sectionHeader {
+  font-size: 1.4em;
+  line-height: 1.2857em; /* 18px */
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.sectionHeaderHome {
+  font-size: 1.1em;
+  line-height: 1.2727em; /* 14px*/
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.subHeader {
+  font-size: 1.1em;
+  line-height: 1.2727em; /* 14px*/
+  font-weight: normal;
+  margin-top: -8px;
+  margin-bottom: 6px;
+}
+
+.kicker a,
+.moduleHeader a,
+.moduleHeaderBd a,
+.moduleHeaderLg a,
+.sectionHeader a,
+.sectionHeaderHome a {
+  color: #000;
+}
+
+.byline,
+.dateline {
+  font-size: 1em;
+  line-height: 1.2em;
+  color: #808080;
+}
+
+.byline {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.caption,
+.smallCaption {
+  color: #666;
+  margin-bottom: 0;
+}
+
+.caption {
+  font-size: 1.1em;
+  line-height: 1.2727em; /* 14px*/ 
+}
+
+.smallCaption {
+  font-size: 0.9em;
+  line-height: 1.223em; /*11px*/
+}
+
+.credit {
+  font-size: 0.9em;
+  line-height: 1.223em; /*11px*/
+  text-align: right;
+  color: #909090;
+  margin-bottom: 3px;
+}
+
+.timestamp {
+  font-size: 10px; /* many contexts, leave as px unit */
+  font-weight: normal !important;
+  white-space: nowrap;
+}
+
+/* classes handling red text */
+.timestamp,
+.alert,
+.important,
+.error {
+  color: #a81817;
+}
+
+.summary {
+  font-size: 1.2em;
+  line-height: 1.25em; /* 15px */
+  margin-bottom: 5px;
+}
+
+.refer {
+  margin-top: 2px;
+}
+
+ul.refer {
+  margin-bottom: 6px;
+}
+
+.refer li {
+  margin-bottom: 2px;
+}
+
+.refer li,
+p.refer,
+div.refer {
+  font-size: 1.1em;
+  line-height: 1.182em; /* 13px */     
+}
+
+p.refer,
+div.refer {
+    margin-bottom: 0;
+}
+
+.inTextRefer {
+  font-weight: bold;
+  font-size: .8em; /* 12px based on article body p size */
+  text-decoration: none !important;
+  *background-position: 0px 4px !important;
+}
+
+.caption .inTextRefer {
+  display: inline-block;
+  margin-left: 5px;
+  padding-bottom: 0;
+  font-size: 1em;
+  line-height: 1.545em; /* 17px */
+}
+
+a.inTextRefer:hover, 
+a.inTextRefer:active {
+  text-decoration: underline !important;
+}
+
+.commentText {
+  font-size: 11px;
+}
+
+.commentCountText {
+  font-size: 10px;
+}
+
+.pipe {
+  color: #999;
+}
+
+.media {
+  font-size: .8em;
+  text-transform: uppercase;
+}
+
+.flush li { /* is a reset for the default 4x4 icon li */
+  background: none;
+  padding: 0;
+}
+
+.flushTop {
+  margin-top: 0 !important;
+}
+
+.flushBottom {
+  margin-bottom: 0 !important;
+}
+
+.wideThumb {
+  margin-bottom: 4px;
+}
+
+.wideThumb img {
+  display: block;
+}
+
+.disclaimer {
+  color: #000;
+  font-size: 1.1em;
+  margin-bottom: 0;
+}
+
+/* END Generic */
+
+/* BEGIN media overlay */
+
+.media img {
+  display: block;
+  margin: 15px auto 0 auto;  
+}
+
+.mediaOverlay {
+  display: block;
+  margin-top: -20px;
+  padding: 3px 4px 4px 20px;
+  font-family: arial, sans-serif;
+  font-size: 1.1em; /*11px*/
+  line-height: 1.182em; /*13px*/
+  color: #000;
+  background: #fff;
+  background-position: 4px 4px;
+  background-repeat: no-repeat;
+  opacity: .8;
+  -moz-opacity: 0.8;
+  filter: Alpha(Opacity=80);
+  cursor: pointer; 
+}
+
+.icon {
+  padding-left: 16px;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+
+/* mediaOverlay and .icon icons */
+
+.audio {
+  background-image:url(/images/icons/multimedia/audio_icon.gif);
+}
+
+.graphic {
+  background-image:url(/images/icons/multimedia/graphic_icon.gif);
+}
+
+.interactive {
+  background-image:url(/images/icons/multimedia/interactive_icon.gif);
+}
+
+.photo {
+  background-image:url(/images/icons/multimedia/photo_icon.gif);
+}
+
+.trailer {
+  background-image:url(/images/icons/multimedia/trailer_icon.gif);
+}
+
+.slideshow {
+  background-image:url(/images/icons/multimedia/photo_icon.gif);   
+}
+
+.map {
+  background-image:url(/images/icons/multimedia/map_icon.gif);
+}
+
+.video {
+  background-image:url(/images/icons/multimedia/video_icon.gif);
+}
+
+.document {
+  background-image:url(/images/multimedia/icons/document_icon.gif);
+}
+
+.op-art {
+  background-image:url(/images/multimedia/icons/op_art_icon.gif);
+}
+
+.rssSm {
+  padding-left: 12px;
+  background-image: url(/images/icons/feeds/rss_icon_8x8.gif);
+}
+
+.rssMd {
+  background-image: url(/images/icons/feeds/rss_icon_10x10.gif);
+}
+
+.rssLg {
+  background-image: url(/images/icons/feeds/rss_icon_12x12.gif);
+}
+
+.rssXl {
+  padding-left: 20px;
+  background-image: url(/images/icons/feeds/rss_icon_16x16.gif);
+}
+
+.lock {
+  background-image: url(/images/icons/lock_icon.gif);
+} 
+
+/* inTextRefer icons */
+
+.inTextReferArticle {
+  background: url(/images/icons/multimedia/article_icon.gif) no-repeat left center;
+  padding: 5px 4px 4px 16px;
+}
+
+.inTextReferAudio {
+  background: url(/images/icons/multimedia/audio_icon.gif) no-repeat left center;
+  padding: 3px 4px 4px 16px;
+}
+
+.inTextReferGraphic {
+  background: url(/images/icons/multimedia/graphic_icon.gif) no-repeat left center;
+  padding: 5px 4px 4px 13px;
+}
+
+.inTextReferInteractive {
+  background: url(/images/icons/multimedia/interactive_icon.gif) no-repeat left center;
+  padding: 4px 4px 4px 13px;
+}
+
+.inTextReferMap {
+  background: url(/images/icons/multimedia/map_icon.gif) no-repeat left center;
+  padding: 5px 4px 4px 14px;
+}
+
+.inTextReferSlideshow {
+  background: url(/images/icons/multimedia/photo_icon.gif) no-repeat left center;
+  padding: 5px 4px 4px 15px;
+}
+
+.inTextReferVideo {
+  background: url(/images/icons/multimedia/video_icon.gif) no-repeat left center;
+  padding: 5px 4px 4px 16px;
+}
+
+.inTextReferEmail {
+  background: url(/images/icons/multimedia/email_icon.png) no-repeat left center;
+  padding: 3px 4px 4px 16px;
+}
+
+.inTextReferComment {
+  background: url(/images/icons/multimedia/comment_icon.gif) no-repeat left center;
+  padding: 3px 4px 4px 13px;
+}
+
+.inTextReferDocument {
+  background: url(/images/icons/multimedia/document_icon.gif) no-repeat left center;
+  padding: 5px 4px 4px 13px;
+}
+
+/* END mediaOverlay */
+
+.inTextImage {
+  vertical-align: middle;
+}
+
+.noWrap {
+  white-space: nowrap;
+}
+
+/* BEGIN utility */
+
+.hidden { 
+  display: none !important;
+}
+
+.hideText,
+.hideTxt {
+  text-indent: -9999px;
+  display: block;
+}
+
+/* END utility */
+
+/* BEGIN hide tracking pixels */
+body > img {
+  display: none;
+}
+/* END hide tracking pixels */
+
+
+
+
+/*$Id: shell.css 58795 2011-02-22 04:50:17Z sharad_rastogi $
+/css/0.1/screen/common/shell.css 
+(c)2006 - 2010 The New York Times Company */ 
+
+#shell {
+  width: 972px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+#page {
+  border: 1px solid #999;
+  padding:0;
+  width: 970px;
+}
+
+#mainTabs li {
+  border-color: #999;
+}
+
+/* memberTools */
+
+#memberTools {
+  float: right;     
+  width: auto;
+  margin: 0px;
+  padding: 2px 0px 0px 0px;
+  white-space: nowrap;   
+  text-align: right;
+  font-family: arial, helvetica, sans-serif;
+  position: relative;
+}
+
+#memberTools li {
+  font-size: 1.2em;
+  margin: 0;
+  background-image: none;
+  display: inline; 
+  white-space: nowrap;
+  border: 0 solid #ccc;
+  border-width: 0 0 0 1px;
+  padding: 0 4px 0 4px;
+}
+
+#memberTools li.first,
+#memberTools li:first-child {
+  border-left-width: 0;
+}
+
+#memberTools li span.username a {
+  font-weight: bold;
+}
+
+/* Membertools drop down */
+
+#dropDown { 
+  position: absolute;
+  top: 17px; 
+  left: 0px;
+  width: 113px;
+  padding: 10px 0 0 0;
+  border: 1px solid #999;
+  text-align:left;
+  visibility: hidden;
+  z-index: 9999;
+  background: #fff;
+}
+
+/* For when the dropDown is in an li, not the membertools ul */
+.containingBlock #dropDown {
+    top: 14px;
+}
+
+#dropDown ul {
+  margin: 0 0 10px 0;
+  padding:0;
+  list-style-type: none;
+}
+
+#dropDown ul li {
+  margin: 0;
+  padding: 0;
+  display: block;
+  font-family: arial, helvetica, sans-serif;
+  font-weight:bold;
+  font-size: 10px;
+  background: transparent;
+  color: #666;
+  border: none;
+}
+
+#dropDown a {
+  display: block;
+  height: 10px;
+  margin: 0;
+  padding: 2px 10px;
+  text-transform: none;
+  font-weight: normal;
+}
+
+#dropDown a:link,
+#dropDown a:visited {
+  color:#004276;
+}	
+
+#dropDown li.sect a {
+  color: #666;
+  text-transform: uppercase; 
+}
+
+/* END Membertools drop down */
+
+/* BEGIN Main */
+
+div#main {
+  border-top: 1px solid #fff;
+  clear: both;
+  margin-top: 15px;
+  padding: 0 0 7px 0;
+}
+
+div#main:after {
+  content: "."; 
+  display: block; 
+  height: 0; 
+  clear: both; 
+  visibility: hidden;
+}   
+
+/* Hides from IE-mac \*/
+* html #main {
+  height: 1%; 
+}
+/* End hide from IE-mac */
+
+/* END Main */
+
+/* BEGIN Footer */
+
+#footer {
+  text-align: center;
+  clear: both;
+  border-top: 2px solid black;
+  padding: 13px 0;
+}
+
+#footer a {
+  color: #666;
+  text-decoration: underline;
+}
+
+#footer ul {
+  list-style: none;
+  margin: 0;
+}
+
+#footer ul.first {
+  margin-bottom: 10px;
+}
+
+#footer ul li {
+  display: inline;
+  padding: 0 5px 0 9px;
+  font-family: arial, helvetica, sans-serif;
+  font-size: 1.1em;
+  border-left: 1px solid #ccc;
+  background: none;
+}
+
+#footer ul li.first {
+  border-left: none;
+  padding-left: 7px;
+}
+
+#footer a.rssButton,
+#footer a.rssButton:visited {
+  padding: 1px 0 5px 20px;
+  background: transparent url(/images/global/icons/feed_icon_16x16.gif) no-repeat top left;
+}
+
+/* END Footer */
+
+
+
+
+
+
+/*$Id: masthead.css 35270 2010-03-29 21:35:14Z kom $
+/css/0.1/screen/common/masthead.css 
+(c)2006 - 2010 The New York Times Company */  
+
+#masthead {
+  margin: 0;
+  padding: 7px 7px 0;
+  min-height: 48px;
+  border-bottom: 2px solid #000;
+  clear: both;
+} 
+
+#branding {
+  float: left;
+  display: inline;
+  width: 152px;
+  margin-top: 4px;
+}
+
+#branding a, 
+#branding a img {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#masthead #date {
+  float: left;
+  clear: left;
+  display: inline;  
+}
+
+#masthead #date p {
+  font-size: 1.2em;
+  margin: 0;
+  padding: 0;
+}
+
+#masthead h2 {
+  width: 465px;  
+  position: relative;
+  top: 12px;
+  margin: 0 0 5px 160px; 
+  text-align: center;
+  font-family: arial, helvetica, sans-serif;   
+  font-size: 2.9em;
+  line-height: 1.1032em; /* 32px */
+}
+
+#masthead h2 a {
+  color: #000;
+  text-decoration: none;
+}
+
+#masthead .pageHeaderWithLabel {
+  top: 3px;
+}
+
+.pageHeaderWithLabel span {
+  font-size: .483em; /* 14px */
+  line-height: 1em;
+  font-family: arial, helvetica, sans-serif;
+  font-weight: bold;
+  color: #000;
+  display: block;
+}
+
+#masthead .pageHeaderWithLabel span a {
+  color: #004276;
+}
+
+#searchWidget {
+  float: right;
+  margin: 0 7px 0 0;
+  padding: 0;
+}
+
+.inlineSearchControl .text {
+  width: 193px;
+} 
+
+
+
+
+
+/* $Id: navigation.css 82104 2011-11-16 15:57:11Z mturk $
+/css/0.1/screen/common/navigation.css 
+(c)2006 - 2009 The New York Times Company */ 
+
+.navigation {
+  bottom: 0 !important;
+	clear: both;
+	text-align: center;
+}
+
+.navigation a:link,
+.navigation a:visited,
+.navigation a:hover,
+.navigation a:active {
+	color: #333;
+}          
+
+.navigation ul li {
+	height: 18px; 
+	padding: 7px 0 0 0;
+	font-family: georgia, "times new roman", times, serif;
+	font-size: 1.1em;
+	border-width: 0 0 1px 1px;
+	border-color: #d3d3d3;
+	background: #fff;
+	background-image: none;
+}
+
+.navigation ul li.first {
+	border-left: none;
+}
+
+.navigation ul li.selected {
+	padding: 7px 0pt 28px;
+	background: #f4f4f4;
+	border-bottom: 1px solid #f4f4f4;
+}
+
+#navJobs.selected,
+#navRealestate.selected,
+#navAutomobiles.selected {
+	background: #f4f4f4;
+}
+
+.navigation .subNavigation li {
+	font-size: 1em;
+}
+
+.navigation .subNavigation {
+	width: 940px;
+	height: 19px; 
+	margin: 0;
+	padding: 8px 15px 0 15px;
+	border-top: none;
+	background: #f4f4f4;
+	list-style: none;
+	white-space: nowrap;
+	font-weight: normal;
+	clear: both;
+	position: absolute;
+	top: 26px;
+	left: 0;
+	text-transform: uppercase;
+	white-space: normal;
+	border-bottom: 1px solid #d3d3d3;
+}
+
+.navigation .subNavigation li,
+.navigation ul.tabs li.selected ul li {
+	float: none;
+	display: inline;
+	margin: 0;
+	padding: 0 6px;
+	border: none;
+	font-family: arial, helvetica, sans-serif;
+	font-weight: normal;
+	background: #f4f4f4;
+}
+
+#navWorld { width: 58px; }
+#navUs	{ width: 36px; }
+#navNyregion { width: 89px; }
+#navBusiness { width: 71px; }
+#navTechnology	{ width: 96px; }
+#navScience { width: 65px; }
+#navHealth	{ width: 63px; }
+#navSports	{ width: 60px; }
+#navOpinion { width: 67px; }
+#navArts { width: 46px; }
+#navStyle { width: 52px; }
+#navTravel { width: 63px; }
+#navJobs { width: 48px;}
+#navRealestate	{ width: 85px; }
+#navAutomobiles { width: 57px; }
+
+#navJobs,
+#navRealestate,
+#navAutomobiles {
+	font-family: arial, helvetica, sans-serif;
+	font-weight: bold;
+	background: #e6eff8;
+}   
+
+.navigation .subNavigation ul#subnavWorld,
+.navigation .subNavigation ul#subnavUS,
+.navigation .subNavigation ul#subnavNYRegion,
+.navigation .subNavigation ul#subnavBusiness,
+.navigation .subNavigation ul#subnavTechnology ,
+#navWorld.selected ul,
+#navUs.selected ul,
+#navNyregion.selected ul,
+#navBusiness.selected ul,
+#navTechnology.selected ul {
+	text-align: left;
+}
+
+.navigation ul#subnavTravel { /* where is this found in travel, pre-travel redesign? */
+	text-align: right !important;
+}
+
+.navigation .subNavigation ul li.children,
+.navigation .tabs li.selected ul li.children {
+	padding: 4px 10px 3px;
+	height:auto;
+	background: #fff;
+	border: 1px solid #ccc;
+	font-weight: bold;
+	line-height:13px !important;
+}
+
+.navigation .subNavigation ul li.children ul,
+.navigation .tabs li.selected ul li.selected ul {
+	width: auto;
+	margin: 0;
+	padding: 0;
+	display: inline;
+	border-top: none;
+	background: none;
+	font-weight: normal;
+}
+
+.navigation .subNavigation ul li.children ul li,
+.navigation .tabs li.selected ul li.selected ul li {
+	margin: 0;
+	background: none;
+	text-transform: none;
+	padding: 0 !important;
+}
+
+.navigation .subNavigation ul li.children ul li a,
+.navigation .tabs li.selected ul li.children ul li a {
+	color: #004276;
+	padding: 4px 8px 3px 8px;
+}
+
+.navigation .subNavigation ul li.nochildren,
+.navigation .tabs li.selected ul li.nochildren {
+	font-weight: bold;
+}   
+
+.navigation .subNavigation ul li.children ul li.selected,
+.navigation .tabs li.selected ul li.children ul li.selected {
+	padding: 0 6px;
+	font-weight: bold;
+	background: #fff;
+}	
+
+/* BEGIN fixing for noNavChild */
+.navigation.nochild {
+	height: auto;
+}
+/* END fixing for noNavChild */
+
+#subNav_events {
+  padding-right: 0;
+}
+
+#subSubNav_specialoffers a{
+  background-color: #e6eff8;
+  border-left: 1px solid #e2e2e2;
+}
+
+#navNyregion.selected {
+  padding: 7px 0 0;
+  border-bottom: 1px solid #d3d3d3;
+}
+
+#navNyregion .subNavigation {
+  display: none;
+}
+
+#navTechnology.selected {
+border-bottom: 1px solid #D3D3D3;
+padding: 7px 0 0;
+}
+ 
+#subNav_sportstickets a{
+  font-weight: bold;
+  color: #004276;
+  font-size: .909em;
+}
+
+#subNav_sportstickets a:link,
+#subNav_sportstickets a:visited{
+  font-weight: bold;
+}
+
+#subNav_sportstickets{
+  border: 1px solid #ccc;
+  padding: 3px 6px 2px 6px;
+  position: relative;
+}
+
+
+
+
+/*$Id: modules.css 34195 2010-03-11 22:26:48Z jhutchins $
+/css/0.1/screen/common/modules.css 
+(c)2006 - 2008 The New York Times Company */ 
+
+
+/* BEGIN Generic Tabbed Module*/
+
+.tabsContainer {
+  position:relative;
+  bottom:-1px;
+  _height:1%; /* FIXME move to ie6 css*/
+}
+
+.tabs {
+  display: block;
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-family: arial, helvetica, sans-serif;
+  overflow: hidden;
+}
+
+#mainTabs {
+  float: left;  /* without this the memberTools is not accessable as the width of the tabsContainer takes the entire shell width */ 
+}
+    
+.tabs li {
+  float: left;
+  display: block;
+  margin: 0;
+  padding: 4px 7px 3px 7px;
+  background-color: #f0f4f5;
+  background-image: none;
+  border: 1px solid #ccc;
+  border-width: 1px 1px 1px 0;
+  font-size:1em;
+  white-space: nowrap;
+}
+
+.tabs li.first, 
+.tabs li.firstItem {
+  border-left: 1px solid #ccc;
+}
+
+.tabs li.selected {
+  background: white;
+  border-bottom: none;
+  padding: 4px 7px 4px 7px;
+}
+
+.tabs li a,
+.tabs li a:link,
+.tabs li a:visited,
+.tabs li a:hover,
+.tabs li a:active {
+  color: #333;
+}
+
+
+#mainTabs li a,
+#mainTabs li a:link,
+#mainTabs li a:visited,
+#mainTabs li a:hover,
+#mainTabs li a:active {
+    color: #004276;
+}
+
+ 
+.tabContent {
+  clear: both;
+  border: 1px solid #ccc;
+  padding: 7px;
+  display: none;
+}
+    
+.tabContent.active {
+  display: block;
+}
+    
+.tabContent ol {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+    
+.tabContent ol li {
+  padding-top: 3px;
+  padding-bottom: 3px;
+}
+
+
+/* END Generic Tabbed Module*/
+
+
+/* BEGIN Tabbed Blog Module */
+
+.tabbedBlogModule h4 {
+    font-size: 1.1em;
+    margin: 10px 0 8px 0;
+    padding: 0;
+    text-transform: uppercase;
+}
+
+.tabbedBlogModule .tabContent ul {
+    padding: 2px 0 0 7px;
+}
+
+.tabbedBlogModule .tabContent ul li {
+    line-height: 1em;
+}
+
+.tabbedBlogModule .tabContent ul li a {
+    line-height: 1.15em;
+}
+
+.tabbedBlogModule .kicker {
+    color: #333;
+    font-size: 0.917em;
+    line-height: 1em;
+}
+
+.tabbedBlogModule p.date {
+    font-size: 0.833em;
+    color: #808285;
+    margin: 2px 0 5px 0;
+}
+
+/* END Tabbed Blog Module */
+
+
+/* BEGIN inline audio player*/
+
+.refer li .inlinePlayer {
+  margin-left:-8px;
+  margin-bottom: 0;
+}
+
+.inlinePlayer {
+  background-color:white;
+  border: 1px solid #e2e2e2;
+  border-width: 1px 0 !important;
+  padding:3px 4px 2px;
+  margin-top: 4px;
+}
+
+/* END inline audio player*/
+
+/* CALENDAR STYLES (Past 7 days) */
+
+.calendarLinks .inset {
+  margin: 8px;
+}
+
+.calendarLinks .sectionHeader,
+.calendarLinks .subColumnA .kicker {
+  margin-left: 5px;
+}
+
+.wideA .aColumn .calendarLinks .subColumns .subColumnB .insetH {
+  margin-left: 20px;
+}
+
+.bColumn .calendarLinks .subColumns {
+	background: none;
+}
+
+table.TwoWeekCalendar {
+  width: 165px;
+  padding: 0;
+  background: url(/images/global/backgrounds/CalendarBlueWeekbg_156x19.gif) repeat-x 5px 3px;
+  font-family: arial, helvetica, sans-serif;
+}
+
+table.TwoWeekCalendar th {
+  padding: 0 0 2px 5px;
+  font-size: 1.1em;
+  color: #666;
+}
+
+table.TwoWeekCalendar td {
+  font-size: 1.1em;
+  color: #bababa;
+  text-align: center;
+}
+
+table.TwoWeekCalendar td a {
+  display: block;
+  width: 16px;
+  border: 1px solid white;
+  color: #999;
+}
+
+table.TwoWeekCalendar td a:hover {
+  border: 1px solid #004276;
+}
+
+table.TwoWeekCalendar a.currentWeek {
+  color: #004276;
+  font-weight: bold;
+  border: 1px solid #ccc;
+}
+
+table.TwoWeekCalendar a.currentDay {
+  color: #004276;
+  font-weight: bold;
+  border: 1px solid #004276;
+}
+
+.calendarLinks .inlineSearchControl .text {
+  width: 128px;
+}
+
+/* END Calendar Styles */
+
+
+
+/* ### CAN WE TOSS THIS? ### */
+/*$Id: mostpopular.css 31159 2010-02-11 15:57:35Z anjali $
+/css/0.1/screen/common/mostpopular.css 
+(c)2006 - 2008 The New York Times Company */     
+
+#tabsContainer {
+  position: relative;
+  bottom: -1px;
+} 
+
+#mostEmailed {
+  display: block;
+}
+
+#mostBlogged,	
+#mostSearched,
+#mostViewed {
+  display: none;
+}   
+
+#mostEmailed,
+#mostBlogged,
+#mostSearched,
+#mostViewed {
+  overflow: hidden;
+}
+
+#mostPopWidget h4 {
+  font-family: arial, helvetica, sans-serif;  
+  font-size: 1.1em;
+  line-height: 1.2727em; /* 14px*/
+  margin-bottom: 8px;   
+}
+
+#mostPopWidget ul.tabs li:first-child {
+  border-left-width: 1px;
+}  
+
+#mostPopWidget ol {
+  margin-left: 2.6em;
+  margin-bottom: 12px;
+  padding: 0;
+}
+
+#mostPopWidget ol li {
+  font-size: 1.2em;
+}
+
+#mostPopWidget .more {
+  float: left;
+  font-size: 1.1em;      
+}
+
+/* CUSTOM HEADLINES */
+
+#mostPopWidget .withCustomHL {
+  margin: -2px 0 0 0;
+  border: 1px solid #ccc;
+  border-top: none;
+  background-color: #fff;
+  padding: 1px 5px 5px 5px;
+  position: relative;
+}
+
+#mostPopWidget .withCustomHL .inset {
+  padding: 4px 4px 8px 8px;
+  margin: 0;
+}
+
+#mostPopWidget .withCustomHL .customHeadlines {
+  float: left;
+  text-align: left;
+  width: 220px;
+  margin: 4px 2px 0 0;
+}
+
+#mostPopWidget .withCustomHL .customHeadlines p.caption { color: #909090; }
+
+#mostPopWidget .withCustomHL .customHeadlines h6.kicker {
+  color: #333;
+  background: url(/images/timeswidgets/homepage/headlines_customize.gif) no-repeat 0 50%;
+  margin: 0 0 2px;
+  padding-left: 18px;
+}
+
+
+
+/*$Id: layout.css 68688 2011-05-31 15:56:52Z fisherc $
+/css/0.1/screen/common/layout.css 
+(c)2006 - 2010 The New York Times Company */
+
+#main {
+  border-top: 1px solid #fff;
+  clear: both;
+  margin-top: 15px;
+  padding: 0 0 7px 0;
+}
+
+/* BEGIN LAYOUTS */
+
+.wideA {
+  background: url(/images/layout/vertical_rule.gif) repeat-y 412px;  
+}
+
+.wideB {
+  background: url(/images/layout/vertical_rule.gif) repeat-y 207px;
+}
+
+.spanAB {
+  background: url(/images/layout/vertical_rule.gif) repeat-y 617px; 
+}
+
+.splitAB {
+  background:url("/images/layout/vertical_rule.gif") repeat-y 310px;
+}
+
+.spanBC {
+  /*  background: url(/images/layout/vertical_rule.gif) repeat-y 617px; */
+}
+
+.subColumns {
+  background: url(/images/layout/vertical_rule.gif) repeat-y 50%;
+}
+
+/* END LAYOUTS */
+
+/* BEGIN Columns */ 
+
+.column,
+.aColumn,
+.bColumn,
+.cColumn,
+.abColumn,
+.bcColumn,
+.abColumn,
+.abcColumn,
+.subColumnA,
+.subColumnB {
+  float: left;
+  display: inline;
+  overflow: visible; /* Fixes column dropping issue in IE */
+}
+
+.column,
+.aColumn,
+.abColumn,
+.subColumnA {
+  margin-right: 1px; 
+}
+
+.lastColumn {
+  margin-right: 0 !important;
+}
+
+/* .last rules below provide backwards compatible support for last columns */
+.wideA div.last,
+.wideB div.last,
+.spanAB div.last,
+.spanBC div.last,
+.subColumn-2 div.last,
+.subColumn-3 div.last {
+  margin-right: 0;
+}
+
+.bColumn {
+  margin-right: 0; 
+}
+
+.cColumn {
+  width: 352px;  
+} 
+
+.wideA .aColumn,
+.spanBC .aColumn {
+  width: 412px;
+}
+
+.wideA .bColumn {
+  width: 204px;
+}
+
+.wideA .aColumn .subColumnA,
+.wideA .aColumn .subColumnB {
+  width: 197px;
+}
+
+.wideB .aColumn {
+  width: 207px;
+}
+
+.wideB .bColumn {
+  width: 409px;
+}
+
+.abColumn {
+  width: 617px;
+}
+
+.splitAB .aColumn {
+  width: 310px;
+}
+
+.splitAB .bColumn {
+  width: 306px;
+}
+
+.bcColumn,
+.spanBC {
+  width: 557px;
+}  
+
+.bcColumn {
+  background: #fff;
+}
+
+/* BEGIN subColumns */
+
+.wideA .aColumn .subColumn-2 div.first,
+.wideA .aColumn .subColumn-2 .firstColumn,
+.abColumn .subColumn-3 div.first,
+.abColumn .subColumn-3 div.firstColumn {
+  width: 207px;
+}
+
+.wideA .aColumn .subColumn-2 div.last,
+.wideA .aColumn .subColumn-2 .lastColumn,
+.wideB .bColumn .subColumn-2 .column,
+.abColumn .subColumn-3 .column {
+  width: 204px;
+}
+
+.wideA .cColumn .subColumn-3 .column { 
+  width: 117px; 
+}
+
+.wideA .cColumn .subColumn-3 div.last,
+.wideA .cColumn .subColumn-3 .lastColumn { 
+  width: 116px; 
+}
+
+.spanAB .subColumn-2 .column {
+  width: 308px;
+}
+
+.cColumn .subColumn-2 .column {
+  width: 175px;
+}
+
+.cColumn .subColumn-2 div.last,
+.cColumn .subColumn-2 .lastColumn {
+  width: 176px;
+}
+
+/* END subColumns */   
+
+/* END Columns*/
+
+/* BEGIN Insets & columnGroups */
+
+.inset {
+  margin: 10px 8px;
+}
+
+.insetV {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.insetH {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.insetHFullWidth { /* gives correct margins on a fullWidth inset (#main) */
+  margin-left: 10px;
+  margin-right: 9px;
+}
+
+div.fullWidth {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.columnGroup .columnGroup {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+/* abColumn */
+
+.abColumn div.insetH,
+.abColumn div.columnGroup,
+.abColumn div.fullWidth .columnGroup {
+  margin-right: 7px;
+  margin-left: 10px;
+}
+
+/* aColumn */
+
+.aColumn div.insetH,
+.aColumn div.columnGroup,
+.aColumn div.fullWidth .columnGroup,
+.abColumn .aColumn .columnGroup,
+.abColumn .aColumn div.fullWidth .columnGroup  {
+  margin-right: 7px;
+  margin-left: 10px;
+}
+
+.splitAB .aColumn .columnGroup {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.bcColumn .aColumn .insetH,
+.bcColumn .aColumn .columnGroup,
+.bcColumn .aColumn div.fullWidth .columnGroup {
+  margin-right: 7px;
+  margin-left: 0;
+} 
+
+/* bColumn */ 
+
+.bColumn div.insetH,
+.bColumn div.columnGroup,
+.bColumn div.fullWidth .columnGroup,
+.abColumn .bColumn .columnGroup,
+.abColumn .bColumn div.fullWidth .columnGroup {
+  margin-right: 7px;
+  margin-left: 7px;
+}
+
+.splitAB .bColumn .columnGroup {
+  margin-right: 7px;
+  margin-left: 10px;
+}
+
+.bcColumn .bColumn .insetH,
+.bcColumn .bColumn .columnGroup,
+.bcColumn .bColumn div.fullWidth .columnGroup {
+  margin-left: 7px;
+} 
+
+/* cColumn */ 
+
+.cColumn div.insetH,
+.cColumn div.columnGroup,
+.cColumn div.fullWidth .columnGroup {
+  margin-right: 9px;
+  margin-left: 7px;
+}        
+
+/* subColumns */
+
+.wideA .aColumn .subColumnA .insetH,
+.wideA .aColumn .subColumnA .columnGroup {
+  margin-right: 7px;
+}
+
+.wideA .aColumn .subColumnB .insetH,
+.wideA .aColumn .subColumnB .columnGroup {
+  margin-left: 7px;
+}
+
+/* misc */
+
+.bcColumn div.insetH,
+.bcColumn div.columnGroup,
+.bcColumn div.fullWidth .columnGroup {
+  margin-right: 9px;
+  margin-left: 7px;
+}
+
+.columnGroup {
+  width: auto !important;
+}
+
+div.opening {
+  padding-top: 10px;
+}
+
+div.closing {
+  padding-bottom: 10px;
+}
+
+/* BEGIN Rules and Dividers */     
+
+.columnGroup,
+.singleRule,
+.doubleRule,
+.module {
+  margin-bottom: 12px; 
+}
+
+.columnGroup,
+.fullWidth,
+.singleRule,
+.singleRuleDivider,
+.doubleRule,
+.doubleRuleDivider,
+.module,
+.inset,
+.insetH,
+.insetV,
+.box,
+hr {
+  clear: both;
+}
+
+.singleRule {
+  border-top: 1px solid #ccc;
+  background-image: none !important;
+  padding-top: 8px;
+}
+
+.doubleRule {
+  padding-top: 12px;
+}
+
+hr,
+.singleRuleDivider {
+  height: 1px;
+  padding: 0;
+  background: #ccc;
+  border: none;
+  line-height: 0;   
+  overflow: hidden;
+}
+
+.doubleRule,
+.doubleRuleDivider {
+  border-width: 0 !important;
+  background: transparent url(/images/global/borders/doubleRule.gif) repeat-x left top;
+}
+
+.doubleRuleDivider {
+  height: 4px;
+  line-height: 0;   
+  overflow: hidden;
+} 
+
+hr,
+.singleRuleDivider,
+.doubleRuleDivider {
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+/* Begin Box */
+
+.box {
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+div.blue {
+  background-color: #f0f4f5;
+}
+
+div.yellow {
+  background-color: #f8f8d4;
+}
+
+.box .subColumnA {
+  margin-right: -1px !important;
+}
+
+/* END box*/
+
+/* BEGIN Utility */
+
+/* shrinkwrap floats */
+.wideA:after,
+.wideB:after,
+.spanAB:after,
+.spanBC:after,
+.splitAB:after,
+.subColumns:after,
+.subColumn-2:after,
+.subColumn-3:after,
+.story:after,
+.clearfix:after,
+.wrap:after  {
+  content: "."; 
+  display: block; 
+  height: 0;
+  clear: both; 
+  visibility: hidden;
+}   
+
+.clearfix,
+.wrap {
+  display: block;
+}
+
+.containingBlock {
+    position: relative;
+}
+ 
+.noBackground {
+  background: none !important;
+}
+
+/* BEGIN standard widths -use case: use in conjunction with .runarounds*/
+
+.w75, 
+.thumb {
+  width: 75px;
+}
+
+.w190,
+.wideThumb,
+.inlineImage {
+  width: 190px;
+}
+
+.w337,
+.homepageImage {
+  width: 337px;
+}
+
+.w395,
+.sectionfrontSpanImage {
+  width: 395px;
+} 
+
+.w600,
+.articleSpanImage,
+.slideshowHorizontal {
+  width: 600px;
+}
+
+/* END standard widths */ 
+
+.singleRule .wideThumb,
+.doubleRule .wideThumb {
+    margin-top: 4px;
+}
+
+/* use thumb when the image does not need to float */
+
+.thumb {
+  margin-bottom: 4px;
+}
+
+.thumbnail {
+  margin: 0 0 6px 6px;    
+}
+
+/* use runaround when you need to have text runaround something like an image- eg, float behavior */   
+
+.thumbnail,
+.runaroundRight {
+  float: right;
+  clear: right;
+  display: inline;
+}
+
+.runaroundRight {
+  margin: 2px 0 6px 6px;
+}
+
+.runaroundLeft {
+  float: left;
+  clear: left;
+  display: inline;
+  margin: 2px 6px 6px 0;
+}
+
+.horizontalMenu li {
+  display: inline;
+  padding: 0 8px;
+  background-image: none;
+}
+
+.horizontalMenu li:first-child {
+  padding-left: 0;
+}
+
+.horizontalMenu.piped li {
+  border-left: 1px solid #999;
+}
+
+.horizontalMenu.piped li:first-child {
+  border-left: none;
+}
+
+/* BEGIN controls */
+
+.opposingFloatControl .element1 {
+  float: left;
+}
+
+.opposingFloatControl .element2 {
+  float: right;
+}
+
+
+
+
+
+/*$Id: ads.css 83788 2011-12-01 17:31:04Z luis.colon $
+/css/0.1/screen/common/ad.css 
+(c)2006 - 2011 The New York Times Company */
+
+#TopLeft {
+  float: left;
+}
+
+#TopRight {
+  float: right;
+}
+
+.centeredAd {
+  text-align: center;
+}
+
+.subNavigation #Position1B {
+  float: left;
+  margin-left: 10px;
+  margin-top: 6px;
+}
+
+#TopAd,
+#SFPushDown {
+  margin-top: 1px; /* navigation tabsContainer -1px bottom  */
+  clear: both;
+  padding: 5px 0pt;
+  text-align: center;  
+  border-bottom: 1px solid #D3D3D3;     
+}   
+
+#TopAd > table,
+#SFPushDown > table {
+  margin: auto;
+}
+
+/* BEGIN Ad rules from general.css
+--------------------------------*/
+
+#Middle1C {
+	float: right;
+	display: inline;  
+	text-transform: uppercase;
+	width: 88px;
+	overflow: hidden;
+	font-size: 9px;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+}
+			
+#Middle1C img {
+	display: block;
+	margin-bottom: 1px;
+}
+
+/* Google ad styling */
+.linkbox {cursor:pointer;cursor:hand;}
+
+/* BEGIN Ad rules from article.css
+--------------------------------*/
+
+#adxCircBottom {
+	clear:both;
+	padding-bottom:15px;
+	margin-bottom: 10px;
+	text-align: left;
+}
+
+#masthead #Bar3,	
+#adxCircBottom a, 
+#adxCircBottom font {
+	font: bold 1.2em arial, helvetica, sans-serif;
+	color:#004276;
+}
+	
+#masthead #Bar3 {
+	font-weight:normal;
+}
+
+#aColumn #adxSponLink {
+	clear: both;
+	width:100%;
+}
+
+#aColumn #adxSponLink iframe {
+	margin-bottom: 10px;
+}
+	
+#adxToolSponsor {
+	padding: 5px 10px 5px 18px;
+}
+	
+#bColumn #adxBigAd {                        
+	text-align: center; 
+	_border-top: none;
+	padding-top: 12px;             
+}	
+	
+/* BEGIN Ads
+--------------------------------*/
+#adxBigAd.columnGroup {                        
+	text-align:center; 
+	_border-top: none;
+	padding-top: 0;             
+}
+
+#adxBigAd table {
+	margin: auto;
+}
+
+#adxBigAd h4 {
+	margin:0px;
+	padding:0px 0 3px 0;
+	color:#999;
+}
+#adxMiddle {
+	margin-bottom:15px;
+}	
+#advertiserLinks {
+	border:1px solid #dedede;
+	overflow: hidden;
+}
+	
+#advertiserLinks h4 {
+	margin:0px;
+	background-color: #efefef;
+	padding: 2px 6px;
+	color: #999;
+	border-bottom:1px solid #dedede;
+}
+	
+#advertiserLinks table {
+	margin: 10px 0;
+	width: 100%;
+}
+	
+#advertiserLinks td {
+	padding: 0 10px;
+}
+	
+#advertiserLinks td.gutter {
+	padding:0px;
+	background-color:#efefef;
+	width:1px;
+}
+#advertiserLinks a {
+	text-decoration: none;
+}
+	
+#advertiserLinks li {
+	padding-bottom: .7em; 
+}
+		
+#advertiserLinks h5 {
+	margin:0px;
+	padding:0px;
+	text-decoration: underline;
+}
+
+#advertiserLinks p {
+	margin: 0;
+	padding:0px;
+}	
+
+* html #advertiserLinks .adUrl{
+	overflow: hidden;
+	word-wrap: break-word;
+	width: 150px;
+}
+	
+#advertiserLinkImg {
+	text-align: center;
+	margin:0px;
+	padding:0px;
+}
+	
+#adTextLinkImg img {
+	border: none;
+}
+	
+#adxSponLink {
+	clear: both;
+}
+
+#adxSponLink iframe { 
+	margin-bottom: 10px;
+}
+
+#SponLink.singleAd {  /* div only contains js no content */
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+#adxSponLinkA {
+  margin-top: 8px;
+}
+	
+#sponsoredLinks {
+  font-family: arial, helvetica, sans-serif;
+	clear: both;
+}
+	
+#sponsoredLinks #header {
+	padding: 1px;
+	background: #f4f4f4;
+}
+	
+*html #sponsoredLinks #header {
+	padding: 3px;
+}	
+	
+#header h4 {
+	color: #999999;
+	font-weight: normal;
+	margin: 0 0 0 2px;
+	padding: 0 0 0 2px;
+	float: left;
+}
+	
+#header .whatIs a {
+  font-size: 1.1em;
+  line-height: 1.2727em; /* 14px*/ 
+	float: right;
+}
+
+#adContent { 
+	padding: 10px;
+}
+	
+#adContent .ad,
+#adContent .ad a:link,
+#adContent .ad a:visited {
+	padding-bottom: 10px;
+	color: #004276;
+}
+	
+.tableless {position:relative;} 
+.tableless img {margin:10px 5px 10px 0;}
+.tableless img.inline {margin:0; position:relative; bottom:-3px;} 
+.tableless p {margin:0;}
+
+.cColumn .twoColumnAd .subColumn-2 .firstColumn {
+	width: 200px;
+	border-right: 1px solid #ccc;
+	padding-right: 7px;
+	margin-right: 8px;
+}
+
+.cColumn .twoColumnAd .subColumn-2 .lastColumn {
+	width: 100px;
+}
+
+.twoColumnAd .lastColumn h4 {
+	color: #999;
+}
+
+.twoColumnAd .firstImage {
+	width: 200px;
+	margin-bottom: 5px;
+}
+
+/* Advertisement headings (gray background) */
+.adHeader,
+#sponsoredLinks #header {
+	background: #f4f4f4;
+	padding: 6px 8px;
+	display: block;
+	margin-bottom:2px;
+}
+
+.adHeader h4,
+#sponsoredLinks #header h4 {
+  font-family:arial, sans-serif;
+  font-size: 1.1em;
+  line-height: 1.2727em; /* 14px*/     
+  font-weight: normal;
+	color: #666;
+	text-transform:uppercase;
+}
+
+/* BEGIN advertisementColumnGroup */
+
+div.advertisementColumnGroup div.textAdvertisement,
+div.advertisementColumnGroup div.ad_section {
+	padding-left: 7px;
+	font-family: Arial, Helvetica, sans-serif;
+	margin-bottom: 12px;
+	}
+
+div.advertisementColumnGroup div.textAdvertisement a.titleLink,
+div.advertisementColumnGroup div.ad_section a.title_link {
+	display: block;
+	font-size: 90%;
+	}
+
+div.advertisementColumnGroup div.textAdvertisement span.adText,
+div.advertisementColumnGroup div.ad_section span.ad_text,
+div.advertisementColumnGroup div.textAdvertisement span.visibleUrl,
+div.advertisementColumnGroup div.ad_section span.visible_url {
+	display: block;
+	font-size: 80%;
+	}
+
+div.advertisementColumnGroup .advertisementThumbnails {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	background: none;
+	}
+
+div.advertisementColumnGroup .advertisementThumbnails .column {
+	margin: 6px 8px;
+	_margin: 6px 8px 6px 6px;
+	display: inline;
+	float: left;
+	width: 86px;
+	overflow: visible;
+	/*\*/vertical-align: top;/*\*/
+	position: relative;
+	font-size: 1em;
+	font-family: Arial, Helvetica, sans-serif;
+	background: none;
+	text-align:left;
+	_height: 1%;
+	line-height: 1.2em;
+	word-wrap: break-word;
+	}
+
+div.advertisementColumnGroup .advertisementThumbnails a {
+	line-height: 1.2em;
+	}
+
+div.advertisementColumnGroup .advertisementThumbnails a {
+	line-height: 1em;
+	}
+
+div.advertisementColumnGroup .advertisementThumbnails img {
+	display: block;
+	margin-bottom: 3px;
+	}
+	
+.bColumn .singleAd {
+  margin-bottom: 12px;
+  margin-top: 4px;
+}
+
+/* center non text ads */
+
+.bColumn .singleAd,
+.cColumn .bigAd {
+  text-align: center;
+}
+
+.cColumn .bigAd,
+.cColumn .singleAd,
+.cColumn .twoColumnAd {
+  clear: both;
+  border-top:1px solid #ccc;
+  padding-top: 12px;
+  margin-bottom: 12px;
+}
+
+.cColumn .columnGroup.first .singleAd:first-child {
+  border: none;
+  padding-top: 0;
+}
+
+/* BEGIN NYT Store Styles 
+------------------------------*/
+#nytStoreBox {
+	background: #F6F6F5;
+	margin-bottom: 10px;
+}
+	
+#nytStoreBox #nytStoreHeader {
+	background: #7B8EAA;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	text-align: center;
+}
+	
+#nytStoreBox #storeItem {
+	background: #F6F6F5;
+	padding: 15px 0 15px 15px;
+}
+	
+#nytStoreBox #storeItem img {
+	background: #F6F6F5;
+	float: left;
+	width: 90px;
+	height: 90px;
+	padding-right: 10px;
+}
+
+#nytStoreBox #storeItem .text {
+	background: #F6F6F5;
+	padding-top: 20px;
+	padding-right: 10px;
+}
+	
+#nytStoreBox #storeItem .link {}
+
+#nytStoreBox #storeItem .clear {
+	clear: both;
+	background: #fff;
+	visibility: hidden;
+}
+
+/* END NYTimes Store Promo 
+------------------------------------*/
+
+
+
+/* BEGIN TextAds  - these classes are used in articles' bColumns
+-----------------------------------------*/
+
+.cColumn-TextAdsBox {
+	clear:both;
+	overflow:auto;
+	padding:10px;
+	padding-right:9px;	
+}
+
+.cColumn-TextAdsBox .opposingFloatControl .element1 {
+	width: 180px;
+}
+
+* html .cColumn-TextAdsBox {
+	height: 1%;}
+
+
+.cColumn-TextAdsLeft {
+	text-align: left;
+	width:180px;
+	float:left;
+}
+
+.cColumn-TextAdsLeft .cColumn-TextAdsHeader {}
+
+.cColumn-TextAdsLeft .cColumn-TextAd {
+	margin: 0 0 1em 0;
+	padding: 0;
+}
+
+.cColumn-TextAdsLeft .cColumn-TextAd br {
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+.cColumn-TextAdsBox font {}
+
+.cColumn-TextAdsRight {
+	float:right;
+}
+	
+/* END Ad rules from article.css
+------------- 
+
+/* most popular ad rules */
+
+#mostPopWidget .moduleAd {
+  text-align: right;
+  padding-right: 8px; 
+  padding-bottom: 5px;
+  margin-top: -37px;
+  width: auto; 
+}
+
+#mostPopWidget .moduleAd:after {
+  content: "."; 
+  display: block; 
+  height: 0; 
+  clear: both; 
+  visibility: hidden;
+}
+
+#Feature1 .story .callout {
+  width: 171px;
+  height: 96px;
+  float: left;
+  display:inline;
+  margin-left: 0;
+  margin-right: 13px; 
+  padding: 0;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+#Feature1 .story h5,
+#Feature1 .story .summary {
+  font-family: arial, helvetica, sans-serif;
+  line-height: 1.166em; /* 14px */
+}
+
+#Feature1 .story .summary {
+  letter-spacing: -0.01em;
+  word-spacing: -0.15em;
+  color: #000;
+}
+
+#Feature1 .story .adCreative {
+  float: left;
+}
+
+/* 5 tiled ads module */
+
+.spanABCAd .subColumn-5 .column {
+  width: 198px;
+  margin-right: 0;
+}
+    
+.spanABCAd .subColumn-5 .firstColumn,
+.spanABCAd .subColumn-5 .lastColumn  {
+  width: 188px;
+}
+    
+.spanABCAd .subColumn-5 .column .inset {
+  margin: 10px 19px;
+}
+
+.spanABCAd .subColumn-5 .firstColumn .inset {
+  margin-left: 10px;
+}
+
+.spanABCAd .subColumn-5 .lastColumn .inset {
+  margin-right: 10px;
+}
+
+
+
+
+
+/*$Id: macros.css 3350 2008-09-04 19:40:20Z jguinto $
+/css/0.1/screen/common/macros.css 
+(c)2006 - 2008 The New York Times Company */ 
+
+
+/* BEGIN OLD MACRO supported styles
+-------------------------------------------------------*/  
+
+/* BEGIN Calendar Styles */
+
+
+
+
+/* BEGIN adjustments for Most Popular macro */
+
+#mostPopWidget div#tabsContainer {
+	left:0;
+}
+
+#mostPopWidget a.more {
+  	font-family: arial, helvetica, sans-serif;
+  	font-size:1.1em !important;
+}
+
+#mostPopWidget {
+  	border-bottom: 0 !important;
+}
+
+/* END adjustments for Most Popular macro */
+
+/* BEGIN SearchFormWrap2 - utility classes for c-column search box*/
+
+.searchFormWrap2 {
+  	border: 1px solid #cccccc;
+  	margin: 5px 0 15px 0;
+  	padding: 10px 8px 10px 8px;
+  	background: #f0f4f5;
+  	overflow:hidden; /*to solve opera horizontal scrolling problems*/
+  	clear:both;
+}
+
+/* Hides from IE-mac \*/
+* html .searchFormWrap2 {height: 1%;}
+/* End hide from IE-mac */
+
+.searchFormWrap2 .srchHdr {
+ 	margin:0 0 5px 0px;
+ 	padding: 0 0 5px 0;
+ 	clear: left;
+ 	font-family: Arial, Helvetica, Sans Serif;
+ 	font-size:90%;
+ 	font-weight: bold;
+ 	text-transform:uppercase;
+ 	color:black;
+}
+
+.searchFormWrap2 .FindNewsByState {float:left;}
+
+.searchFormWrap2 select {
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	font-family: Arial, Helvetica, Sans Serif;
+	border: 1px solid #ccc;
+}
+
+.searchFormWrap2 form#searchForm2 #searchGoImg2 {
+	margin: 1px 0 0 0;
+}
+
+* html .searchFormWrap2 form#searchForm2 #searchGoImg2 {
+	margin:2px 0 0 0;
+}
+
+/*END Search FormWrap2 */
+
+/* .TopicSearchesBox
+-------------------------------------------------------*/
+
+.TopicSearchesBox-Right {float:right;}
+
+.TopicSearchesBox {
+	float:none;
+	overflow:none;
+	padding-top:55px;
+	font-family:arial, sans-serif;
+}
+
+.TopicSearchesBox p{padding:0;margin:0;line-height:4px;}
+
+/* BEGIN AP REUTERS insert */
+
+#apr h4 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:1em;
+	font-weight:normal;
+	color:black;
+	text-transform:uppercase;
+	margin-bottom:7px;
+}
+
+#apr h4 a {
+	color:black;
+}
+
+#apr h5 {
+	font-weight:normal;
+}
+
+/* END AP REUTERS insert */
+
+/* END OLD MACRO supported styles */
+
+
+
+/* ### CAN THIS BE TOSSED? ### */
+/*$Id: googleads.css 74384 2011-08-22 20:58:44Z helckt $
+/css/0.1/screen/common/googleads.css
+(c)2009 - 2010 The New York Times Company */
+
+.nytd_google_ads {
+  border: 1px solid #9DA3AD;
+  background-color: #F8F8F9;
+  width: 100%;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 12px;
+  color: #333;
+  font-weight: normal;
+  padding-bottom: 8px;
+  text-align: left;
+}
+
+.nytd_google_single_ad {
+  padding-bottom: 0;
+}
+
+.nytd_google_ads .header td {
+  background-color: #9DA3AD;
+  height: 20px;
+  padding-top: 2px;
+  padding-left: 11px;
+  padding-bottom: 2px;
+  color: #FFF;
+}
+
+.nytd_google_ads .header td.left {
+  width: 70%;
+}
+
+.nytd_google_ads .header td.right {
+  width: 30%;
+  text-align: right;
+}
+
+.nytd_google_ads .listing {
+  padding: 4px;
+  height: 55px;
+}
+
+.nytd_google_ads .listing td {
+  width: 100%;
+  height: 55px;
+  line-height: 14px;
+  padding: 4px 4px 4px 11px;
+  padding-bottom: 5px;
+}
+
+.nytd_google_single_ad .listing td {
+  height: 110px;
+  line-height: 22px;
+  padding: 4px 4px 4px 16px;
+}
+
+.nytd_google_ads .listing a {
+  font-size: 11px;
+  color: #333;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+.nytd_google_ads .listing a.first {
+  font-size: 12px;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.nytd_google_ads .listing a.last {
+  font-size: 10px;
+}
+
+.nytd_google_ads .listing a.first,
+.nytd_google_ads .listing a.last {
+  color: #000066;
+}
+
+.nytd_google_single_ad .listing a,
+.nytd_google_single_ad .listing a.last {
+  font-size: 14px;
+}
+
+.nytd_google_single_ad .listing a.first {
+  font-size: 18px;
+}
+
+#MiddleRight .nytd_google_ads,
+#SFMiddle .nytd_google_ads {
+  padding-bottom:0;
+}
+
+#MiddleRight .nytd_google_ads div.footer,
+#SFMiddle .nytd_google_ads div.footer {
+  background-color: #9DA3AD;
+  color: #FFF;
+  height: 11px;
+  font-family: Arial,Helvetica,sans-serif;
+  font-size: 12px;
+  padding: 2px 5px 5px 11px;
+}
+
+#MiddleRight .nytd_google_ads div.footer a,
+#SFMiddle .nytd_google_ads div.footer a {
+  color: #FFF;
+}
+
+#MiddleRight .nytd_google_ads div.footer .left,
+#SFMiddle .nytd_google_ads div.footer .left {
+  float:left;
+}
+
+#MiddleRight .nytd_google_ads div.footer .right,
+#SFMiddle .nytd_google_ads div.footer .right {
+  float:right;
+}
+
+
+
+
+/*$Id: headlines.css 58763 2011-02-18 21:56:32Z mturk $
+/css/0.1/screen/common/modules/headlines.css
+(c)2006 - 2008 The New York Times Company */ 
+
+.relatedStories .story .date, 
+.eventLocation {
+	font-size: 1em; /* 10px  */
+	color: #808080;
+	margin: 0;
+}
+
+.relatedStories .story.first {
+	clear: none;
+}
+
+.relatedStories .byline span {
+    text-transform: uppercase;
+}
+
+.relatedStories .byline span.timestamp {
+	text-transform: none;
+}
+
+.partnerHeadlines h3,
+.partnerHeadlines h5 {
+	font-family: arial,helvetica,sans-serif;
+}
+
+/* BEGIN legacy (deprecated) */
+.relatedStories .story .date,
+.relatedStories .external .story h4,
+.eventLocation{
+	font-family: arial, helvetica, sans-serif; 
+}
+
+.relatedStories .more {
+	font-size: 1.1em;	
+}
+
+.relatedStories .story h4 {
+	font-size: 1.2em; /* 12px */
+}
+/* END legacy (deprecated)*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* $Id: sectionfront.css 36399 2010-04-13 18:25:47Z kom $
+/css/0.1/screen/common/sectionfront.css
+(c)2006 - 2009 The New York Times Company  */ 
+
+/* @import url(/css/0.1/screen/common/global.css); */
+/* @import url(/css/0.1/screen/common/shell.css); */
+/* @import url(/css/0.1/screen/common/masthead.css); */
+/* @import url(/css/0.1/screen/common/navigation.css); */
+/* @import url(/css/0.1/screen/common/modules.css); */
+/* @import url(/css/0.1/screen/common/mostpopular.css); */
+/* @import url(/css/0.1/screen/common/layout.css?version=20100413); */
+/* @import url(/css/0.1/screen/common/ads.css); */
+/* @import url(/css/0.1/screen/common/macros.css); */
+/* @import url(/css/0.1/screen/common/googleads.css); */
+/* @import url(/css/0.1/screen/common/modules/headlines.css); */
+
+
+.aColumn .columGroup {
+	border-top:1px solid #ccc;
+	background-image: none;
+}
+
+/* Begin Lede Story */
+
+.ledeStory {
+  margin-bottom:8px;
+}
+
+.ledeStory h1 {
+	font-size: 2em;
+	line-height: 1.15em; /* 23px */
+}
+
+.ledeStory .storyHeader {
+	margin-bottom: 6px;
+}
+
+.ledeStory .summary {
+	font-size: 1.4em;
+	line-height: 1.214em; /* 17px */
+}
+
+/* End Lede Story */
+
+/* TODO remove. Impersonates h5s while template preprocessor is being developed*/
+.bColumn .story h3 {
+	font-size:1.2em;
+	line-height: 1.25em; /* 15px */
+}
+
+.aprModule .kicker {
+	margin-top: 2px;
+  margin-bottom: 5px;
+}
+
+#SpanABMiddleRegion {
+  clear: both;
+  background-color: #fff;
+}
+
+
+
+/* $Id: common.css 73334 2011-08-03 15:46:27Z priya.ollapally $
+/css/0.1/screen/interactive/common.css
+(c)2006 - 2010 The New York Times Company  */
+
+/* ledeStory overrides */
+
+.storyHeader h1 {
+  font-weight: normal;
+}
+
+#interactiveAB h1,
+#interactiveABC h1 {
+  font-size: 2.2em; /* 22px */
+  line-height: 1.182em; /* 26px */
+}
+
+#interactiveAB .ledeStory .summary,
+#interactiveABC .ledeStory .summary {
+  padding-right: 10px;
+}
+
+.ledeStory .storySummary {
+  font-size: 1em;
+  line-height: 1.9em; /* 19px */
+}
+
+.ledeStory .storySummary .summary {
+  line-height: 1.357em; /* 19px */
+}
+
+.ledeStory .storySummary .refer {
+  line-height: 1.728em; /* 19px */
+}
+
+.ledeStory .module,
+.ledeStory .columnGroup {
+  clear: none;
+}
+
+.ledeStory .runaroundRight {
+  margin-left: 10px;
+}
+
+.ledeStory:last-child,
+.module:last-child {
+  margin-bottom: 0;
+}
+
+.ledeStory .dateline {
+  margin-bottom: 5px;
+}
+
+.ledeStory .kicker {
+  margin-bottom: 2px;
+}
+
+.refer .pipe {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+#interactiveFooter .refer .pipe {
+  padding-left: 10px;
+  padding-right: 5px;
+}
+
+#interactiveWideB .refer .pipe {
+  padding-left: 2px;
+  padding-right: 6px;
+}
+
+.caption {
+  font-style: italic;
+}
+
+.caption,
+.credit {
+  color: #808080;
+}
+
+#interactiveAB .ledeStory .byline,
+#interactiveABC .ledeStory .byline {
+  color: #333;
+}
+
+.byline,
+.refer,
+.credit {
+  font-size: 1.1em;
+  line-height: 1.2727em; /*14px*/
+}
+
+.feedback {
+  font-size: 1em;
+  line-height: 1.2em;
+}
+
+.feedback form {
+  display: inline;
+}
+
+/* interactiveFooter */
+
+#interactiveFooter {
+  clear: both;
+  padding-top: 5px;
+}
+
+#interactiveWideB #interactiveFooter {
+  clear: none;
+  padding-top: 12px;
+}
+
+#interactiveFooter .module {
+  margin-bottom: 8px;
+}
+
+#interactiveAB #interactiveFooter .adjustedColumn { /* when ad is present */
+  width: 336px;
+}
+
+#interactiveABC #interactiveFooter .adjustedColumn { /* when ad is present */
+  width: 686px; 
+}
+
+#interactiveFooter .metaData .credit {
+  text-align: left;
+}
+
+#interactiveFooter #Frame4A {
+  margin-left: 12px;
+  width: 120px;
+}
+
+/* subColumn-2 */
+
+.wideA .aColumn .subColumn-2 .lastColumn .columnGroup {
+  margin-left: 7px;
+}
+
+/* subColumn-3 related rules that need to be worked into common/layout.css */
+
+.abColumn .subColumn-3 {
+  background: url(/images/layout/subColumn-3-abColumn.gif) repeat-y;
+}
+
+.abColumn .subColumn-3 .column {
+  width: 204px;
+}
+
+.abColumn .subColumn-3 .firstColumn {
+  width: 207px;
+}
+
+.abColumn .subColumn-3 .column .columnGroup {
+  margin-left: 7px;
+  margin-right: 7px;
+}
+
+.abColumn .subColumn-3 .firstColumn .columnGroup {
+  margin-left: 10px;
+}
+
+#viewAllMM { /* unable to use opposing float control */
+  float: right;
+  display: inline;
+  padding-top: 2px;
+}
+
+
+
+
+/* $Id: twittertool.css 43610 2010-08-19 20:16:11Z santep $
+* /css/0.1/screen/common/modules/articletools.css
+* (c)2006 - 2008 The New York Times Company */ 
+
+@import url(/css/0.1/screen/common/forms.css);
+
+#twitter_item {
+  position:relative;
+  line-height:1.4em;
+  list-style:none;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+td #twitter_item {
+  text-transform:uppercase;
+}
+
+#twitter_button {
+  cursor:pointer;
+  background-image:url(/images/article/functions/twitter.gif);
+  background-repeat:no-repeat;
+  padding:0 0 3px 20px;
+  background-position:-1px -1px;
+}
+
+.entry-tools #twitter_button {
+  display:block;
+}
+
+#twitter_panel {
+  background-color:white;
+  position:absolute;
+  right:-6px;
+  top:-2px;
+  padding:10px;
+  width:230px;
+  border: 1px solid #EAE8E9;
+  text-align:left;
+  z-index:10;
+}
+
+#twitter_panel a {
+ padding-left:0 !important;
+}
+
+#twitter_form button {
+  float:right;
+}
+
+#twitter_textarea {
+  font-size:11px;
+  font-family: Arial, Helvetica, sans-serif;
+  width:220px;
+  padding:5px;
+  height:50px;
+  margin-bottom:4px;
+  color:#333;
+}
+
+#twitter_spinner {
+  position:absolute;
+  top:60px;
+  left:110px;
+}
+
+#twitter_char_count {
+  text-transform:none;
+  font-family: Arial, Helvetica, sans-serif;
+  color:#666;
+  float:left;
+}
+
+#twitter_form_title {
+  padding:1px 0 1px 22px;
+  background: url(/images/apps/timespeople/twitter.gif) no-repeat left center;
+}
+
+#twitter_close {
+  cursor:pointer;
+  padding-right: 18px;
+  background: url(/images/article/comments/buttons/close_window.gif) no-repeat right center;
+}
+
+#twitter_panel .singleRule {
+ margin: 5px 0 10px;
+ border-color: #EAE8E9;
+}
+
+.opposingFloatControl .element1 { float: left; }
+.opposingFloatControl .element2 { float: right; }
+
+ .sponsorLabel {
+   font-size:9px;
+   color:#666;
+   text-transform:uppercase;
+ }
+
+
+
+
+/* $Id: sharetools.css 75829 2011-09-13 17:25:14Z luis.colon $
+/css/0.1/screen/common/modules/sharetools.css
+(c)2006 - 2008 The New York Times Company */ 
+
+#toolsList.shareMenuOpened {
+  padding-bottom: 26px;
+}
+
+#shareMenu a,
+#shareMenu a:visited {
+  color: #333;
+  outline: none; 
+}
+
+#shareMenu.opened {
+  background-color: white;
+  border: 1px solid #EAE8E9;
+  line-height: 1.4em;
+  padding: 5px 10px; 
+  position: absolute;
+}
+
+#shareMenu.noAd { 
+  height: 105px !important;
+}
+
+#shareMenu .shareButton {
+  background: url(/images/article/functions/toolsicon_anim.gif) no-repeat 0 0;
+  padding: 0 0 3px 20px;
+}
+
+#shareMenu.closed a.shareButton:hover {
+  background: url(/images/article/functions/expand.gif) no-repeat 0 0;
+}
+
+#shareMenu.opened .shareButton {
+  background: url(/images/article/functions/contract.gif) no-repeat 0 0;
+  float: left;
+  margin-bottom: 7px;
+  margin-top: 2px;
+  padding: 0 0 0 20px;
+}
+
+#shareMenu .closeButton {
+  background: url(/images/article/comments/buttons/close_window.gif) no-repeat 4.1em 0;
+  float: right;
+  display: inline;
+  margin-bottom: 7px;
+  margin-top: 2px;
+  padding: 0 20px 0 0;
+}
+
+#shareMenu #shareList {
+  border-top: 1px solid #EAE8E9;
+  clear: both;
+  display:inline-block;
+  margin-left: 0;
+  padding: 8px 0 0 0;
+  text-align: left;
+}
+
+#shareMenu #shareList.hidden {
+  display: none;
+}
+
+#shareMenu #shareList li {
+  background: none;
+  border-bottom: 0;
+  border-right: 0;
+  float: left;
+  display: inline;
+  margin-bottom: 0;
+  margin-left: 5px;
+  padding: 5px 0;
+  width: 105px;
+}
+
+#shareMenu #shareList li#shareMenuAd {
+  border-top:  1px solid #EAE8E9; 
+  margin-left: 0;
+  margin-top: 5px;
+  padding-top: 7px;
+  width: auto;
+}
+
+#shareMenu #shareList li a,
+#shareMenu #shareList li a:visited {
+  background-repeat: no-repeat;
+  padding: 2px 0 3px 20px;
+  display: inline;
+}
+
+#shareMenu #shareList li#shareMenuAd a {
+  padding-left: 0;
+}
+
+#shareMenu #shareList .shareSponsor {
+  background: url(/ads/sharetools-sponsor.gif) no-repeat 0 0;
+  clear: both;
+  display: block;
+  width: 115px;
+  height: 13px;
+  margin-bottom: 5px;
+  margin-top: 0;
+}
+
+/* Facebook, LinkedIn, and Twitter share tools */
+
+#facebook_button,
+#linkedin_button,
+#twitter_button {
+  cursor: pointer;
+  background-repeat: no-repeat;
+  padding: 0 0 3px 20px;
+  background-position: -1px -1px;
+}
+
+#facebook_button {
+  background-image: url(/images/article/functions/facebook.gif);
+}
+
+#linkedin_button {
+  background-image: url(/images/article/functions/linkedin.gif);
+}
+
+#twitter_button {
+  background-image: url(/images/article/functions/twitter.gif);
+}
+
+/* Digg share tools css */
+
+#shareList .digg a {
+  background-image: url(/images/article/functions/digg.gif);
+}
+
+/* Facebook share tools css */
+
+#shareList .facebook a {
+  background-image: url(/images/article/functions/facebook.gif);
+}
+
+/* Myspace share tools css */
+
+#shareList .myspace a {
+  background-image: url(/images/article/functions/myspace.gif);
+}
+
+/* Permalink share tools css */
+
+#shareList .permalink a {
+  background-image: url(/images/article/functions/permalink.gif);
+}
+
+/* Reddit share tools css */
+
+#shareList .reddit a {
+  background-image: url(/images/article/functions/reddit.gif);
+}
+
+/* Tumblr share tools css */
+
+#shareList .tumblr a {
+  background-image: url(/images/article/functions/tumblr.gif);
+}
+
+/* Override Yahoo's own CSS for Buzz badge */
+
+#shareMenu #shareList #yahooBuzzBadge-form a {
+  padding: 0;
+}
+
+#shareMenu #yahooBuzzBadge-form span span {
+  padding-left: 20px;
+  width: 75px !important;
+  top: -3px !important;
+}
+
+#shareMenu #yahooBuzzBadge-form span:hover {
+  text-decoration: underline;
+}
+
+#shareMenu #shareList li.yahoobuzz {
+  height: 14px !important;
+}
+
+
+
+
+/* $Id: horizontalTools.css 42949 2010-08-09 08:49:10Z sharad_rastogi $
+   /css/0.1/screen/common/modules/horizontalTools.css
+   (c)2006 - 2010 The New York Times Company  */ 
+
+@import url('/css/0.1/screen/common/modules/articletools.css');
+
+.articleTools #shareList li#shareMenuAd {
+  padding-top: 0 !important;
+  margin-top: 3px !important;
+}
+
+.articleTools,
+#shareMenu.closed {
+  width: auto !important;
+}
+
+.articleTools ul li {
+  padding: 0 10px 0 10px;
+  float: left;
+  border-bottom: medium none;
+  border-right: 1px solid #CCCCCC;
+}
+
+.articleTools {
+  font-family: arial,helvetica,sans-serif;
+}
+
+.articleTools .toolsList {
+  position: relative !important;
+  z-index: 1;
+}
+
+.articleTools #toolsList .closed {
+  border-right: medium none;
+}
+
+
+
+
+/*$Id: common.css 35592 2010-04-02 19:42:38Z santep $
+/css/0.1/screen/globalEdition/common.css
+(c)2006 - 2009 The New York Times Company */
+
+/* Begin Masthead */
+
+#masthead .globalEditionCobrand { /* overrides #branding when cobranded logo is used */
+  width: 275px;
+  margin-bottom: 3px;
+}
+
+#nytIhtMastheadLogo {
+  display: block;
+}
+
+#globalEditionMastheadLogo {
+  display: block;
+  margin: 0 auto;
+}
+
+#withReutersMastheadLogo {
+  margin-left: 5px;
+}
+
+#masthead .globalEditionPageHeader {
+  font-size: 2.4em;
+  line-height: 1.333em; /*32px*/
+  margin-left: 280px;
+  width: 342px;
+  top: 4px;
+}
+
+/* new articles until macro is updated */
+
+
+#masthead div.globalEditionPageHeader h2 {
+  font-size: 1em;
+  line-height: 1.333em; /*32px*/
+  margin-left: 0;
+  width: 342px;
+  top: 4px;
+}
+
+/* pre 0.1 css framework (articles) */
+
+#branding {
+  float: left;
+  display: inline;
+  width: 152px;
+  margin-top: 4px;
+}
+
+#branding a,
+#branding a img {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+#masthead div.globalEditionPageHeader h1 {
+  font-size: 24px !important;
+  line-height: 32px !important; 
+  width: 342px !important;
+  top: 14px !important;
+  left: 288px !important;
+}
+
+/* End Masthead */
+
+
+
+
+
+/*$Id: styles.css 7828 2009-01-13 18:27:03Z fisherc $
+/css/0.1/print/styles.css 
+(c)2006 - 2009 The New York Times Company */
+
+/* Global */
+
+#shell {
+  width: 973px !important;
+}
+
+#page {
+  *overflow: hidden !important;      
+}
+
+/* Times People */
+
+#TP_container,
+#TP_container_shadow {
+  position: absolute !important;
+}
+
+/* Sectionfront */
+
+.wideA .bColumn {
+  *width: 203px !important;
+  _width: 203px !important;
+}
+
+/* Homepage */
+
+#home #main,
+#home #classifiedsWidget #realEstate, 
+#home #classifiedsWidget #autos,
+#home #classifiedsWidget #jobMarket,
+#home #classifiedsWidget #allClassifieds {
+  *overflow: hidden !important;
+}
+
+#home .cColumn {
+  *width: 350px !important;
+  _width: 350px !important;
+}
+
+#home .cColumn .subColumn-2 div.last, 
+#home .cColumn .subColumn-2 .lastColumn {
+  *width: 176px !important;
+  _width: 176px !important;
+}
+
+#home .wideA .bColumn {
+  *width: 173px !important;
+  _width: 173px !important;
+}
+ 
+
+
+
+
+<!--[if IE]>
+        <style type="text/css">
+            @import url(http://graphics8.nytimes.com/css/0.1/screen/common/ie.css);
+        </style>
+    <![endif]-->
+<!--[if IE 6]>
+        <style type="text/css">
+            @import url(http://graphics8.nytimes.com/css/0.1/screen/common/ie6.css);
+        </style>
+    <![endif]-->
+    
+    <style type="text/css">
+      .janky { font-family: nyt-cheltenham,sans-serif; }
+      #james { text-align: center; }
+      #pv-explainer { position: absolute; width: 290px; height: 150px; text-align: left; } 
+      #pv-explainer h1 { display: block; height: 52px; width: 290px; text-indent: -9999px; outline: none; background: transparent url('a/pv_headline.png') left top no-repeat; }  
+      #pv-explainer p { position: relative; top: 0px; left: 8px; font-family: "georgia, 'times new roman', times, serif"; font-size: 20px; line-height: 22px; }
+    </style>
+
+
+
+
+
+
+
+
+
+/* $Id: styles.css 73420 2011-08-04 16:24:07Z priya.ollapally $
+/css/0.1/screen/build/interactive/styles.css
+(c)2006 - 2011 The New York Times Company  */
+
+ul.multiline li {
+  margin-bottom: 8px;
+}
+
+/* horizontal article tools overrides */
+
+.articleTools .box {
+  border: none !important;
+  z-index: 20001; /* opened sharetools menu must sit above document cloud */
+}
+
+.articleTools .toolsList {
+  margin-right: 0;
+  margin-top: 5px;
+  _display: inline; /* for IE6 */
+}
+
+.articleTools .toolsList li {
+  float: none;
+  display: inline;
+  border: none;
+  margin: 0 17px 0 0;
+  padding: 0;
+}
+
+.toolsList li a,
+.toolsList li a:visited,
+.toolsList li a:hover {
+  display: inline;
+}
+
+.toolsList .email form {
+  display: none;
+} 
+
+.articleTools .toolsList #shareMenu {
+  margin: 0;
+}
+
+.articleTools .toolsList .email {
+  margin: 0 16px 0 0;
+  *margin-right: 0;
+}
+
+.articleTools #emailThis {
+  padding: 0 0 0 17px;
+}
+
+.articleTools #shareMenu.opened {
+  top: 0;
+  right: 0;
+}
+
+#interactiveWideB #toolsList li.opened {
+  left: 0;
+}
+
+.articleTools .toolsList .comments a {
+  padding-left: 14px;
+}
+/*$Id: styles.css 7828 2009-01-13 18:27:03Z fisherc $
+/css/0.1/print/styles.css 
+(c)2006 - 2009 The New York Times Company */
+
+/* Global */
+
+#shell {
+  width: 973px !important;
+}
+
+#page {
+  *overflow: hidden !important;      
+}
+
+/* Times People */
+
+#TP_container,
+#TP_container_shadow {
+  position: absolute !important;
+}
+
+/* Sectionfront */
+
+.wideA .bColumn {
+  *width: 203px !important;
+  _width: 203px !important;
+}
+
+/* Homepage */
+
+#home #main,
+#home #classifiedsWidget #realEstate, 
+#home #classifiedsWidget #autos,
+#home #classifiedsWidget #jobMarket,
+#home #classifiedsWidget #allClassifieds {
+  *overflow: hidden !important;
+}
+
+#home .cColumn {
+  *width: 350px !important;
+  _width: 350px !important;
+}
+
+#home .cColumn .subColumn-2 div.last, 
+#home .cColumn .subColumn-2 .lastColumn {
+  *width: 176px !important;
+  _width: 176px !important;
+}
+
+#home .wideA .bColumn {
+  *width: 173px !important;
+  _width: 173px !important;
+}
+ 
+<!--[if IE]>
+        <style type="text/css">
+            @import url(http://graphics8.nytimes.com/css/0.1/screen/common/ie.css);
+        </style>
+    <![endif]-->
+<!--[if IE 6]>
+        <style type="text/css">
+            @import url(http://graphics8.nytimes.com/css/0.1/screen/common/ie6.css);
+        </style>
+    <![endif]-->
+    
+    <style type="text/css">
+      .janky { font-family: nyt-cheltenham,sans-serif; }
+      #james { text-align: center; }
+      #pv-explainer { position: absolute; width: 290px; height: 150px; text-align: left; } 
+      #pv-explainer h1 { display: block; height: 52px; width: 290px; text-indent: -9999px; outline: none; background: transparent url('a/pv_headline.png') left top no-repeat; }  
+      #pv-explainer p { position: relative; top: 0px; left: 8px; font-family: "georgia, 'times new roman', times, serif"; font-size: 20px; line-height: 22px; }
+    </style>
+
+http://graphics8.nytimes.com/packages/css/newsgraphics/2010/0621-bop/bop-0620a.css
+http://graphics8.nytimes.com/packages/css/newsgraphics/2010/0621-bop/bop-0620a.css

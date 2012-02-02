@@ -4,6 +4,18 @@ chuck.js
 Changelog
 ---------
 
+**2/2/12**
+
+1. Fixed the gradient display. Turned all the gradient objects in *times_polevault.js* to an array of instructions. They need to be in an array because they need to be read in a specific order. All in one pass, the gradient object is created, color stops are added, and the fill style is set to the gradient.
+
+
+
+**1/31/12**
+
+1. Created a local version of all the Times styles and saved them to *times_styles.css* Removed all the other stylesheet calls and plugged in this one.
+
+
+
 **1/30/12**
 
 1. Removed all `Character.show()` calls from *times_polevault.js*. Characters are visible by default, making this call unnecessary.
