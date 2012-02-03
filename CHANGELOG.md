@@ -4,6 +4,11 @@ chuck.js
 Changelog
 ---------
 
+**2/3/12**
+
+1. Refactored `Character.makeAction()` to do the function application itself rather than return a function that does the work. This allows `Character.show()`, `Character.hide()` and `Character.start()` to get rid of the `maker` variable and its intermediate call to `makeAction()`.
+
+
 **2/2/12**
 
 1. Fixed the gradient display. Turned all the gradient objects in *times_polevault.js* to an array of instructions. They need to be in an array because they need to be read in a specific order. All in one pass, the gradient object is created, color stops are added, and the fill style is set to the gradient.

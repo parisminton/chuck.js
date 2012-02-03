@@ -77,12 +77,10 @@ function Character (obj_name, touchable) {
 Character.prototype = {
   
   /* ... returns a faux constructor. each instance it creates is also a function. ... */
-  makeAction : function(constructr, func) {
-    return function () {
-      constructr.apply(func, arguments);
-      func.constructor = constructr;
-      return func;
-    }
+  makeAction : function(func, obj) {
+    Action.call(func, obj);
+    func.constructor = Action;
+    return func;
   },
 
   travelTo : new Action(this, function () {
@@ -90,8 +88,7 @@ Character.prototype = {
   }),
 
   show : function () {
-    var obj = this,
-        maker;
+    var obj = this;
 
     /* ... CAREFUL: this function shares a name with the method that contains it, but they're two distinct values. this is by design, and part of all the Action instantiations that follow. ... */
     function show () {
@@ -100,13 +97,11 @@ Character.prototype = {
       return obj;
     };
 
-    maker = this.makeAction(Action, show);
-    this.show = maker(obj); 
+    this.show = this.makeAction(show, obj);
   },
 
   hide : function () {
-    var obj = this,
-        maker;
+    var obj = this;
 
     function hide () {
       obj.initial_vis = obj.visible;
@@ -114,13 +109,11 @@ Character.prototype = {
       return obj;
     };
     
-    maker = this.makeAction(Action, hide);
-    this.hide = maker(obj);
+    this.hide = this.makeAction(hide, obj);
   },
 
   start : function () {
-    var obj = this,
-        maker;
+    var obj = this;
 
     function start (frame) {
       obj.initial_vis = obj.visible;
@@ -128,8 +121,7 @@ Character.prototype = {
       return obj;
     };
     
-    maker = this.makeAction(Action, start);
-    this.start = maker(obj);
+    this.start = this.makeAction(start, obj);
   },
 
   setSequenceOrder : function() {
